@@ -1,22 +1,22 @@
 <?php
 session_start();
 if (isset($_SESSION['ghAppLogin']) && $_SESSION['ghAppLogin'] == true) {
-    if (!isset($_SESSION['loginType']) || empty($_SESSION['loginType']) || ($_SESSION['loginType'] != "postgraduate/welcome.php"))
+    if (!isset($_SESSION['loginType']) || empty($_SESSION['loginType']) || ($_SESSION['loginType'] != "undergraduate/welcome.php"))
         echo '<script>window.location.href = "?logout=true"</script>';
 
     if (!(isset($_SESSION["ghApplicant"]) && !empty($_SESSION['ghApplicant'])))
-        header('Location: login.php');
+        header('Location: ../index.php');
 } else {
-    header('Location: login.php');
+    header('Location: ../index.php');
 }
 
-if ($_SESSION["submitted"]) header('Location: application-status.php');
+if ($_SESSION["submitted"]) header('Location: ../application-status.php');
 
 if (isset($_GET['logout'])) {
     unset($_SESSION['ghAppLogin']);
     unset($_SESSION['ghApplicant']);
     session_destroy();
-    header('Location: login.php');
+    header('Location: ../index.php');
 }
 
 $user_id = isset($_SESSION['ghApplicant']) && !empty($_SESSION["ghApplicant"]) ? $_SESSION["ghApplicant"] : "";
@@ -28,15 +28,15 @@ $page = array("id" => 2, "name" => "Education Background");
 
 <head>
     <title><?= $page["name"] ?></title>
-    <link rel="stylesheet" href="assets/css/main.css">
-    <?php require_once("inc/apply-head-section.php") ?>
+    <link rel="stylesheet" href="../../assets/css/main.css">
+    <?php require_once("../../inc/apply-head-section.php") ?>
 </head>
 
 <body id="body">
 
     <div id="wrapper">
 
-        <?php require_once("inc/page-nav2.php") ?>
+        <?php require_once("../../inc/page-nav2.php") ?>
 
         <main class="container">
             <div class="row">
@@ -51,31 +51,32 @@ $page = array("id" => 2, "name" => "Education Background");
                             </div>
                         </div>
 
-                        <?php require_once("forms/education-background.php") ?>
                         <!-- Page form -->
                         <form class="needs-validation" id="appForm" name="2" method="#" novalidate>
+                            <?php require_once("forms/education-background.php") ?>
+
                             <!-- Bottom page navigation -->
-                            <?php require_once("inc/bottom-page-section.php"); ?>
+                            <?php require_once("../../inc/bottom-page-section.php"); ?>
                         </form>
-                        <?php require_once("inc/education-bg.php") ?>
+                        <?php require_once("../../inc/education-bg.php") ?>
                     </section>
                 </div>
 
                 <div class="col-md-4 ">
                     <!-- Right page navigation and help div -->
-                    <?php require_once("inc/right-page-section.php"); ?>
+                    <?php require_once("../../inc/right-page-section.php"); ?>
                 </div>
 
             </div>
         </main>
-        <?php require_once("inc/page-footer.php"); ?>
+        <?php require_once("../../inc/page-footer.php"); ?>
 
-        <?php require_once("inc/app-sections-menu.php"); ?>
+        <?php require_once("../../inc/app-sections-menu.php"); ?>
     </div>
 
 
-    <script src="js/jquery-3.6.0.min.js"></script>
-    <script src="js/myjs.js"></script>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script src="../../js/myjs.js"></script>
     <script>
         $(document).ready(function() {
             var incompleteForm = false;
@@ -183,9 +184,9 @@ $page = array("id" => 2, "name" => "Education Background");
 
                 if (this.id == "course-studied") {
                     if (this.value == "OTHER") {
-                        $(".other-course-studied").slideUp(200);
-                    } else {
                         $(".other-course-studied").slideDown(200);
+                    } else {
+                        $(".other-course-studied").slideUp(200);
                     }
                 }
 
@@ -218,7 +219,7 @@ $page = array("id" => 2, "name" => "Education Background");
 
                 if (this.id == "edit-course-studied") {
                     if (this.value == "OTHER") {
-                        $(".edit-other-course-studied").slideToggle(200);
+                        $(".edit-other-course-studied").slideDown(200);
                     } else {
                         $(".edit-other-course-studied").slideUp(200);
                     }
@@ -228,7 +229,7 @@ $page = array("id" => 2, "name" => "Education Background");
             $(".form-select-option").change("blur", function() {
                 $.ajax({
                     type: "PUT",
-                    url: "api/prev-uni-recs",
+                    url: "../../api/prev-uni-recs",
                     data: {
                         what: this.name,
                         value: this.value,
@@ -245,7 +246,7 @@ $page = array("id" => 2, "name" => "Education Background");
             $(".form-text-input").on("blur", function() {
                 $.ajax({
                     type: "PUT",
-                    url: "api/prev-uni-recs",
+                    url: "../../api/prev-uni-recs",
                     data: {
                         what: this.name,
                         value: this.value,
@@ -299,7 +300,7 @@ $page = array("id" => 2, "name" => "Education Background");
 
                 $.ajax({
                     type: "PUT",
-                    url: "api/prev-uni-recs",
+                    url: "../../api/prev-uni-recs",
                     data: {
                         what: this.name,
                         value: this.value,
@@ -321,7 +322,7 @@ $page = array("id" => 2, "name" => "Education Background");
 
                 $.ajax({
                     type: "GET",
-                    url: "api/grades",
+                    url: "../../api/grades",
                     data: {
                         what: this.name,
                         value: this.value,
@@ -344,7 +345,7 @@ $page = array("id" => 2, "name" => "Education Background");
                 if (this.value != "TECHNICAL") value = "secondary";
                 $.ajax({
                     type: "GET",
-                    url: "api/elective-subjects",
+                    url: "../../api/elective-subjects",
                     data: {
                         value: value,
                     },
@@ -365,7 +366,7 @@ $page = array("id" => 2, "name" => "Education Background");
                 if (!incompleteForm) {
                     $.ajax({
                         type: "POST",
-                        url: "api/validateForm/",
+                        url: "../../api/validateForm/",
                         data: {
                             form: this.name,
                         },
@@ -404,7 +405,7 @@ $page = array("id" => 2, "name" => "Education Background");
 
         });
     </script>
-    <script src="js/add-education-form.js"></script>
+    <script src="../../js/add-education-form.js"></script>
 </body>
 
 </html>

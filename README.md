@@ -1,1 +1,1 @@
-# rmu-student
+# rmu_admissions

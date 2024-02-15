@@ -1,4 +1,4 @@
 /vendor
 .env
-endpoint/.htaccess
-/assets
+/apply/docs
+/apply/photos
