@@ -1,10 +1,13 @@
 <?php
 session_start();
 
+if (isset($_SESSION["login"]) && $_SESSION["login"] === true) header("Location: index.php");
+
 if (!isset($_SESSION["_start"])) {
     $rstrong = true;
     $_SESSION["_start"] = hash('sha256', bin2hex(openssl_random_pseudo_bytes(64, $rstrong)));
 }
+$_SESSION["lastAccessed"] = time();
 ?>
 
 <!DOCTYPE html>
@@ -34,6 +37,12 @@ if (!isset($_SESSION["_start"])) {
             box-shadow: none !important;
             border-color: #86b7fe transparent !important;
         }
+
+        @media (width < 769px) {
+            .loginFormContainer {
+                margin-top: 70px;
+            }
+        }
     </style>
 </head>
 
@@ -52,7 +61,7 @@ if (!isset($_SESSION["_start"])) {
                         <div style="width:auto">
 
                             <!--Form card-->
-                            <div class="card loginFormContainer" style="margin-bottom: 10px; margin-top: 100px; min-width: 360px; max-width: 360px">
+                            <div class="card loginFormContainer" style="margin-bottom: 10px; min-width: 360px; max-width: 360px">
                                 <div class="row" style="display: flex; justify-content:center; padding-top: 50px;  padding-bottom: 0;  margin-bottom:0 !important;">
                                     <img src="assets/images/icons8-mobile-id-verification-100.png" alt="sign in image" style="width: 120px;">
                                     <h1 class="text-center" style="color: #003262; margin: 15px 0px !important;">Sign In</h1>
@@ -125,9 +134,7 @@ if (!isset($_SESSION["_start"])) {
                     success: function(result) {
                         console.log(result);
                         alert(result['message']);
-                        if (result.response == 'success') {
-                            window.location.href = result.message;
-                        } else {}
+                        if (result.success) window.location.reload();
                     },
                     error: function(error) {}
                 });

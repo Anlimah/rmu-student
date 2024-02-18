@@ -29,7 +29,7 @@ use Src\Core\Validator;
 use Src\Controller\Courses;
 use Src\Controller\Classes;
 
-$student = new Student($config);
+$student = new Student($config["database"]["mysql"]);
 
 $data = [];
 $errors = [];
@@ -110,7 +110,6 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
 } elseif ($_SERVER['REQUEST_METHOD'] == "POST") {
 
     if ($_GET["url"] == "studentLogin") {
-
         if (!isset($_SESSION["_start"]) || empty($_SESSION["_start"]))
             die(json_encode(array("success" => false, "message" => "Invalid request: 1!")));
         if (!isset($_POST["_logToken"]) || empty($_POST["_logToken"]))
@@ -122,10 +121,10 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
         $password = Validator::Password($_POST["usp_password"]);
 
         $result = $student->login($username, $password);
-        if (!$result) die(json_encode(array("success" => false, "message" => "Incorrect index number or password! ")));
+        if (!$result["success"]) die(json_encode($result));
 
         $_SESSION['login'] = true;
-        $_SESSION['index_number'] = $result["index_number"];
-        die(json_encode(array("success" => true,  "message" => strtolower($result["role"]))));
+        $_SESSION['index_number'] = $result["message"]["index_number"];
+        die(json_encode(array("success" => true,  "message" => "Login successfull!")));
     }
 }

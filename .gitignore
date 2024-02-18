@@ -1,4 +1,3 @@
 /vendor
+/assets
 .env
-/apply/docs
-/apply/photos

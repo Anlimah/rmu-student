@@ -70,29 +70,15 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
 
                         <div class="row mb-4">
                             <div class="col-xxl-12 col-md-12">
-                                <div class="card profile-card" style="background-color: #003262; border-color: transparent !important; padding: 15px 15px">
-                                    <div class="student-img" style="text-align: center; padding-top: 20px;">
-                                        <img src="<?= $student_image ?>" alt="<?= $student_data["full_name"] ?>" style="border-radius: 50%; border: 2px solid white; width: 100px; height: 100px;">
-                                    </div>
+                                <h1 style="text-transform: uppercase;">Select semester courses for registration</h1>
+                                <table class="table">
+                                    <thead>
+                                        <th colspan="2">COURSE TITLE</th>
+                                        <th></th>
+                                        <th>CREDITS</th>
 
-                                    <div class="student-name" style="text-align: center; color: #FFA000; padding-top: 10px; text-transform: uppercase; font-weight: 600">
-                                        <?= $student_data["full_name"] ?>
-                                    </div>
-
-                                    <div class="student-index" style="text-align: center; color: white; text-transform: uppercase; font-weight: 600">
-                                        <?= $student_index ?>
-                                    </div>
-
-                                    <div style="display: flex; justify-content: center; align-items:center; margin-top: 40px; ">
-                                        <div class="student-program me-2" style="color: white; text-transform: uppercase; font-weight: 600">
-                                            <?= $student_data["program_name"] ?>
-                                        </div>
-                                        <div class="student-program" style="color: #FFA000; text-transform: uppercase; font-weight: 600">
-                                            [<?= $student_data["class_code"] ?>]
-                                        </div>
-                                    </div>
-                                </div>
-
+                                    </thead>
+                                </table>
                             </div>
                         </div>
 
@@ -122,9 +108,7 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
                                         <hr>
                                         <p class="mb-0">Registration ends on <b><?= $registration_end ?> at 11:59 PM.</b></p>
                                         <hr>
-                                        <p class="mb-0 d-flex" style="justify-content: right;">
-                                            <button class="btn btn-outline-success" id="register-here-btn">Register Here</button>
-                                        </p>
+                                        <p class="mb-0 d-flex" style="justify-content: right;"><button href="" class="btn btn-outline-success">Register Here</button></p>
                                     </div>
                                 </div>
                             </div>
@@ -200,10 +184,6 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
                 })
 
             })();
-
-            $("#register-here-btn").on("click", function() {
-                window.location.href = "register-courses.php";
-            });
 
             $(".prev-uni-rec").click(function() {
                 if ($('#prev-uni-rec-yes').is(':checked')) {
@@ -482,24 +462,23 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
                 }
             });
 
-            $(document).on({
-                ajaxStart: function() {
-                    if (itsForm == true)
-                        $("#submitBtn").prop("disabled", true).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
-                    else
-                        $("#progressStatus").prop("disabled", true).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Saving progress...');
-                },
-                ajaxStop: function() {
-                    if (itsForm)
-                        $("#submitBtn").prop("disabled", false).html('Check My Work and Continue');
-                    else
-                        $("#progressStatus").prop("disabled", false).html('All progress saved.');
-                }
-            });
-
         });
     </script>
-    <script src="js/add-education-form.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $(document).on({
+                ajaxStart: function() {
+                    // Show full page LoadingOverlay
+                    $.LoadingOverlay("show");
+                },
+                ajaxStop: function() {
+                    // Hide it after 3 seconds
+                    $.LoadingOverlay("hide");
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>
