@@ -28,103 +28,81 @@ use Src\Core\Base;
 use Src\Core\Validator;
 use Src\Controller\Courses;
 use Src\Controller\Classes;
+use Src\Controller\Semester;
 
-$student = new Student($config["database"]["mysql"]);
+$fullUrl = $_SERVER["REQUEST_URI"];
+$urlParse = parse_url($fullUrl, PHP_URL_PATH);
+$urlPath = str_replace("/rmu-student/api/", "", $urlParse);
+$separatePath = explode("/", $urlPath);
+$resourceRequested = count($separatePath);
 
-$data = [];
-$errors = [];
+$module = $separatePath[0];
 
 // All GET request will be sent here
 if ($_SERVER['REQUEST_METHOD'] == "GET") {
-    if ($_GET["url"] == "programs") {
-        if (isset($_GET["type"])) {
-            $t = 0;
-            if ($_GET["type"] != "All") {
-                $t = (int) $_GET["type"];
-            }
-            $result = $admin->fetchPrograms($t);
-            if (!empty($result)) {
-                $data["success"] = true;
-                $data["message"] = $result;
-            } else {
-                $data["success"] = false;
-                $data["message"] = "No result found!";
-            }
-        }
-        die(json_encode($data));
-    } elseif ($_GET["url"] == "form-price") {
-        if (!isset($_GET["form_key"]) || empty($_GET["form_key"])) {
-            die(json_encode(array("success" => false, "message" => "Missing input field")));
-        }
-        $rslt = $admin->fetchFormPrice($_GET["form_key"]);
-        if (!$rslt) die(json_encode(array("success" => false, "message" => "Error fetching form price details!")));
-        die(json_encode(array("success" => true, "message" => $rslt)));
-    }
-    //
-    elseif ($_GET["url"] == "vendor-form") {
-        if (!isset($_GET["vendor_key"]) || empty($_GET["vendor_key"])) {
-            die(json_encode(array("success" => false, "message" => "Missing input field")));
-        }
-        $rslt = $admin->fetchVendor($_GET["vendor_key"]);
-        if (!$rslt) die(json_encode(array("success" => false, "message" => "Error fetching vendor details!")));
-        die(json_encode(array("success" => true, "message" => $rslt)));
-    }
-    //
-    elseif ($_GET["url"] == "prog-form") {
-        if (!isset($_GET["prog_key"]) || empty($_GET["prog_key"])) {
-            die(json_encode(array("success" => false, "message" => "Missing input field")));
-        }
-        $rslt = $admin->fetchProgramme($_GET["prog_key"]);
-        if (!$rslt) die(json_encode(array("success" => false, "message" => "Error fetching programme information!")));
-        die(json_encode(array("success" => true, "message" => $rslt)));
-    }
-    //
-    elseif ($_GET["url"] == "adp-form") {
-        if (!isset($_GET["adp_key"]) || empty($_GET["adp_key"])) {
-            die(json_encode(array("success" => false, "message" => "Missing input field")));
-        }
-        $rslt = $admin->fetchAdmissionPeriodByID($_GET["adp_key"]);
-        if (!$rslt) die(json_encode(array("success" => false, "message" => "Error fetching admissions information!")));
-        die(json_encode(array("success" => true, "message" => $rslt)));
-    }
-    //
-    elseif ($_GET["url"] == "user-form") {
-        if (!isset($_GET["user_key"]) || empty($_GET["user_key"])) {
-            die(json_encode(array("success" => false, "message" => "Missing input field")));
-        }
-        $rslt = $admin->fetchSystemUser($_GET["user_key"]);
-        if (!$rslt) die(json_encode(array("success" => false, "message" => "Error fetching user account information!")));
-        die(json_encode(array("success" => true, "message" => $rslt)));
-    }
-    //
-    elseif ($_GET["url"] == "programsByCategory") {
-        if (!isset($_GET["cert-type"]) || empty($_GET["cert-type"])) {
-            die(json_encode(array("success" => false, "message" => "Missing input field")));
-        }
-        $rslt = $admin->fetchAllFromProgramByCode($_GET["cert-type"]);
-        if (!$rslt) die(json_encode(array("success" => false, "message" => "Failed to fetch programs for this certificate category [{$_GET["cert-type"]}]!")));
-        die(json_encode(array("success" => true, "message" => $rslt)));
-    }
+    $action = $separatePath[1];
 
-    // All POST request will be sent here
-} elseif ($_SERVER['REQUEST_METHOD'] == "POST") {
+    if ($module === 'student') {
+        $studentObj = new Student($config["database"]["mysql"]);
 
-    if ($_GET["url"] == "studentLogin") {
-        if (!isset($_SESSION["_start"]) || empty($_SESSION["_start"]))
-            die(json_encode(array("success" => false, "message" => "Invalid request: 1!")));
-        if (!isset($_POST["_logToken"]) || empty($_POST["_logToken"]))
-            die(json_encode(array("success" => false, "message" => "Invalid request: 2!")));
-        if ($_POST["_logToken"] !== $_SESSION["_start"])
-            die(json_encode(array("success" => false, "message" => "Invalid request: 3!")));
+        switch ($action) {
+            case 'semester-courses':
+                $semester_data = $semesterObj->currentSemester();
+                if (empty($semester_data)) die(json_encode(array("success" => false, "message" => "No courses assigned to your class yet.")));
+                die(json_encode(array("success" => false, "message" => $semester_data)));
+            default:
+                die(json_encode(array("success" => false, "message" => "No match found for your request!")));
+        }
+    }
+}
 
-        $username = Validator::IndexNumber($_POST["usp_identity"]);
-        $password = Validator::Password($_POST["usp_password"]);
+//
+elseif ($_SERVER['REQUEST_METHOD'] == "POST") {
+    $action = $separatePath[1];
 
-        $result = $student->login($username, $password);
-        if (!$result["success"]) die(json_encode($result));
+    if ($module === 'student') {
+        $studentObj = new Student($config["database"]["mysql"]);
 
-        $_SESSION['login'] = true;
-        $_SESSION['index_number'] = $result["message"]["index_number"];
-        die(json_encode(array("success" => true,  "message" => "Login successfull!")));
+        switch ($action) {
+
+            case 'login':
+
+                if (!isset($_SESSION["_start"]) || empty($_SESSION["_start"]))
+                    die(json_encode(array("success" => false, "message" => "Invalid request: 1!")));
+                if (!isset($_POST["_logToken"]) || empty($_POST["_logToken"]))
+                    die(json_encode(array("success" => false, "message" => "Invalid request: 2!")));
+                if ($_POST["_logToken"] !== $_SESSION["_start"])
+                    die(json_encode(array("success" => false, "message" => "Invalid request: 3!")));
+
+                $username = Validator::IndexNumber($_POST["usp_identity"]);
+                $password = Validator::Password($_POST["usp_password"]);
+
+                $result = $studentObj->login($username, $password);
+                if (!$result["success"]) die(json_encode($result));
+
+                $semesterObj = new Semester($config["database"]["mysql"]);
+                $semester_data = $semesterObj->currentSemester();
+                if (!empty($semester_data)) {
+                    $_SESSION["semester"]["id"] = $semester_data["semester_id"];
+                    $_SESSION["semester"]["name"] = $semester_data["semester_name"];
+                    $_SESSION["semester"]["reg_status"] = $semester_data["reg_open_status"];
+                    $_SESSION["semester"]["reg_date"] = $semester_data["reg_end_date"];
+                    $_SESSION["semester"]["acad_y_id"] = $semester_data["academic_year_id"];
+                    $_SESSION["semester"]["acad_y_name"] = $semester_data["academic_year_name"];
+                }
+
+                $_SESSION["student"]['login'] = true;
+                $_SESSION["student"]['index_number'] = $result["message"]["index_number"];
+                die(json_encode(array("success" => true,  "message" => "Login successfull!")));
+
+            case 'semesterCourses':
+                // /$result = $studentObj->assignCourse($_POST);
+                $feed = Validator::SendResult($result, $result, "Account not found!");
+                die(json_encode($feed));
+
+            default:
+                # code...
+                break;
+        }
     }
 }

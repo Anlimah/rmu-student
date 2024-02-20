@@ -91,48 +91,51 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
                                             <td colspan="2"><strong>COMPULSORY COURSES</strong></td>
                                         </tr>
 
-                                        <tr>
-                                            <td style="display: flex;">
-                                                <span class="me-2">
-                                                    <img src="assets/images/icons8-stop-48.png" alt="" style="width: 24px !important">
-                                                </span>
-                                                <span>SOFTWARE ENGINEERING</span>
-                                            </td>
-                                            <td style="text-align:center">
-                                                <input type="checkbox" id="btn-check-compulsory1" class="btn-check" autocomplete="off" style="display: none;">
-                                                <label class="btn btn-light btn-outline-success-dark" style="width: 50px !important" for="btn-check-compulsory1">3</label>
-                                            </td>
-                                        </tr>
-
-                                        <tr>
-                                            <td style="display: flex;">
-                                                <span class="me-2">
-                                                    <img src="assets/images/icons8-stop-48.png" alt="" style="width: 24px !important">
-                                                </span>
-                                                <span>SOFTWARE PROJECT MANAGEMENT</span>
-                                            </td>
-                                            <td style="text-align:center">
-                                                <input type="checkbox" id="btn-check-compulsory2" class="btn-check" autocomplete="off" style="display: none;">
-                                                <label class="btn btn-light btn-outline-success-dark" style="width: 50px !important" for="btn-check-compulsory2">3</label>
-                                            </td>
-                                        </tr>
+                                        <?php
+                                        $courses = $studentObj->fetchSemesterCompulsoryCourses($student_index, $current_semester["semester_id"]);
+                                        //Base::dd($courses);
+                                        foreach ($courses as $course) {
+                                        ?>
+                                            <tr>
+                                                <td style="display: flex;">
+                                                    <span class="me-2">
+                                                        <img src="assets/images/icons8-stop-48.png" alt="" style="width: 24px !important">
+                                                    </span>
+                                                    <span><?= $course["course_name"] ?></span>
+                                                </td>
+                                                <td style="text-align:center">
+                                                    <input type="checkbox" id="btn-check-<?= $course["course_name"] ?>" class="btn-check" autocomplete="off" style="display: none;">
+                                                    <label class="btn btn-light btn-outline-success-dark" style="width: 50px !important" for="btn-check-<?= $course["course_code"] ?>">3</label>
+                                                </td>
+                                            </tr>
+                                        <?php
+                                        }
+                                        ?>
 
                                         <tr class="alert alert-warning">
                                             <td colspan="2"><strong>ELECTIVE COURSES</strong></td>
                                         </tr>
 
-                                        <tr>
-                                            <td style="display: flex;">
-                                                <span class="me-2">
-                                                    <img src="assets/images/icons8-stop-48.png" alt="" style="width: 24px;">
-                                                </span>
-                                                <span>PRINCIPLES OF COMPUTER PROGRAMMING AND PROBLEM SOLVING</span>
-                                            </td>
-                                            <td style="text-align:center">
-                                                <input type="checkbox" id="btn-check-elective1" class="btn-check" autocomplete="off" style="display: none;">
-                                                <label class="btn btn-light btn-outline-success-dark" style="width: 50px !important" for="btn-check-elective1">3</label>
-                                            </td>
-                                        </tr>
+                                        <?php
+                                        $courses = $studentObj->fetchSemesterCompulsoryCourses($student_index, $current_semester["semester_id"]);
+                                        //Base::dd($courses);
+                                        foreach ($courses as $course) {
+                                        ?>
+                                            <tr>
+                                                <td style="display: flex;">
+                                                    <span class="me-2">
+                                                        <img src="assets/images/icons8-stop-48.png" alt="" style="width: 24px !important">
+                                                    </span>
+                                                    <span><?= $course["course_name"] ?></span>
+                                                </td>
+                                                <td style="text-align:center">
+                                                    <input type="checkbox" id="btn-check-<?= $course["course_name"] ?>" class="btn-check" autocomplete="off" style="display: none;">
+                                                    <label class="btn btn-light btn-outline-success-dark" style="width: 50px !important" for="btn-check-<?= $course["course_code"] ?>">3</label>
+                                                </td>
+                                            </tr>
+                                        <?php
+                                        }
+                                        ?>
 
                                     </tbody>
                                 </table>
@@ -172,251 +175,10 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
                 }
             });
 
-            (() => {
-                'use strict'
-
-                // Fetch all the forms we want to apply custom Bootstrap validation styles to
-                const forms = document.querySelectorAll('.needs-validation')
-
-                // Loop over them and prevent submission
-                Array.from(forms).forEach(form => {
-                    form.addEventListener('submit', event => {
-                        event.preventDefault()
-                        if (!form.checkValidity()) {
-                            event.stopPropagation()
-                            incompleteForm = true;
-                            $("#page_info_text").removeClass("hide");
-                            $("#page_info_text").addClass("display");
-                            window.location.href = "#body";
-                        } else {
-                            incompleteForm = false;
-                            itsForm = true;
-                            $("#page_info_text").removeClass("display");
-                            $("#page_info_text").addClass("hide");
-                        }
-
-                        form.classList.add('was-validated')
-                    }, false)
-                })
-
-            })();
-
-            $(".prev-uni-rec").click(function() {
-                if ($('#prev-uni-rec-yes').is(':checked')) {
-                    $("#prev-uni-rec-list").removeClass("hide");
-                } else if ($('#prev-uni-rec-no').is(':checked')) {
-                    $("#prev-uni-rec-list").addClass("hide");
-                }
-            });
-
-            $(".completed-prev-uni").click(function() {
-                if ($('#completed-prev-uni-yes').is(':checked')) {
-                    $("#date-completed-uni").removeClass("hide");
-                    $("#uni-not-completed").addClass("hide");
-                } else if ($('#completed-prev-uni-no').is(':checked')) {
-                    $("#uni-not-completed").removeClass("hide");
-                    $("#date-completed-uni").addClass("hide");
-                }
-            });
-
-            $(".awaiting-result").click(function() {
-                if ($('#awaiting-result-yes').is(':checked')) {
-                    //$("#not-waiting").addClass("hide");
-                    $("#not-waiting").slideUp(200);
-                    $("#awaiting_result_value").attr("value", 1);
-                }
-                if ($('#awaiting-result-no').is(':checked')) {
-                    //$("#not-waiting").removeClass("hide");
-                    $("#not-waiting").slideDown(200);
-                    $("#awaiting_result_value").attr("value", 0);
-                }
-
-                if ($('#edit-awaiting-result-yes').is(':checked')) {
-                    //$("#edit-not-waiting").addClass("hide");
-                    $("#edit-not-waiting").slideUp(200);
-                    $("#edit-awaiting_result_value").attr("value", 1);
-                }
-                if ($('#edit-awaiting-result-no').is(':checked')) {
-                    //$("#edit-not-waiting").removeClass("hide");
-                    $("#edit-not-waiting").slideDown(200);
-                    $("#edit-awaiting_result_value").attr("value", 0);
-                }
-            });
-
-            $(".form-select").change("blur", function() {
-                // For add education background
-                if (this.id == "cert-type") {
-
-                    var myArray = ['WASSCE', 'SSSCE', 'NECO', 'GBCE'];
-                    let index = $.inArray(this.value, myArray);
-
-                    if (index == -1) {
-                        $("#course-studied").slideUp();
-                        $("#course-studied option[value='OTHER']").attr('selected', 'selected');
-                        $(".other-course-studied").slideDown();
-                        $(".waec-course-content").slideUp();
-
-                        if (this.value == "OTHER") $(".sepcific-cert").slideDown();
-
-                        $("#awaiting-result-yes").attr("checked", "checked");
-                        $("#awaiting-result-no").attr("checked", "");
-
-                    } else {
-                        $("#course-studied").slideDown();
-                        $(".other-course-studied").slideUp();
-                        $(".waec-course-content").slideDown();
-                        $(".sepcific-cert").slideUp();
-
-                        $("#awaiting-result-yes").attr("checked", "");
-                        $("#awaiting-result-no").attr("checked", "checked");
-                    }
-                }
-
-                if (this.id == "course-studied") {
-                    if (this.value == "OTHER") {
-                        $(".other-course-studied").slideUp(200);
-                    } else {
-                        $(".other-course-studied").slideDown(200);
-                    }
-                }
-
-                // For edit education background
-                if (this.id == "edit-cert-type") {
-                    var myArray = ['WASSCE', 'SSSCE', 'NECO', 'GBCE'];
-                    let index = $.inArray(this.value, myArray);
-
-                    if (index == -1) {
-                        $("#edit-course-studied").slideUp();
-                        $("#edit-course-studied option[value='OTHER']").attr('selected', 'selected');
-                        $(".edit-other-course-studied").slideDown();
-                        $(".edit-waec-course-content").slideUp();
-
-                        if (this.value == "OTHER") $(".edit-sepcific-cert").slideDown();
-
-                        $("#edit-awaiting-result-yes").attr("checked", "checked");
-                        $("#edit-awaiting-result-no").attr("checked", "");
-
-                    } else {
-                        $("#edit-course-studied").slideDown();
-                        $(".edit-other-course-studied").slideUp();
-                        $(".edit-waec-course-content").slideDown();
-                        $(".edit-sepcific-cert").slideUp();
-
-                        $("#edit-awaiting-result-yes").attr("checked", "");
-                        $("#edit-awaiting-result-no").attr("checked", "checked");
-                    }
-                }
-
-                if (this.id == "edit-course-studied") {
-                    if (this.value == "OTHER") {
-                        $(".edit-other-course-studied").slideToggle(200);
-                    } else {
-                        $(".edit-other-course-studied").slideUp(200);
-                    }
-                }
-            });
-
-            $(".form-select-option").change("blur", function() {
-                $.ajax({
-                    type: "PUT",
-                    url: "api/prev-uni-recs",
-                    data: {
-                        what: this.name,
-                        value: this.value,
-                    },
-                    success: function(result) {
-                        console.log(result);
-                    },
-                    error: function(error) {
-                        console.log(error);
-                    }
-                });
-            });
-
-            $(".form-text-input").on("blur", function() {
-                $.ajax({
-                    type: "PUT",
-                    url: "api/prev-uni-recs",
-                    data: {
-                        what: this.name,
-                        value: this.value,
-                    },
-                    success: function(result) {
-                        console.log(result);
-                    },
-                    error: function(error) {
-                        console.log(error);
-                    }
-                });
-            });
-
-            $(".form-radio-btn").on("click", function() {
-
-                const inputs = document.querySelectorAll('.required-field');
-                const completed = document.querySelectorAll('.completed-uni');
-                const not_completed = document.querySelectorAll('.not-completed-uni');
-
-                if (this.id == "prev-uni-rec-yes") {
-                    for (const input of inputs) {
-                        input.setAttribute('required', '');
-                    }
-                } else if (this.id == "prev-uni-rec-no") {
-                    for (const input of inputs) {
-                        input.removeAttribute('required');
-                    }
-                    for (const inp of completed) {
-                        inp.removeAttribute('required', '');
-                    }
-                    for (const inp of not_completed) {
-                        inp.removeAttribute('required', '');
-                    }
-                }
-
-                if (this.id == "completed-prev-uni-yes") {
-                    for (const inp of completed) {
-                        inp.setAttribute('required', '');
-                    }
-                    for (const inp of not_completed) {
-                        inp.removeAttribute('required', '');
-                    }
-                } else if (this.id == "completed-prev-uni-no") {
-                    for (const inp of completed) {
-                        inp.removeAttribute('required', '');
-                    }
-                    for (const inp of not_completed) {
-                        inp.setAttribute('required', '');
-                    }
-                }
-
-                $.ajax({
-                    type: "PUT",
-                    url: "api/prev-uni-recs",
-                    data: {
-                        what: this.name,
-                        value: this.value,
-                    },
-                    success: function(result) {
-                        console.log(result);
-                    },
-                    error: function(error) {
-                        console.log(error);
-                    }
-                });
-            });
-
-            $("#cert-type, #edit-cert-type").change("blur", function() {
-                var myArray = ['WASSCE', 'SSSCE', 'NECO', 'GBCE'];
-                let index = $.inArray(this.value, myArray);
-
-                if (index == -1) return;
-
+            let semesterCourses = function() {
                 $.ajax({
                     type: "GET",
-                    url: "api/grades",
-                    data: {
-                        what: this.name,
-                        value: this.value,
-                    },
+                    url: "api/student/semester-courses",
                     success: function(result) {
                         console.log(result);
                         $(".edu-mod-grade").html('<option value="Grade" hidden>Grade</option>');
@@ -428,56 +190,8 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
                         console.log(error);
                     }
                 });
-            });
-
-            $("#course-studied").change("blur", function() {
-                let value = "technical";
-                if (this.value != "TECHNICAL") value = "secondary";
-                $.ajax({
-                    type: "GET",
-                    url: "api/elective-subjects",
-                    data: {
-                        value: value,
-                    },
-                    success: function(result) {
-                        console.log(result);
-                        $(".elective-subjects").html('<option value="Select" hidden>Select</option>');
-                        $.each(result, function(index, value) {
-                            $(".elective-subjects").append('<option value="' + value.subject + '">' + value.subject + '</option>');
-                        });
-                    },
-                    error: function(error) {
-                        console.log(error);
-                    }
-                });
-            });
-
-            $("#appForm").on("submit", function() {
-                if (!incompleteForm) {
-                    $.ajax({
-                        type: "POST",
-                        url: "api/validateForm/",
-                        data: {
-                            form: this.name,
-                        },
-                        success: function(result) {
-                            console.log(result);
-                            if (result.success) {
-                                window.location.href = "application-step3.php";
-                            } else {
-                                $("#page_info_text").removeClass("hide");
-                                $("#page_info_text").addClass("display");
-                                $("#data_info").html("").append(result.message);
-                                window.location.href = "#body";
-                            }
-                        },
-                        error: function(error) {
-                            console.log(error);
-                        }
-                    });
-                }
-            });
-
+            }
+            semesterCourses();
         });
     </script>
     <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>

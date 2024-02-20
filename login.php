@@ -126,7 +126,7 @@ $_SESSION["lastAccessed"] = time();
 
                 $.ajax({
                     type: "POST",
-                    url: "api/studentLogin",
+                    url: "api/student/login",
                     data: new FormData(this),
                     contentType: false,
                     cache: false,

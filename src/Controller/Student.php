@@ -50,9 +50,37 @@ class Student
         return $this->dm->run($query, array(':p' => $class, ':s' => $semester))->all();
     }
 
-    public function fetchSemesterCourses(): mixed
+    public function fetchSemesterCourses($index_number, $semester): mixed
     {
-        $query = "SELECT * FROM course WHERE fk_semester = :i";
+        $query = "SELECT co.`code` AS course_code, co.`name` AS course_name, 
+        cc.`id` AS category_id, cc.`name` AS category_name 
+        FROM section AS se, course AS co, course_category AS cc, class AS cl, semester AS sm, student AS st 
+        WHERE se.`fk_course` = co.`code` AND se.`fk_class` = cl.`code` AND 
+        se.`fk_semester` = sm.`id` AND co.`fk_category` = cc.`id` 
+        AND st.`fk_class` = cl.`code` AND st.`index_number` = :i AND sm.`id` = :s";
+        return $this->dm->run($query, array(':i' => $index_number, ':s' => $semester))->all();
+    }
+
+    public function fetchSemesterCompulsoryCourses($index_number, $semester): mixed
+    {
+        $query = "SELECT co.`code` AS course_code, co.`name` AS course_name, 
+        cc.`id` AS category_id, cc.`name` AS category_name 
+        FROM section AS se, course AS co, course_category AS cc, class AS cl, semester AS sm, student AS st 
+        WHERE se.`fk_course` = co.`code` AND se.`fk_class` = cl.`code` AND 
+        se.`fk_semester` = sm.`id` AND co.`fk_category` = cc.`id` 
+        AND st.`fk_class` = cl.`code` AND st.`index_number` = :i AND sm.`id` = :s AND cc.`name` = 'compulsory'";
+        return $this->dm->run($query, array(':i' => $index_number, ':s' => $semester))->all();
+    }
+
+    public function fetchSemesterElectiveCourses($index_number, $semester): mixed
+    {
+        $query = "SELECT co.`code` AS course_code, co.`name` AS course_name, 
+        cc.`id` AS category_id, cc.`name` AS category_name 
+        FROM section AS se, course AS co, course_category AS cc, class AS cl, semester AS sm, student AS st 
+        WHERE se.`fk_course` = co.`code` AND se.`fk_class` = cl.`code` AND 
+        se.`fk_semester` = sm.`id` AND co.`fk_category` = cc.`id` 
+        AND st.`fk_class` = cl.`code` AND st.`index_number` = :i AND sm.`id` = :s AND cc.`name` = 'elective'";
+        return $this->dm->run($query, array(':i' => $index_number, ':s' => $semester))->all();
     }
 
     public function courseRegistrationStatus(): mixed
