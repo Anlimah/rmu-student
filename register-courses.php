@@ -68,75 +68,80 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
                 <div class="col-md-12">
                     <section id="page_info" style="margin-bottom: 0px !important;">
 
-                        <div class="row mb-4">
-                            <div class="col-xxl-12 col-md-12">
-                                <h1 style="text-transform: uppercase;">Select semester courses for registration</h1>
-                                <table class="table">
-                                    <thead>
-                                        <th colspan="2">COURSE TITLE</th>
-                                        <th></th>
-                                        <th>CREDITS</th>
-
-                                    </thead>
-                                </table>
-                            </div>
-                        </div>
+                        <h1 class="mb-4 mt-4">L<?= $student_level ?> <?= $semester ?> SEMESTER </h1>
 
                         <hr>
 
-                        <h1 class="mb-4 mt-4">L<?= $student_level ?> <?= $semester ?> Semester </h1>
+                        <div class="row mb-4">
+                            <div class="col-xxl-12 col-md-12">
+                                <div class="alert alert-info" style="text-transform: uppercase;"><b>SELECT SEMESTER COURSES FOR REGISTRATION</b></div>
+                                <table class="table table-borderless">
+                                    <colgroup>
+                                        <col style="width: 90%">
+                                        <col>
+                                    </colgroup>
 
-                        <?php if (empty($current_semester) || !$current_semester["reg_open_status"]) { ?>
-                            <div class="row mb-4">
-                                <div class="col-xxl-12 col-md-12">
-                                    <div class="alert alert-danger d-flex align-items-center" role="alert">
-                                        <span class="bi bi-exclamation-triangle-fill me-2"></span>
-                                        <b>Semester course registration closed</b>
-                                    </div>
+                                    <thead>
+                                        <th>COURSE TITLE</th>
+                                        <th>CREDITS</th>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr class="alert alert-warning">
+                                            <td colspan="2"><strong>COMPULSORY COURSES</strong></td>
+                                        </tr>
+
+                                        <tr>
+                                            <td style="display: flex;">
+                                                <span class="me-2">
+                                                    <img src="assets/images/icons8-stop-48.png" alt="" style="width: 24px !important">
+                                                </span>
+                                                <span>SOFTWARE ENGINEERING</span>
+                                            </td>
+                                            <td style="text-align:center">
+                                                <input type="checkbox" id="btn-check-compulsory1" class="btn-check" autocomplete="off" style="display: none;">
+                                                <label class="btn btn-light btn-outline-success-dark" style="width: 50px !important" for="btn-check-compulsory1">3</label>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td style="display: flex;">
+                                                <span class="me-2">
+                                                    <img src="assets/images/icons8-stop-48.png" alt="" style="width: 24px !important">
+                                                </span>
+                                                <span>SOFTWARE PROJECT MANAGEMENT</span>
+                                            </td>
+                                            <td style="text-align:center">
+                                                <input type="checkbox" id="btn-check-compulsory2" class="btn-check" autocomplete="off" style="display: none;">
+                                                <label class="btn btn-light btn-outline-success-dark" style="width: 50px !important" for="btn-check-compulsory2">3</label>
+                                            </td>
+                                        </tr>
+
+                                        <tr class="alert alert-warning">
+                                            <td colspan="2"><strong>ELECTIVE COURSES</strong></td>
+                                        </tr>
+
+                                        <tr>
+                                            <td style="display: flex;">
+                                                <span class="me-2">
+                                                    <img src="assets/images/icons8-stop-48.png" alt="" style="width: 24px;">
+                                                </span>
+                                                <span>PRINCIPLES OF COMPUTER PROGRAMMING AND PROBLEM SOLVING</span>
+                                            </td>
+                                            <td style="text-align:center">
+                                                <input type="checkbox" id="btn-check-elective1" class="btn-check" autocomplete="off" style="display: none;">
+                                                <label class="btn btn-light btn-outline-success-dark" style="width: 50px !important" for="btn-check-elective1">3</label>
+                                            </td>
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+
+
+                                <div style="display: flex; justify-content:flex-end;margin-top: 30px">
+                                    <button class="btn btn-primary"><span class="bi bi-save me-2"></span> SAVE REGISTRATION</button>
                                 </div>
                             </div>
-                        <?php } else {
-                            $registration_end = (new \DateTime($current_semester["reg_end_date"]))->format("l F j, Y");
-                        ?>
-                            <div class="row mb-4">
-                                <div class="col-xxl-12 col-md-12">
-                                    <div class="alert alert-success" role="alert">
-                                        <h6 class="alert-heading d-flex align-items-center">
-                                            <span class="bi bi-exclamation-triangle-fill me-2"></span>
-                                            <b>Semester course registration opened.</b>
-                                        </h6>
-                                        <hr>
-                                        <p class="mb-0">Registration ends on <b><?= $registration_end ?> at 11:59 PM.</b></p>
-                                        <hr>
-                                        <p class="mb-0 d-flex" style="justify-content: right;"><button href="" class="btn btn-outline-success">Register Here</button></p>
-                                    </div>
-                                </div>
-                            </div>
-                        <?php } ?>
-
-                        <div class="row">
-
-                            <div class="col-xxl-4 col-md-6 mb-4">
-                                <div class="card info-card sales-card">
-                                    <div class="card-body">
-                                        <a href="applications.php?t=1&c=MASTERS">
-                                            <div class="d-flex align-items-center">
-                                                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                                    <img src="assets/images/icons8-check-24.png" style="width: 48px;" alt="">
-                                                </div>
-                                                <div class="ps-3">
-                                                    <span class="text-muted small pt-2 ps-1">
-                                                        <h5 class="card-title">Courses</h5>
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-
-
-
                         </div>
 
                     </section>
@@ -155,6 +160,17 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
         $(document).ready(function() {
             var incompleteForm = false;
             var itsForm = false;
+
+            $(".btn-check").change(function() {
+                var checkbox = $(this);
+                var image = checkbox.closest("td").prev().find("img");
+
+                if (checkbox.prop("checked")) {
+                    image.attr("src", "assets/images/icons8-correct-24.png");
+                } else {
+                    image.attr("src", "assets/images/icons8-stop-48.png");
+                }
+            });
 
             (() => {
                 'use strict'

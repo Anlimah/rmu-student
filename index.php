@@ -96,16 +96,12 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
                             </div>
                         </div>
 
-                        <hr>
-
-                        <h1 class="mb-4 mt-4">L<?= $student_level ?> <?= $semester ?> Semester </h1>
-
                         <?php if (empty($current_semester) || !$current_semester["reg_open_status"]) { ?>
                             <div class="row mb-4">
                                 <div class="col-xxl-12 col-md-12">
                                     <div class="alert alert-danger d-flex align-items-center" role="alert">
                                         <span class="bi bi-exclamation-triangle-fill me-2"></span>
-                                        <b>Semester course registration closed</b>
+                                        <b><?= $semester ?> semester course registration closed</b>
                                     </div>
                                 </div>
                             </div>
@@ -117,7 +113,7 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
                                     <div class="alert alert-success" role="alert">
                                         <h6 class="alert-heading d-flex align-items-center">
                                             <span class="bi bi-exclamation-triangle-fill me-2"></span>
-                                            <b>Semester course registration opened.</b>
+                                            <b><?= $semester ?> semester course registration opened.</b>
                                         </h6>
                                         <hr>
                                         <p class="mb-0">Registration ends on <b><?= $registration_end ?> at 11:59 PM.</b></p>
@@ -151,7 +147,24 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
                                 </div>
                             </div>
 
-
+                            <div class="col-xxl-4 col-md-6 mb-4">
+                                <div class="card info-card sales-card">
+                                    <div class="card-body">
+                                        <a href="applications.php?t=1&c=MASTERS">
+                                            <div class="d-flex align-items-center">
+                                                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                                    <img src="assets/images/icons8-check-24.png" style="width: 48px;" alt="">
+                                                </div>
+                                                <div class="ps-3">
+                                                    <span class="text-muted small pt-2 ps-1">
+                                                        <h5 class="card-title">Results</h5>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
 
                         </div>
 
