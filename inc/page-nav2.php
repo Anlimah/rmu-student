@@ -14,14 +14,16 @@
 
             <span class="open-sections-menu dropdown bi bi-list dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside" style="font-size: 28px; color: #fff">
                 <ul class="dropdown-menu">
-                    <li>
-                        <a class="dropdown-item" href="">
-                            <span class="bi bi-person-circle"></span> Your Profile
-                        </a>
-                    </li>
-                    <li>
-                        <hr class="dropdown-divider">
-                    </li>
+                    <?php if (isset($_SESSION["student"]["default_password"]) && !$_SESSION["student"]["default_password"]) { ?>
+                        <li>
+                            <a class="dropdown-item" href="">
+                                <span class="bi bi-person-circle"></span> Your Profile
+                            </a>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                    <?php } ?>
                     <li>
                         <a class="dropdown-item" href="?logout=true">
                             <span class="bi bi-box-arrow-right"></span> Sign Out

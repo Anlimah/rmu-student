@@ -1,15 +1,28 @@
-const slideMenu = $('.app-sections-menu');
-const openButton = $('.open-sections-menu');
-const closeButton = $('.close-sections-menu');
+function validatePassword(password) {
+    // Password must be at least 8 characters long
+    if (password.length < 8) {
+        return { success: false, message: 'Password must be at least 8 characters long!' };
+    }
 
-openButton.click(function() {
-    slideMenu.addClass('open');
-});
+    // Password must have at least one uppercase letter
+    if (!/[A-Z]/.test(password)) {
+        return { success: false, message: 'Password must have at least one uppercase letter!' };
+    }
 
-closeButton.click(function() {
-    slideMenu.addClass('close');
-    setTimeout(function() {
-        slideMenu.removeClass('open');
-        slideMenu.removeClass('close');
-    }, 300); // match the transition time in CSS
-});
+    // Password must have at least one lowercase letter
+    if (!/[a-z]/.test(password)) {
+        return { success: false, message: 'Password must have at least one lowercase letter!' };
+    }
+
+    // Password must have at least one digit
+    if (!/\d/.test(password)) {
+        return { success: false, message: 'Password must have at least one digit!' };
+    }
+
+    // Password must have at least one special character
+    if (!/[',@,$,#,!,*,+,\-.,,\,]/.test(password)) {
+        return { success: false, message: 'Password must have at least one special character!' };
+    }
+
+    return { success: false, message: 'Password passed' };
+}

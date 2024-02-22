@@ -6,7 +6,10 @@ $_SESSION["currentAccess"] = time();
 
 $diff = $_SESSION["currentAccess"] - $_SESSION["lastAccessed"];
 
-if ($diff >  1800) die(json_encode(array("success" => false, "message" => "logout")));
+if ($diff > 1800) {
+    http_response_code(401);
+    die(json_encode(array("success" => false, "message" => "logout")));
+}
 
 /*
 * Designed and programmed by
@@ -47,9 +50,9 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
 
         switch ($action) {
             case 'semester-courses':
-                $semester_data = $semesterObj->currentSemester();
-                if (empty($semester_data)) die(json_encode(array("success" => false, "message" => "No courses assigned to your class yet.")));
-                die(json_encode(array("success" => false, "message" => $semester_data)));
+                $st_semester_courses = $studentObj->fetchSemesterCourses($_GET["index"], $_GET["sem"]);
+                if (empty($st_semester_courses)) die(json_encode(array("success" => false, "message" => "No courses assigned to your class yet.")));
+                die(json_encode(array("success" => true, "message" => $st_semester_courses)));
             default:
                 die(json_encode(array("success" => false, "message" => "No match found for your request!")));
         }
@@ -93,12 +96,50 @@ elseif ($_SERVER['REQUEST_METHOD'] == "POST") {
 
                 $_SESSION["student"]['login'] = true;
                 $_SESSION["student"]['index_number'] = $result["message"]["index_number"];
+                $_SESSION["student"]['default_password'] = $result["message"]["default_password"];
                 die(json_encode(array("success" => true,  "message" => "Login successfull!")));
 
-            case 'semesterCourses':
-                // /$result = $studentObj->assignCourse($_POST);
-                $feed = Validator::SendResult($result, $result, "Account not found!");
-                die(json_encode($feed));
+            case 'create-password':
+
+                if (!isset($_SESSION["_start_create_password"]) || empty($_SESSION["_start_create_password"]))
+                    die(json_encode(array("success" => false, "message" => "Invalid request: 1!")));
+                if (!isset($_POST["_cpToken"]) || empty($_POST["_cpToken"]))
+                    die(json_encode(array("success" => false, "message" => "Invalid request: 2!")));
+                if ($_POST["_cpToken"] !== $_SESSION["_start_create_password"])
+                    die(json_encode(array("success" => false, "message" => "Invalid request: 3!")));
+
+                $password = Validator::Password2($_POST["new-usp-password"]);
+
+                $result = $studentObj->createNewPassword($_SESSION["student"]["index_number"], $password);
+                if (!$result["success"]) die(json_encode($result));
+                $_SESSION["student"]['default_password'] = 0;
+                die(json_encode($result));
+
+                // gets all the assigned semester courses 
+            case 'semester-courses':
+                $st_semester_courses = $studentObj->fetchSemesterCourses($_POST["index"], $_POST["sem"]);
+                if (empty($st_semester_courses)) die(json_encode(array("success" => false, "message" => "No courses assigned to your class yet.")));
+                die(json_encode(array("success" => true, "message" => $st_semester_courses)));
+
+            case 'register-courses':
+                if (isset($_POST['selected-course']) && is_array($_POST['selected-course'])) {
+                    $selectedCourses = Validator::InputTextNumberForArray($_POST['selected-course']);
+
+                    $result = $studentObj->registerSemesterCourses(
+                        $selectedCourses,
+                        $_SESSION["student"]["index_number"],
+                        $_SESSION["semester"]["id"]
+                    );
+
+                    $feed = Validator::SendResult(
+                        $result,
+                        "You have successfully registered $result courses for the semester!",
+                        "Failed to register your semester courses. The process could not complete!"
+                    );
+                    die(json_encode($feed));
+                } else {
+                    die(json_encode(array("success" => false,  "message" => "You have not selected any course!")));
+                }
 
             default:
                 # code...

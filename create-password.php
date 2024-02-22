@@ -1,12 +1,34 @@
 <?php
 session_start();
 
-if (isset($_SESSION["student"]["login"]) && $_SESSION["student"]["login"] === true) header("Location: index.php");
+if (!isset($_SESSION["student"]['login'])) header('Location: login.php');
+if ($_SESSION["student"]['login'] !== true) header('Location: login.php');
+if (isset($_SESSION["student"]["default_password"]) && !$_SESSION["student"]["default_password"])  header('Location: index.php');
 
-if (!isset($_SESSION["_start"])) {
+if (!isset($_SESSION["_start_create_password"])) {
     $rstrong = true;
-    $_SESSION["_start"] = hash('sha256', bin2hex(openssl_random_pseudo_bytes(64, $rstrong)));
+    $_SESSION["_start_create_password"] = hash('sha256', bin2hex(openssl_random_pseudo_bytes(64, $rstrong)));
 }
+
+if (isset($_GET['logout'])) {
+    session_destroy();
+    $_SESSION = array();
+    if (ini_get("session.use_cookies")) {
+        $params = session_get_cookie_params();
+        setcookie(
+            session_name(),
+            '',
+            time() - 42000,
+            $params["path"],
+            $params["domain"],
+            $params["secure"],
+            $params["httponly"]
+        );
+    }
+
+    header('Location: login.php');
+}
+
 $_SESSION["lastAccessed"] = time();
 ?>
 
@@ -58,13 +80,13 @@ $_SESSION["lastAccessed"] = time();
                 <div class="col login-section">
                     <section class="login">
 
-                        <div style="width:auto">
+                        <div style="width:auto;">
 
                             <!--Form card-->
-                            <div class="card loginFormContainer" style="margin-bottom: 10px; min-width: 360px; max-width: 360px">
+                            <div class="card loginFormContainer" style="margin-bottom: 10px; min-width: 360px; max-width: 360px;">
                                 <div class="row" style="display: flex; justify-content:center; padding-top: 50px;  padding-bottom: 0;  margin-bottom:0 !important;">
-                                    <img src="assets/images/icons8-id-verified-100.png" alt="sign in image" style="width: 120px;">
-                                    <h1 class="text-center" style="color: #003262; margin: 15px 0px !important;">SIGN IN</h1>
+                                    <img src="assets/images/icons8-authentication-100.png" alt="sign in image" style="width: 120px;">
+                                    <h1 class="text-center" style="color: #003262; margin: 15px 0px !important;">CREATE NEW PASSWORD</h1>
                                 </div>
 
                                 <hr style="padding-top: 15px !important;">
@@ -72,23 +94,17 @@ $_SESSION["lastAccessed"] = time();
                                 <div style="margin: 0px 12% !important">
                                     <form id="appLoginForm">
                                         <div class="mb-4">
-                                            <input class="form-control form-control-lg form-control-login" type="text" id="usp_identity" name="usp_identity" placeholder="INDEX NUMBER">
+                                            <input type="password" id="new-usp-password" name="new-usp-password" class="form-control form-control-lg form-control-login" placeholder="NEW PASSWORD" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*['@,$,#,!,*,+,\-.,\\])(?=.*\d).{8,16}$" title="Password must be at least 8 and most 16 characters long and contain at least one uppercase letter, one lowercase letter, one digit, and one special character">
                                         </div>
-
                                         <div class="mb-4">
-                                            <input class="form-control form-control-lg form-control-login" type="password" id="usp_password" name="usp_password" placeholder="PASSWORD">
+                                            <input type="password" id="re-usp-password" class="form-control form-control-lg form-control-login" placeholder="RETYPE PASSWORD">
                                         </div>
-
                                         <div class="mb-4">
-                                            <button type="submit" class="btn btn-primary form-btn-login">SIGN IN</button>
+                                            <button type="submit" class="btn btn-primary form-btn-login">CREATE NEW PASSWORD</button>
                                         </div>
-
-                                        <input type="hidden" name="_logToken" value="<?= $_SESSION['_start'] ?>">
+                                        <input type="hidden" name="_cpToken" value="<?= $_SESSION['_start_create_password'] ?>">
                                     </form>
 
-                                    <div class="row" style="margin-bottom:30px;">
-                                        <a href="reset-password.php" style="color: #003262 !important; text-decoration:underline !important">FORGOT YOUR PASSWORD?</a>
-                                    </div>
 
                                 </div>
 
@@ -126,7 +142,7 @@ $_SESSION["lastAccessed"] = time();
 
                 $.ajax({
                     type: "POST",
-                    url: "api/student/login",
+                    url: "api/student/create-password",
                     data: new FormData(this),
                     contentType: false,
                     cache: false,
