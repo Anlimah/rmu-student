@@ -114,13 +114,13 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
         }
 
         .cr-card-item-info {
-            font-size: 24px;
+            font-size: 20px;
             margin: 1px 0;
             font-weight: bolder;
         }
 
         .cr-card-item-title {
-            font-size: 18px;
+            font-size: 16px;
             margin: 1px 0;
             color: #003262;
             font-weight: bolder;
@@ -175,7 +175,7 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
                                 </table>
 
                                 <div style="display: flex; justify-content: space-between; margin-top: 30px; margin-bottom: 20px;">
-                                    <button class="btn btn-outline-secondary-dark" id="reset-semester-courses-btn" style="padding: 10px 15px;">
+                                    <button type="button" class="btn btn-outline-secondary-dark" id="reset-semester-courses-btn" style="padding: 10px 15px;">
                                         <span class="bi bi-x-square me-2"></span> <b>RESET</b>
                                     </button>
 
@@ -193,15 +193,17 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
                 <div class="col-xxl-12 col-md-12">
                     <div class="cr-card bg-secondary">
                         <div class="cr-card-item-group transform-text">
-                            <div class="cr-card-item-info">2023-2024 Semester 1</div>
+                            <div class="cr-card-item-info">
+                                <?= $current_semester["academic_year_name"] ?> Semester <?= $current_semester["semester_name"] ?>
+                            </div>
                             <div class="cr-card-item-title">Academic Session</div>
                         </div>
                         <div class="cr-card-item-group transform-text">
-                            <div class="cr-card-item-info">5</div>
+                            <div class="cr-card-item-info" id="total-registered-courses">0</div>
                             <div class="cr-card-item-title">Registered Courses</div>
                         </div>
                         <div class="cr-card-item-group transform-text">
-                            <div class="cr-card-item-info">16</div>
+                            <div class="cr-card-item-info" id="total-registered-credits">0</div>
                             <div class="cr-card-item-title">Total Credits</div>
                         </div>
                     </div>
@@ -217,6 +219,7 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
     </div>
 
     <script src="js/jquery-3.6.0.min.js"></script>
+    <script src="js/myjs.js"></script>
     <script>
         jQuery(document).ready(function($) {
 
@@ -237,78 +240,8 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
                 }
             });
 
-
-            let semesterCourses = function() {
-                $.ajax({
-                    type: "POST",
-                    url: "api/student/semester-courses",
-                    data: {
-                        index: $("#student").val(),
-                        sem: $("#semester").val()
-                    },
-                    success: function(result) {
-                        console.log(result);
-
-                        if (result.success) {
-
-                            $("#compulsory-courses-display").html(
-                                '<tr class="alert alert-warning">' +
-                                '<td colspan="2"><strong>COMPULSORY COURSES</strong></td>' +
-                                '</tr>'
-                            );
-                            $("#elective-courses-display").html(
-                                '<tr class="alert alert-warning">' +
-                                '<td colspan="2"><strong>ELECTIVE COURSES</strong></td>' +
-                                '</tr>'
-                            );
-
-                            result.message.forEach(function(value) {
-                                var disable = value.reg_status ? 'disabled' : '';
-                                var image = value.reg_status ? 'assets/images/icons8-correct-24.png' : 'assets/images/icons8-stop-48.png';
-                                var status = value.reg_status ? 'active' : '';
-
-                                var courseHtml = '<tr>' +
-                                    '<td style="display: flex;">' +
-                                    '<span class="me-2">' +
-                                    '<img src="' + image + '" alt="" style="width: 24px !important">' +
-                                    '</span>' +
-                                    '<span>' + value.course_name + '</span>' +
-                                    '</td>' +
-                                    '<td style="text-align:center">' +
-                                    '<input ' + disable + ' name="selected-course[]" value="' + value.course_code + '" type="checkbox" id="btn-check-' + value.course_code + '" class="btn-check" autocomplete="off" style="display: none;">' +
-                                    '<label class="btn btn-light btn-outline-success-dark ' + status + '" style="width: 50px !important" for="btn-check-' + value.course_code + '">3</label>' +
-                                    '</td>' +
-                                    '</tr>';
-
-                                if (value.category_name === 'compulsory') {
-                                    $("#compulsory-courses-display").append(courseHtml);
-                                } else if (value.category_name === 'elective') {
-                                    $("#elective-courses-display").append(courseHtml);
-                                }
-                            });
-
-                            $("#courses-register-btn-div").show();
-                            return;
-                        }
-
-                        $("#course-registration-section").html(
-                            '<div class="alert alert-danger d-flex align-items-start" role="alert">' +
-                            '<span class="bi bi-exclamation-triangle-fill me-2"></span>' +
-                            '<div style="text-transform: uppercase"><b>' + result.message + '</b></div>' +
-                            '</div>'
-                        );
-                    },
-                    error: function(xhr, status, error) {
-                        if (xhr.status == 401) {
-                            alert("Your session expired, logging you out...");
-                            window.location.href = "?logout";
-                        } else {
-                            console.log("Error: " + status + " - " + error);
-                        }
-                    }
-                });
-            }
             semesterCourses();
+            registrationSummary();
 
             $(document).on("submit", "#register-semester-courses-form", function(e) {
                 e.preventDefault();
@@ -323,8 +256,33 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
                     processData: false,
                     success: function(result) {
                         console.log(result);
-                        if (result.success) semesterCourses();
+                        if (result.success) {
+                            semesterCourses();
+                            registrationSummary();
+                        }
                         alert(result.message);
+                    },
+                    error: function(xhr, status, error) {
+                        if (xhr.status == 401) {
+                            alert("Your session expired, logging you out...");
+                            window.location.href = "?logout";
+                        } else {
+                            console.log("Error: " + status + " - " + error);
+                        }
+                    }
+                });
+            });
+
+            $(document).on("click", "#reset-semester-courses-btn", function() {
+                $.ajax({
+                    type: "POST",
+                    url: "api/student/reset-course-registration",
+                    success: function(result) {
+                        console.log(result);
+                        if (result.success) {
+                            semesterCourses();
+                            registrationSummary();
+                        } else alert(result.message);
                     },
                     error: function(xhr, status, error) {
                         if (xhr.status == 401) {

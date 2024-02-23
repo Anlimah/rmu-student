@@ -50,6 +50,21 @@ class Student
         return $registered_courses;
     }
 
+    public function resetCourseRegistration($student, $semester): mixed
+    {
+        //return $course . ' ' . $student . ' ' . $semester;
+        $query = "UPDATE `course_registration` SET `registered` = 0 WHERE `fk_student` = :fks AND `fk_semester` = :fkm";
+        return $this->dm->run($query, array(':fks' => $student, ':fkm' => $semester))->edit();
+    }
+
+    public function fetchCourseRegistrationSummary($student, $semester): mixed
+    {
+        $query = "SELECT COUNT(cr.`id`) AS total_course, SUM(c.`credit_hours`) AS total_credit 
+        FROM `course_registration` AS cr, `course` AS c 
+        WHERE cr.`fk_course` = c.`code` AND cr.`fk_student` = :fks AND cr.`fk_semester` = :fkm AND cr.`registered` = 1";
+        return $this->dm->run($query, array(':fks' => $student, ':fkm' => $semester))->one();
+    }
+
     public function fetchData($index_number): mixed
     {
         $query = "SELECT 

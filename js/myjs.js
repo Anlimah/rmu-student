@@ -26,3 +26,88 @@ function validatePassword(password) {
 
     return { success: false, message: 'Password passed' };
 }
+
+function semesterCourses() {
+    $.ajax({
+        type: "POST",
+        url: "api/student/semester-courses",
+        success: function (result) {
+            console.log(result);
+
+            if (result.success) {
+
+                $("#compulsory-courses-display").html(
+                    '<tr class="alert alert-warning">' +
+                    '<td colspan="2"><strong>COMPULSORY COURSES</strong></td>' +
+                    '</tr>'
+                );
+                $("#elective-courses-display").html(
+                    '<tr class="alert alert-warning">' +
+                    '<td colspan="2"><strong>ELECTIVE COURSES</strong></td>' +
+                    '</tr>'
+                );
+
+                result.message.forEach(function (value) {
+                    var disable = value.reg_status ? 'disabled' : '';
+                    var image = value.reg_status ? 'assets/images/icons8-correct-24.png' : 'assets/images/icons8-stop-48.png';
+                    var status = value.reg_status ? 'active' : '';
+
+                    var courseHtml = '<tr>' +
+                        '<td style="display: flex;">' +
+                        '<span class="me-2">' +
+                        '<img src="' + image + '" alt="" style="width: 24px !important">' +
+                        '</span>' +
+                        '<span>' + value.course_name + '</span>' +
+                        '</td>' +
+                        '<td style="text-align:center">' +
+                        '<input ' + disable + ' name="selected-course[]" value="' + value.course_code + '" type="checkbox" id="btn-check-' + value.course_code + '" class="btn-check" autocomplete="off" style="display: none;">' +
+                        '<label class="btn btn-light btn-outline-success-dark ' + status + '" style="width: 50px !important" for="btn-check-' + value.course_code + '">3</label>' +
+                        '</td>' +
+                        '</tr>';
+
+                    if (value.category_name === 'compulsory') {
+                        $("#compulsory-courses-display").append(courseHtml);
+                    } else if (value.category_name === 'elective') {
+                        $("#elective-courses-display").append(courseHtml);
+                    }
+                });
+
+                $("#courses-register-btn-div").show();
+                return;
+            }
+
+            $("#course-registration-section").html(
+                '<div class="alert alert-danger d-flex align-items-start" role="alert">' +
+                '<span class="bi bi-exclamation-triangle-fill me-2"></span>' +
+                '<div style="text-transform: uppercase"><b>' + result.message + '</b></div>' +
+                '</div>'
+            );
+        },
+        error: function (xhr, status, error) {
+            if (xhr.status == 401) {
+                alert("Your session expired, logging you out...");
+                window.location.href = "?logout";
+            } else {
+                console.log("Error: " + status + " - " + error);
+            }
+        }
+    });
+}
+
+function registrationSummary() {
+    $.ajax({
+        type: "POST",
+        url: "api/student/registration-summary",
+        success: function (result) {
+            console.log(result);
+        },
+        error: function (xhr, status, error) {
+            if (xhr.status == 401) {
+                alert("Your session expired, logging you out...");
+                window.location.href = "?logout";
+            } else {
+                console.log("Error: " + status + " - " + error);
+            }
+        }
+    });
+}
