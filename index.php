@@ -151,7 +151,24 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
                                 </div>
                             </div>
 
-
+                            <div class="col-xxl-4 col-md-6 mb-4">
+                                <div class="card info-card sales-card">
+                                    <div class="card-body">
+                                        <a href="applications.php?t=1&c=MASTERS">
+                                            <div class="d-flex align-items-center">
+                                                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                                    <img src="assets/images/icons8-check-24.png" style="width: 48px;" alt="">
+                                                </div>
+                                                <div class="ps-3">
+                                                    <span class="text-muted small pt-2 ps-1">
+                                                        <h5 class="card-title">Results</h5>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
 
                         </div>
 
