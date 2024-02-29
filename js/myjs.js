@@ -36,16 +36,19 @@ function semesterCourses() {
 
             if (result.success) {
 
-                $("#compulsory-courses-display").html(
-                    '<tr class="alert alert-warning">' +
-                    '<td colspan="2"><strong>COMPULSORY COURSES</strong></td>' +
-                    '</tr>'
-                );
-                $("#elective-courses-display").html(
-                    '<tr class="alert alert-warning">' +
-                    '<td colspan="2"><strong>ELECTIVE COURSES</strong></td>' +
-                    '</tr>'
-                );
+                // $("#compulsory-courses-display").html(
+                //     '<tr class="alert alert-warning">' +
+                //     '<td colspan="2"><strong>COMPULSORY COURSES</strong></td>' +
+                //     '</tr>'
+                // );
+                // $("#elective-courses-display").html(
+                //     '<tr class="alert alert-warning">' +
+                //     '<td colspan="2"><strong>ELECTIVE COURSES</strong></td>' +
+                //     '</tr>'
+                // );
+
+                $("#compulsory-courses-display").html('');
+                $("#elective-courses-display").html('');
 
                 result.message.forEach(function (value) {
                     var disable = value.reg_status ? 'disabled' : '';
@@ -61,7 +64,7 @@ function semesterCourses() {
                         '</td>' +
                         '<td style="text-align:center">' +
                         '<input ' + disable + ' name="selected-course[]" value="' + value.course_code + '" type="checkbox" id="btn-check-' + value.course_code + '" class="btn-check" autocomplete="off" style="display: none;">' +
-                        '<label class="btn btn-light btn-outline-success-dark ' + status + '" style="width: 50px !important" for="btn-check-' + value.course_code + '">3</label>' +
+                        '<label class="btn btn-light btn-outline-success-dark ' + status + '" style="width: 50px !important" for="btn-check-' + value.course_code + '">' + value.credits + '</label>' +
                         '</td>' +
                         '</tr>';
 
@@ -100,6 +103,15 @@ function registrationSummary() {
         url: "api/student/registration-summary",
         success: function (result) {
             console.log(result);
+
+            if (result.success) {
+                total_course = result.message.total_course ? result.message.total_course : 0;
+                total_credit = result.message.total_credit ? result.message.total_credit : 0;
+                $("#total-registered-courses").html(total_course);
+                $("#total-registered-credits").html(total_credit);
+            } else {
+                alert(result.message);
+            }
         },
         error: function (xhr, status, error) {
             if (xhr.status == 401) {

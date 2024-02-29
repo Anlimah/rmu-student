@@ -173,9 +173,7 @@ elseif ($_SERVER['REQUEST_METHOD'] == "POST") {
                     $_SESSION["student"]["index_number"],
                     $_SESSION["semester"]["id"]
                 );
-
                 $feed = Validator::SendResult($result, $result, $result);
-
                 die(json_encode($feed));
 
             default:
