@@ -131,7 +131,7 @@ function otherSemesterCourses() {
                 $("#other-semester-courses").html('');
 
                 result.message.forEach(function (value) {
-                    var courseHtml = '<tr>' +
+                    var courseHtml = '<tr style="cursor: pointer">' +
                         '<td style="display: flex;">' +
                         '<span class="me-2">[' + value.course_code + ']</span>' +
                         '<span>' + value.course_name + '</span>' +

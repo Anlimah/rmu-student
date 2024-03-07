@@ -371,10 +371,9 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
             });
 
             $(document).on("submit", "#add-course-search-form", function(e) {
-                e.preventDefault(); // Prevent form submission
-                var searchText = $('#search-input').val().toLowerCase(); // Get the search text
+                e.preventDefault();
+                var searchText = $('#search-input').val().toLowerCase();
 
-                // Loop through each table row and hide those that do not match the search text
                 $('#search-other-courses-tbl tbody tr').each(function() {
                     var rowText = $(this).text().toLowerCase();
                     if (searchText === '' || rowText.indexOf(searchText) === -1) $(this).hide();
@@ -384,10 +383,7 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
 
             // Add click event handler to the tr
             $('#search-other-courses-tbl').on('click', 'tr', function() {
-                // Find the checkbox within the clicked tr
                 var checkbox = $(this).find('input[type="checkbox"]');
-
-                // Toggle the checkbox's checked state
                 checkbox.prop('checked', !checkbox.prop('checked'));
             });
 
