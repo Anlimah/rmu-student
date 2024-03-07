@@ -59,7 +59,7 @@ class Student
 
     public function fetchCourseRegistrationSummary($student, $semester): mixed
     {
-        $query = "SELECT COUNT(cr.`id`) AS total_course, SUM(c.`credit_hours`) AS total_credit 
+        $query = "SELECT COUNT(cr.`id`) AS total_course, SUM(c.`credits`) AS total_credit 
         FROM `course_registration` AS cr, `course` AS c 
         WHERE cr.`fk_course` = c.`code` AND cr.`fk_student` = :fks AND cr.`fk_semester` = :fkm AND cr.`registered` = 1";
         return $this->dm->run($query, array(':fks' => $student, ':fkm' => $semester))->one();
@@ -82,7 +82,7 @@ class Student
 
     public function fetchSemesterCourses($index_number, $semester): mixed
     {
-        $query = "SELECT co.`code` AS course_code, co.`name` AS course_name,  co.`credit_hours` AS credits, 
+        $query = "SELECT co.`code` AS course_code, co.`name` AS course_name,  co.`credits` AS credits, 
         cr.`registered` AS reg_status, cc.`id` AS category_id, cc.`name` AS category_name 
         FROM `course_registration` AS cr, `course` AS co, `course_category` AS cc, `semester` AS sm, `student` AS st 
         WHERE cr.`fk_course` = co.`code` AND cr.`fk_student` = st.`index_number` AND cr.`fk_semester` = sm.`id` AND 
@@ -92,7 +92,7 @@ class Student
 
     public function fetchSemesterCompulsoryCourses($index_number, $semester): mixed
     {
-        $query = "SELECT co.`code` AS course_code, co.`name` AS course_name,  co.`credit_hours` AS credits, 
+        $query = "SELECT co.`code` AS course_code, co.`name` AS course_name,  co.`credits` AS credits, 
         cr.`registered` AS reg_status, cc.`id` AS category_id, cc.`name` AS category_name 
         FROM `course_registration` AS cr, course AS co, course_category AS cc, class AS cl, semester AS sm, student AS st 
         WHERE cr.`fk_course` = co.`code` AND cr.`fk_class` = cl.`code` AND 
@@ -103,7 +103,7 @@ class Student
 
     public function fetchSemesterElectiveCourses($index_number, $semester): mixed
     {
-        $query = "SELECT co.`code` AS course_code, co.`name` AS course_name,  co.`credit_hours` AS credits, 
+        $query = "SELECT co.`code` AS course_code, co.`name` AS course_name,  co.`credits` AS credits, 
         cr.`registered` AS reg_status, cc.`id` AS category_id, cc.`name` AS category_name 
         FROM `course_registration` AS cr, course AS co, course_category AS cc, class AS cl, semester AS sm, student AS st 
         WHERE cr.`fk_course` = co.`code` AND cr.`fk_class` = cl.`code` AND 
@@ -114,7 +114,7 @@ class Student
 
     public function fetchCoursesBySemName(string $index_number, int $semester = 1): mixed
     {
-        $query = "SELECT co.`code` AS course_code, co.`name` AS course_name,  co.`credit_hours` AS credits, 
+        $query = "SELECT co.`code` AS course_code, co.`name` AS course_name,  co.`credits` AS credits, 
         cr.`registered` AS reg_status, cc.`id` AS category_id, cc.`name` AS category_name 
         FROM `course_registration` AS cr, `course` AS co, `course_category` AS cc, `semester` AS sm, `student` AS st 
         WHERE cr.`fk_course` = co.`code` AND cr.`fk_student` = st.`index_number` AND cr.`fk_semester` = sm.`id` AND 
@@ -124,7 +124,7 @@ class Student
 
     public function fetchRegOrUnregCoursesBySemName(string $index_number, int $semester = 1, int $registered = 0): mixed
     {
-        $query = "SELECT co.`code` AS course_code, co.`name` AS course_name,  co.`credit_hours` AS credits, 
+        $query = "SELECT co.`code` AS course_code, co.`name` AS course_name,  co.`credits` AS credits, 
         cr.`registered` AS reg_status, cc.`id` AS category_id, cc.`name` AS category_name 
         FROM `course_registration` AS cr, `course` AS co, `course_category` AS cc, `semester` AS sm, `student` AS st 
         WHERE cr.`fk_course` = co.`code` AND cr.`fk_student` = st.`index_number` AND cr.`fk_semester` = sm.`id` AND 
@@ -134,7 +134,7 @@ class Student
 
     public function fetchRegOrUnregCourses(string $index_number, int $registered = 0): mixed
     {
-        $query = "SELECT co.`code` AS course_code, co.`name` AS course_name,  co.`credit_hours` AS credits, 
+        $query = "SELECT co.`code` AS course_code, co.`name` AS course_name,  co.`credits` AS credits, 
         cr.`registered` AS reg_status, cc.`id` AS category_id, cc.`name` AS category_name 
         FROM `course_registration` AS cr, `course` AS co, `course_category` AS cc, `semester` AS sm, `student` AS st 
         WHERE cr.`fk_course` = co.`code` AND cr.`fk_student` = st.`index_number` AND cr.`fk_semester` = sm.`id` AND 
@@ -144,7 +144,7 @@ class Student
 
     public function fetchCoursesBySemesterAndLevel(int $semester, int $level, int $department, int $registered = 0): mixed
     {
-        $query = "SELECT co.`code` AS course_code, co.`name` AS course_name,  co.`credit_hours` AS credits, 
+        $query = "SELECT co.`code` AS course_code, co.`name` AS course_name,  co.`credits` AS credits, 
         cr.`registered` AS reg_status, cc.`id` AS category_id, cc.`name` AS category_name 
         FROM `course_registration` AS cr, `course` AS co, `course_category` AS cc, 
         `semester` AS sm, `student` AS st, `department` AS d 

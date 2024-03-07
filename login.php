@@ -103,7 +103,6 @@ $_SESSION["lastAccessed"] = time();
             </div>
 
         </main>
-        <?php require_once("inc/page-footer.php"); ?>
 
     </div>
 
@@ -111,11 +110,12 @@ $_SESSION["lastAccessed"] = time();
     <script src="js/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function() {
-            if (window.location.href == "https://admissions.rmuictonline.com/apply/index.php" || window.location.href == "https://admissions.rmuictonline.com/apply/") {
+
+            if (window.location.pathname == "/apply/index.php" || window.location.pathname == "/apply/") {
                 $(".sign-out-1").hide();
             }
 
-            if (window.location.href == "http://localhost/rmu-student/login.php") {
+            if (window.location.pathname == "/rmu-student/login.php") {
                 $(".sign-out-1").hide();
             }
 

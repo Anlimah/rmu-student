@@ -9,25 +9,19 @@
         </div>
         <div class="col-md-2 sign-out-1" style="display: flex; align-items: center; justify-content:space-between">
             <div id="sign-out-1" style="text-align:center; display: relative">
-                <a href="?logout=true" style="color: #fff !important">Sign Out</a>
+                <span style="color: #fff !important; cursor: pointer" class="logout-btn">Sign Out</span>
             </div>
 
             <span class="open-sections-menu dropdown bi bi-list dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside" style="font-size: 28px; color: #fff">
                 <ul class="dropdown-menu">
-                    <?php if (isset($_SESSION["student"]["default_password"]) && !$_SESSION["student"]["default_password"]) { ?>
-                        <li>
-                            <a class="dropdown-item" href="">
-                                <span class="bi bi-person-circle"></span> Your Profile
-                            </a>
-                        </li>
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
-                    <?php } ?>
+                    <li class="dropdown-item" id="user-profile">
+                        <span class="bi bi-person-circle"></span> Your Profile
+                    </li>
                     <li>
-                        <a class="dropdown-item" href="?logout=true">
-                            <span class="bi bi-box-arrow-right"></span> Sign Out
-                        </a>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li class="dropdown-item" class="logout-btn">
+                        <span class="bi bi-box-arrow-right"></span> Sign Out
                     </li>
                 </ul>
             </span>

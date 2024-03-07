@@ -1,8 +1,7 @@
 <?php
 session_start();
 
-if (!isset($_SESSION["student"]['login'])) header('Location: login.php');
-if ($_SESSION["student"]['login'] !== true) header('Location: login.php');
+if (!isset($_SESSION["student"]['login']) || $_SESSION["student"]['login'] !== true) header('Location: login.php');
 if (isset($_SESSION["student"]["default_password"]) && !$_SESSION["student"]["default_password"])  header('Location: index.php');
 
 if (!isset($_SESSION["_start_create_password"])) {
@@ -119,7 +118,6 @@ $_SESSION["lastAccessed"] = time();
             </div>
 
         </main>
-        <?php require_once("inc/page-footer.php"); ?>
 
     </div>
 

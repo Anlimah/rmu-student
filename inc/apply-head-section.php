@@ -15,7 +15,7 @@
 <link href="assets/images/rmu-logo.png" rel="apple-touch-icon">
 <link rel="stylesheet" href="assets/css/main.css">
 <link href="assets/vendor/bootstrap/css/bootstrap.css" rel="stylesheet">
-<script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="assets/vendor/bootstrap/js/bootstrap.bundle.js"></script>
 <link rel="stylesheet" href="assets/vendor/bootstrap-icons/bootstrap-icons.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
