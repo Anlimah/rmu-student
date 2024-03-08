@@ -161,4 +161,27 @@ class Student
             )
         )->all();
     }
+
+    public function fetchCoursesBySemAndLevel(int $semester, int $level, int $department, int $registered = 0): mixed
+    {
+        $query = "SELECT 
+        co.`code` AS course_code, co.`name` AS course_name,  co.`credits` AS credits, 
+        cr.`registered` AS reg_status, cc.`id` AS category_id, cc.`name` AS category_name 
+        FROM 
+        `course_registration` AS cr, `course` AS co, `course_category` AS cc, 
+        `semester` AS sm, `student` AS st, `class` AS cl, `section` AS se 
+        WHERE 
+        cr.`fk_course` = co.`code` AND cl.`fk_course` = co.`code` AND cr.`fk_student` = st.`index_number` AND 
+        cr.`fk_semester` = sm.`id` AND co.`fk_category` = cc.`id` AND co.`fk_department` = d.`id` AND 
+        d.`id` = :d AND sm.`name` = :s AND co.`level` <= :l AND cr.`registered` = :r";
+        return $this->dm->run(
+            $query,
+            array(
+                ':d' => $department,
+                ':s' => $semester,
+                ':l' => $level,
+                ':r' => $registered
+            )
+        )->all();
+    }
 }
