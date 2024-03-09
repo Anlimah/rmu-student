@@ -173,10 +173,21 @@ elseif ($_SERVER['REQUEST_METHOD'] == "POST") {
                     $_SESSION["student"]["index_number"],
                     $_SESSION["semester"]["id"]
                 );
-
                 $feed = Validator::SendResult($result, $result, $result);
-
                 die(json_encode($feed));
+
+                // gets all the assigned semester courses 
+            case 'other-semester-courses':
+
+                $st_semester_courses = $studentObj->fetchSemesterCourses(
+                    $_SESSION["student"]["index_number"],
+                    $_SESSION["semester"]["id"]
+                );
+
+                if (empty($st_semester_courses)) {
+                    die(json_encode(array("success" => false, "message" => "No courses assigned to your class yet.")));
+                }
+                die(json_encode(array("success" => true, "message" => $st_semester_courses)));
 
             default:
                 # code...

@@ -16,7 +16,7 @@ class Classe
     public function fetchCompulsoryCourses($class, $semester)
     {
         $query = "SELECT 
-        cs.`code` AS course_code, cs.`name` AS course_name, cs.`credit_hours`, 
+        cs.`code` AS course_code, cs.`name` AS course_name, cs.`credits`, 
         cs.`semester` AS course_semester, cs.`level` AS course_level, c.`code` AS class_code, 
         cc.`id` AS course_category_id, cc.`name` AS course_category_name 
         FROM student AS s, department AS d, programs AS p, class AS c, course AS cs, course_category AS cc 

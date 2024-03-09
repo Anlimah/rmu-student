@@ -1,8 +1,7 @@
 <?php
 session_start();
 
-if (!isset($_SESSION["student"]['login'])) header('Location: login.php');
-if ($_SESSION["student"]['login'] !== true) header('Location: login.php');
+if (!isset($_SESSION["student"]['login']) || $_SESSION["student"]['login'] !== true) header('Location: login.php');
 if ($_SESSION["student"]['default_password']) header("Location: create-password.php");
 
 if (isset($_GET['logout'])) {
@@ -35,11 +34,10 @@ $student_index = isset($_SESSION["student"]['index_number']) && !empty($_SESSION
 
 $studentObj = new Student($config["database"]["mysql"]);
 $student_data = $studentObj->fetchData($student_index);
-//Base::dd($student_data);
+
 $semster = new Semester($config["database"]["mysql"]);
 $current_semester = $semster->currentSemester();
 
-// /Base::dd($current_semester);
 if (!empty($current_semester)) $semester = $current_semester["semester_name"] . "<sup>st</sup>";
 else $semster = $current_semester["semester_name"] . "<sup>nd</sup>";
 
@@ -178,8 +176,8 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
                             <div class="col-xxl-4 col-md-6 mb-4">
                                 <div class="item-card">
                                     <img src="assets/images/icons8-courses-64.png" alt="Icon">
-                                    <p>COURSES</p>
-                                    <a href="#" class="arrow-link"><i class="bi bi-box-arrow-in-down-right"></i></a>
+                                    <p>SEMESTER COURSES</p>
+                                    <a href="semester-courses.php" class="arrow-link"><i class="bi bi-box-arrow-in-down-right"></i></a>
                                 </div>
                             </div>
 
@@ -187,7 +185,7 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
                                 <div class="item-card">
                                     <img src="assets/images/icons8-timetable-96(1).png" alt="Icon">
                                     <p>EXAM & CLASS TIMETABLE</p>
-                                    <a href="#" class="arrow-link"><i class="bi bi-box-arrow-in-down-right"></i></a>
+                                    <a href="timetable.php" class="arrow-link"><i class="bi bi-box-arrow-in-down-right"></i></a>
                                 </div>
                             </div>
 
@@ -195,7 +193,7 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
                                 <div class="item-card">
                                     <img src="assets/images/icons8-exam-96.png" alt="Icon">
                                     <p>EXAM RESULTS</p>
-                                    <a href="#" class="arrow-link"><i class="bi bi-box-arrow-in-down-right"></i></a>
+                                    <a href="exam-results.php" class="arrow-link"><i class="bi bi-box-arrow-in-down-right"></i></a>
                                 </div>
                             </div>
 
@@ -230,7 +228,8 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
 
             </div>
         </main>
-        <?php require_once("inc/page-footer.php"); ?>
+
+        <!-- footer -->
 
         <?php require_once("inc/app-sections-menu.php"); ?>
     </div>
