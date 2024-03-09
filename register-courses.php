@@ -1,8 +1,8 @@
 <?php
 session_start();
 
-if (!isset($_SESSION['login'])) header('Location: login.php');
-if ($_SESSION['login'] !== true) header('Location: login.php');
+if (!isset($_SESSION["student"]['login'])) header('Location: login.php');
+if ($_SESSION["student"]['login'] !== true) header('Location: login.php');
 
 if (isset($_GET['logout'])) {
     session_destroy();
@@ -34,14 +34,13 @@ $config = require('config/database.php');
 
 $studentObj = new Student($config["database"]["mysql"]);
 $semster = new Semester($config["database"]["mysql"]);
-$student_index = isset($_SESSION['index_number']) && !empty($_SESSION["index_number"]) ? $_SESSION["index_number"] : "";
+$student_index = isset($_SESSION["student"]["index_number"]) && !empty($_SESSION["student"]["index_number"]) ? $_SESSION["student"]["index_number"] : "";
 $student_data = $studentObj->fetchData($student_index);
 //Base::dd($student_data);
 $current_semester = $semster->currentSemester();
-
 // /Base::dd($current_semester);
-if (!empty($current_semester)) $semester = $current_semester["semester_name"] . "<sup>st</sup>";
-else $semster = $current_semester["semester_name"] . "<sup>nd</sup>";
+//if (!empty($current_semester)) $semester = $current_semester["semester_name"] . "<sup>st</sup>";
+//else $semester = $current_semester["semester_name"] . "<sup>nd</sup>";
 
 $student_level = 100;
 $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_data["photo"];
@@ -54,6 +53,94 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
     <title>Student Portal | Home</title>
     <link rel="stylesheet" href="assets/css/main.css">
     <?php require_once("inc/apply-head-section.php") ?>
+    <style>
+        /* Lighter Blue Outline Button */
+        .btn-outline-primary-dark {
+            --bs-btn-color: #003262;
+            --bs-btn-border-color: #003262;
+            --bs-btn-hover-color: #fff;
+            --bs-btn-hover-bg: #003262;
+            --bs-btn-hover-border-color: #003262;
+            --bs-btn-focus-shadow-rgb: 0, 50, 98;
+            --bs-btn-active-color: #fff;
+            --bs-btn-active-bg: #003262;
+            --bs-btn-active-border-color: #003262;
+            --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+            --bs-btn-disabled-color: #003262;
+            --bs-btn-disabled-bg: transparent;
+            --bs-btn-disabled-border-color: #003262;
+            --bs-gradient: none;
+        }
+
+        /* Darker Secondary Outline Button */
+        .btn-outline-secondary-dark {
+            --bs-btn-color: #444;
+            --bs-btn-border-color: #444;
+            --bs-btn-hover-color: #fff;
+            --bs-btn-hover-bg: #444;
+            --bs-btn-hover-border-color: #444;
+            --bs-btn-focus-shadow-rgb: 68, 68, 68;
+            --bs-btn-active-color: #fff;
+            --bs-btn-active-bg: #444;
+            --bs-btn-active-border-color: #444;
+            --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+            --bs-btn-disabled-color: #444;
+            --bs-btn-disabled-bg: transparent;
+            --bs-btn-disabled-border-color: #444;
+            --bs-gradient: none;
+        }
+
+        .sunken-border {
+            border-bottom-left-radius: 15px;
+            border-bottom-right-radius: 15px;
+            border-bottom: 1px solid #ccc;
+            box-shadow: inset 0 1px 0 #fff, inset 0 -1px 0 #fff, inset 1px 0 0 #fff, inset -1px 0 0 #fff, inset 0 1px 1px rgba(0, 0, 0, 0.1);
+        }
+
+        .cr-card {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 20px;
+            border-radius: 5px;
+            color: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+        }
+
+        .cr-card-item-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .cr-card-item-info {
+            font-size: 20px;
+            margin: 1px 0;
+            font-weight: bolder;
+        }
+
+        .cr-card-item-title {
+            font-size: 16px;
+            margin: 1px 0;
+            color: #003262;
+            font-weight: bolder;
+        }
+
+        .transform-text {
+            text-transform: uppercase !important;
+        }
+
+
+        @media (min-width: 768px) {
+            .cr-card {
+                flex-direction: row;
+            }
+
+            .cr-card-item-group {
+                margin: 0 20px;
+            }
+        }
+    </style>
 </head>
 
 <body id="body">
@@ -63,71 +150,68 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
         <?php require_once("inc/page-nav2.php") ?>
 
         <main class="container">
-            <div class="row">
 
-                <div class="col-md-12">
-                    <section id="page_info" style="margin-bottom: 0px !important;">
-
-                        <h1 class="mb-4 mt-4">L<?= $student_level ?> <?= $semester ?> Semester </h1>
-
-                        <hr>
-
-                        <div class="row mb-4">
-                            <div class="col-xxl-12 col-md-12">
-                                <h4 style="text-transform: uppercase;">Select semester courses for registration</h4>
-                                <div class="alert alert-warning">COMPULSORY COURSES FOR THIS SEMESTER REGISTRATION</div>
-                                <table class="table table-borderless">
+            <div class="row sunken-border mb-4">
+                <div class="col-xxl-12 col-md-12">
+                    <div id="course-registration-section">
+                        <div id="course-registration-form-section">
+                            <div class="alert alert-info" style="text-transform: uppercase; margin-bottom: 30px !important;"><b>SELECT SEMESTER COURSES FOR REGISTRATION</b></div>
+                            <form id="register-semester-courses-form" method="post" enctype="multipart/form-data">
+                                <table class="table table-borderless" style="margin-bottom: 30px !important;">
+                                    <colgroup>
+                                        <col style="width: 90%">
+                                        <col>
+                                    </colgroup>
                                     <thead>
-                                        <th>COURSE TITLE</th>
-                                        <th>CREDITS</th>
-                                    </thead>
-                                    <tbody>
                                         <tr>
-                                            <td style="display: flex; justify-content: flex-start; align-items:center">
-                                                <span class="me-2">
-                                                    <img src="assets/images/icons8-checkmark-24.png" alt="" style="width: 24px;">
-                                                </span>
-                                                <span><?= $program ?></span>
-                                            </td>
-                                            <td>
-                                                <input type="checkbox" class="btn-check" id="btn-check<?= $course_id ?>" autocomplete="off">
-                                                <label class="btn btn-light btn-outline-success w-100" for="btn-check<?= $course_id ?>">3</label>
-                                            </td>
+                                            <th>COURSE TITLE</th>
+                                            <th>CREDITS</th>
                                         </tr>
+                                    </thead>
+                                    <tbody id="compulsory-courses-display">
                                     </tbody>
-                                </table>
-                                <div class="alert alert-warning">ELECTIVE COURSES FOR THIS SEMESTER REGISTRATION</div>
-                                <table class="table table-borderless">
-                                    <thead>
-                                        <th>COURSE TITLE</th>
-                                        <th>CREDITS</th>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td style="display: flex; justify-content: flex-start; align-items:center">
-                                                <span class="me-2">
-                                                    <img src="assets/images/icons8-checkmark-24.png" alt="" style="width: 24px;">
-                                                </span>
-                                                <span><?= $program ?></span>
-                                            </td>
-                                            <td>
-                                                <input type="checkbox" class="btn-check" id="btn-check<?= $course_id ?>" autocomplete="off">
-                                                <label class="btn btn-light btn-outline-success w-100" for="btn-check<?= $course_id ?>">3</label>
-                                            </td>
-                                        </tr>
+                                    <tbody id="elective-courses-display">
                                     </tbody>
                                 </table>
 
-                                <div style="display: flex; justify-content:flex-end;margin-top: 30px">
-                                    <button class="btn btn-primary"><span class="bi bi-save me-2"></span> SAVE REGISTRATION</button>
+                                <div style="display: flex; justify-content: space-between; margin-top: 30px; margin-bottom: 20px;">
+                                    <button type="button" class="btn btn-outline-secondary-dark" id="reset-semester-courses-btn" style="padding: 10px 15px;">
+                                        <span class="bi bi-x-square me-2"></span> <b>RESET</b>
+                                    </button>
+
+                                    <button class="btn btn-outline-primary-dark" id="register-semester-courses-btn" style="padding: 10px 15px;">
+                                        <span class="bi bi-save me-2"></span> <b>REGISTER</b>
+                                    </button>
                                 </div>
-                            </div>
+                            </form>
                         </div>
-
-                    </section>
+                    </div>
                 </div>
-
             </div>
+
+            <div class="row">
+                <div class="col-xxl-12 col-md-12">
+                    <div class="cr-card bg-secondary">
+                        <div class="cr-card-item-group transform-text">
+                            <div class="cr-card-item-info">
+                                <?= $current_semester["academic_year_name"] ?> Semester <?= $current_semester["semester_name"] ?>
+                            </div>
+                            <div class="cr-card-item-title">Academic Session</div>
+                        </div>
+                        <div class="cr-card-item-group transform-text">
+                            <div class="cr-card-item-info" id="total-registered-courses">0</div>
+                            <div class="cr-card-item-title">Registered Courses</div>
+                        </div>
+                        <div class="cr-card-item-group transform-text">
+                            <div class="cr-card-item-info" id="total-registered-credits">0</div>
+                            <div class="cr-card-item-title">Total Credits</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <input type="hidden" name="student" id="student" value="<?= $_SESSION["student"]["index_number"] ?>">
+            <input type="hidden" name="semester" id="semester" value="<?= $_SESSION["semester"]["id"] ?>">
         </main>
         <?php require_once("inc/page-footer.php"); ?>
 
@@ -137,316 +221,79 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
     <script src="js/jquery-3.6.0.min.js"></script>
     <script src="js/myjs.js"></script>
     <script>
-        $(document).ready(function() {
-            var incompleteForm = false;
-            var itsForm = false;
+        jQuery(document).ready(function($) {
 
-            (() => {
-                'use strict'
+            $(document).on("change", ".btn-check", function() {
+                var checkbox = $(this);
+                var image = checkbox.closest("td").prev().find("img");
+                var label = checkbox.next("label");
 
-                // Fetch all the forms we want to apply custom Bootstrap validation styles to
-                const forms = document.querySelectorAll('.needs-validation')
+                if (!label.hasClass("disabled")) {
+                    if (checkbox.prop("checked")) {
+                        image.attr("src", "assets/images/icons8-correct-24.png");
+                    } else {
+                        image.attr("src", "assets/images/icons8-stop-48.png");
+                    }
+                } else {
+                    // Prevent the checkbox from being toggled
+                    return false;
+                }
+            });
 
-                // Loop over them and prevent submission
-                Array.from(forms).forEach(form => {
-                    form.addEventListener('submit', event => {
-                        event.preventDefault()
-                        if (!form.checkValidity()) {
-                            event.stopPropagation()
-                            incompleteForm = true;
-                            $("#page_info_text").removeClass("hide");
-                            $("#page_info_text").addClass("display");
-                            window.location.href = "#body";
+            semesterCourses();
+            registrationSummary();
+
+            $(document).on("submit", "#register-semester-courses-form", function(e) {
+                e.preventDefault();
+                formData = new FormData(this);
+
+                $.ajax({
+                    type: "POST",
+                    url: "api/student/register-courses",
+                    data: formData,
+                    contentType: false,
+                    cache: false,
+                    processData: false,
+                    success: function(result) {
+                        console.log(result);
+                        if (result.success) {
+                            semesterCourses();
+                            registrationSummary();
+                        }
+                        alert(result.message);
+                    },
+                    error: function(xhr, status, error) {
+                        if (xhr.status == 401) {
+                            alert("Your session expired, logging you out...");
+                            window.location.href = "?logout";
                         } else {
-                            incompleteForm = false;
-                            itsForm = true;
-                            $("#page_info_text").removeClass("display");
-                            $("#page_info_text").addClass("hide");
+                            console.log("Error: " + status + " - " + error);
                         }
-
-                        form.classList.add('was-validated')
-                    }, false)
-                })
-
-            })();
-
-            $(".prev-uni-rec").click(function() {
-                if ($('#prev-uni-rec-yes').is(':checked')) {
-                    $("#prev-uni-rec-list").removeClass("hide");
-                } else if ($('#prev-uni-rec-no').is(':checked')) {
-                    $("#prev-uni-rec-list").addClass("hide");
-                }
-            });
-
-            $(".completed-prev-uni").click(function() {
-                if ($('#completed-prev-uni-yes').is(':checked')) {
-                    $("#date-completed-uni").removeClass("hide");
-                    $("#uni-not-completed").addClass("hide");
-                } else if ($('#completed-prev-uni-no').is(':checked')) {
-                    $("#uni-not-completed").removeClass("hide");
-                    $("#date-completed-uni").addClass("hide");
-                }
-            });
-
-            $(".awaiting-result").click(function() {
-                if ($('#awaiting-result-yes').is(':checked')) {
-                    //$("#not-waiting").addClass("hide");
-                    $("#not-waiting").slideUp(200);
-                    $("#awaiting_result_value").attr("value", 1);
-                }
-                if ($('#awaiting-result-no').is(':checked')) {
-                    //$("#not-waiting").removeClass("hide");
-                    $("#not-waiting").slideDown(200);
-                    $("#awaiting_result_value").attr("value", 0);
-                }
-
-                if ($('#edit-awaiting-result-yes').is(':checked')) {
-                    //$("#edit-not-waiting").addClass("hide");
-                    $("#edit-not-waiting").slideUp(200);
-                    $("#edit-awaiting_result_value").attr("value", 1);
-                }
-                if ($('#edit-awaiting-result-no').is(':checked')) {
-                    //$("#edit-not-waiting").removeClass("hide");
-                    $("#edit-not-waiting").slideDown(200);
-                    $("#edit-awaiting_result_value").attr("value", 0);
-                }
-            });
-
-            $(".form-select").change("blur", function() {
-                // For add education background
-                if (this.id == "cert-type") {
-
-                    var myArray = ['WASSCE', 'SSSCE', 'NECO', 'GBCE'];
-                    let index = $.inArray(this.value, myArray);
-
-                    if (index == -1) {
-                        $("#course-studied").slideUp();
-                        $("#course-studied option[value='OTHER']").attr('selected', 'selected');
-                        $(".other-course-studied").slideDown();
-                        $(".waec-course-content").slideUp();
-
-                        if (this.value == "OTHER") $(".sepcific-cert").slideDown();
-
-                        $("#awaiting-result-yes").attr("checked", "checked");
-                        $("#awaiting-result-no").attr("checked", "");
-
-                    } else {
-                        $("#course-studied").slideDown();
-                        $(".other-course-studied").slideUp();
-                        $(".waec-course-content").slideDown();
-                        $(".sepcific-cert").slideUp();
-
-                        $("#awaiting-result-yes").attr("checked", "");
-                        $("#awaiting-result-no").attr("checked", "checked");
-                    }
-                }
-
-                if (this.id == "course-studied") {
-                    if (this.value == "OTHER") {
-                        $(".other-course-studied").slideUp(200);
-                    } else {
-                        $(".other-course-studied").slideDown(200);
-                    }
-                }
-
-                // For edit education background
-                if (this.id == "edit-cert-type") {
-                    var myArray = ['WASSCE', 'SSSCE', 'NECO', 'GBCE'];
-                    let index = $.inArray(this.value, myArray);
-
-                    if (index == -1) {
-                        $("#edit-course-studied").slideUp();
-                        $("#edit-course-studied option[value='OTHER']").attr('selected', 'selected');
-                        $(".edit-other-course-studied").slideDown();
-                        $(".edit-waec-course-content").slideUp();
-
-                        if (this.value == "OTHER") $(".edit-sepcific-cert").slideDown();
-
-                        $("#edit-awaiting-result-yes").attr("checked", "checked");
-                        $("#edit-awaiting-result-no").attr("checked", "");
-
-                    } else {
-                        $("#edit-course-studied").slideDown();
-                        $(".edit-other-course-studied").slideUp();
-                        $(".edit-waec-course-content").slideDown();
-                        $(".edit-sepcific-cert").slideUp();
-
-                        $("#edit-awaiting-result-yes").attr("checked", "");
-                        $("#edit-awaiting-result-no").attr("checked", "checked");
-                    }
-                }
-
-                if (this.id == "edit-course-studied") {
-                    if (this.value == "OTHER") {
-                        $(".edit-other-course-studied").slideToggle(200);
-                    } else {
-                        $(".edit-other-course-studied").slideUp(200);
-                    }
-                }
-            });
-
-            $(".form-select-option").change("blur", function() {
-                $.ajax({
-                    type: "PUT",
-                    url: "api/prev-uni-recs",
-                    data: {
-                        what: this.name,
-                        value: this.value,
-                    },
-                    success: function(result) {
-                        console.log(result);
-                    },
-                    error: function(error) {
-                        console.log(error);
                     }
                 });
             });
 
-            $(".form-text-input").on("blur", function() {
+            $(document).on("click", "#reset-semester-courses-btn", function() {
                 $.ajax({
-                    type: "PUT",
-                    url: "api/prev-uni-recs",
-                    data: {
-                        what: this.name,
-                        value: this.value,
-                    },
+                    type: "POST",
+                    url: "api/student/reset-course-registration",
                     success: function(result) {
                         console.log(result);
+                        if (result.success) {
+                            semesterCourses();
+                            registrationSummary();
+                        } else alert(result.message);
                     },
-                    error: function(error) {
-                        console.log(error);
-                    }
-                });
-            });
-
-            $(".form-radio-btn").on("click", function() {
-
-                const inputs = document.querySelectorAll('.required-field');
-                const completed = document.querySelectorAll('.completed-uni');
-                const not_completed = document.querySelectorAll('.not-completed-uni');
-
-                if (this.id == "prev-uni-rec-yes") {
-                    for (const input of inputs) {
-                        input.setAttribute('required', '');
-                    }
-                } else if (this.id == "prev-uni-rec-no") {
-                    for (const input of inputs) {
-                        input.removeAttribute('required');
-                    }
-                    for (const inp of completed) {
-                        inp.removeAttribute('required', '');
-                    }
-                    for (const inp of not_completed) {
-                        inp.removeAttribute('required', '');
-                    }
-                }
-
-                if (this.id == "completed-prev-uni-yes") {
-                    for (const inp of completed) {
-                        inp.setAttribute('required', '');
-                    }
-                    for (const inp of not_completed) {
-                        inp.removeAttribute('required', '');
-                    }
-                } else if (this.id == "completed-prev-uni-no") {
-                    for (const inp of completed) {
-                        inp.removeAttribute('required', '');
-                    }
-                    for (const inp of not_completed) {
-                        inp.setAttribute('required', '');
-                    }
-                }
-
-                $.ajax({
-                    type: "PUT",
-                    url: "api/prev-uni-recs",
-                    data: {
-                        what: this.name,
-                        value: this.value,
-                    },
-                    success: function(result) {
-                        console.log(result);
-                    },
-                    error: function(error) {
-                        console.log(error);
-                    }
-                });
-            });
-
-            $("#cert-type, #edit-cert-type").change("blur", function() {
-                var myArray = ['WASSCE', 'SSSCE', 'NECO', 'GBCE'];
-                let index = $.inArray(this.value, myArray);
-
-                if (index == -1) return;
-
-                $.ajax({
-                    type: "GET",
-                    url: "api/grades",
-                    data: {
-                        what: this.name,
-                        value: this.value,
-                    },
-                    success: function(result) {
-                        console.log(result);
-                        $(".edu-mod-grade").html('<option value="Grade" hidden>Grade</option>');
-                        $.each(result, function(index, value) {
-                            $(".edu-mod-grade").append('<option value="' + value.grade + '">' + value.grade + '</option>');
-                        });
-                    },
-                    error: function(error) {
-                        console.log(error);
-                    }
-                });
-            });
-
-            $("#course-studied").change("blur", function() {
-                let value = "technical";
-                if (this.value != "TECHNICAL") value = "secondary";
-                $.ajax({
-                    type: "GET",
-                    url: "api/elective-subjects",
-                    data: {
-                        value: value,
-                    },
-                    success: function(result) {
-                        console.log(result);
-                        $(".elective-subjects").html('<option value="Select" hidden>Select</option>');
-                        $.each(result, function(index, value) {
-                            $(".elective-subjects").append('<option value="' + value.subject + '">' + value.subject + '</option>');
-                        });
-                    },
-                    error: function(error) {
-                        console.log(error);
-                    }
-                });
-            });
-
-            $("#appForm").on("submit", function() {
-                if (!incompleteForm) {
-                    $.ajax({
-                        type: "POST",
-                        url: "api/validateForm/",
-                        data: {
-                            form: this.name,
-                        },
-                        success: function(result) {
-                            console.log(result);
-                            if (result.success) {
-                                window.location.href = "application-step3.php";
-                            } else {
-                                $("#page_info_text").removeClass("hide");
-                                $("#page_info_text").addClass("display");
-                                $("#data_info").html("").append(result.message);
-                                window.location.href = "#body";
-                            }
-                        },
-                        error: function(error) {
-                            console.log(error);
+                    error: function(xhr, status, error) {
+                        if (xhr.status == 401) {
+                            alert("Your session expired, logging you out...");
+                            window.location.href = "?logout";
+                        } else {
+                            console.log("Error: " + status + " - " + error);
                         }
-                    });
-                }
+                    }
+                });
             });
-
         });
     </script>
     <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>

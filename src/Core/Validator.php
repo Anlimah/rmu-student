@@ -47,6 +47,38 @@ class Validator
         die(json_encode(array("success" => false, "message" => "Invalid password!")));
     }
 
+    public static function Password2($password): mixed
+    {
+        $user_input = htmlentities(htmlspecialchars($password));
+        // Password must be at least 8 characters long
+        if (strlen($user_input) < 8 || strlen($user_input) > 16) {
+            die(json_encode(array("success" => false, "message" => "Password must be at least 8 or most 16 characters long!")));
+        }
+
+        // Password must have at least one uppercase letter
+        if (!preg_match('/[A-Z]/', $user_input)) {
+            die(json_encode(array("success" => false, "message" => "Password must have at least one uppercase letter!")));
+        }
+
+        // Password must have at least one lowercase letter
+        if (!preg_match('/[a-z]/', $user_input)) {
+            die(json_encode(array("success" => false, "message" => "Password must have at least one lowercase letter!")));
+        }
+
+        // Password must have at least one digit
+        if (!preg_match('/\d/', $user_input)) {
+            die(json_encode(array("success" => false, "message" => "Password must have at least one digit!")));
+        }
+
+        // Password must have at least one special character
+        if (!preg_match('/[\',@,$,#,!,*,+,\-.,,\,]/', $user_input)) {
+            die(json_encode(array("success" => false, "message" => "Password must have at least one special character!")));
+        }
+
+        return $password;
+    }
+
+
     public static function InputTextNumber($input)
     {
         if (empty($input)) die(json_encode(array("success" => false, "message" => "Input required")));
@@ -54,6 +86,17 @@ class Validator
         $validated_input = (bool) preg_match('/[A-Za-z0-9]/', $user_input);
         if ($validated_input) return $user_input;
         die(json_encode(array("success" => false, "message" => "invalid")));
+    }
+
+    public static function InputTextNumberForArray(array $input)
+    {
+        if (empty($input)) die(json_encode(array("success" => false, "message" => "Input required")));
+        for ($i = 0; $i < count($input); $i++) {
+            $user_input = htmlentities(htmlspecialchars($input[$i]));
+            $validated_input = (bool) preg_match('/[A-Za-z0-9]/', $user_input);
+            if (!$validated_input) die(json_encode(array("success" => false, "message" => "invalid input received!")));
+        }
+        return $input;
     }
 
     public static function InputTextOnly($input)
