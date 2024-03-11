@@ -82,7 +82,6 @@ class Student
 
     public function fetchSemesterCourses($index_number, $semester): mixed
     {
-
         $query = "SELECT 
         co.`code` AS course_code, co.`name` AS course_name,  co.`credits` AS credits, 
         cr.`registered` AS reg_status, cc.`id` AS category_id, cc.`name` AS category_name 
@@ -180,7 +179,7 @@ class Student
         WHERE 
         cr.`fk_course` = cs.`code`AND cr.`fk_student` = st.`index_number` AND 
         cr.`fk_semester` = sm.`id` AND cs.`fk_category` = cc.`id` AND 
-        sm.`name` = :s AND cs.`level` <= :l AND cr.`registered` = :r AND st.`index_number` = :i";
+        sm.`name` = :s AND cs.`level` < :l AND cr.`registered` = :r AND st.`index_number` = :i";
         return $this->dm->run($query, array(
             ':s' => $semester, ':l' => $level, ':r' => $registered, ':i' => $index_number
         ))->all();

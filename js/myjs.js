@@ -142,15 +142,18 @@ function otherSemesterCourses() {
                         '</tr>';
                     $("#other-semester-courses").append(courseHtml);
                 });
+                $("#save-unreg-courses-btn-area").show();
                 return;
             }
 
-            $("#course-registration-section").html(
+            $(".unregistered-courses-disp").html(
                 '<div class="alert alert-danger d-flex align-items-start" role="alert">' +
                 '<span class="bi bi-exclamation-triangle-fill me-2"></span>' +
                 '<div style="text-transform: uppercase"><b>' + result.message + '</b></div>' +
                 '</div>'
             );
+
+            $("#save-unreg-courses-btn-area").hide();
 
         },
         error: function (xhr, status, error) {
