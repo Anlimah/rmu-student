@@ -131,12 +131,12 @@ function otherSemesterCourses() {
                 $("#other-semester-courses").html('');
 
                 result.message.forEach(function (value) {
-                    var courseHtml = '<tr style="cursor: pointer">' +
+                    var courseHtml = '<tr>' +
                         '<td style="display: flex;">' +
                         '<span class="me-2">[' + value.course_code + ']</span>' +
                         '<span>' + value.course_name + '</span>' +
                         '</td>' +
-                        '<td style="text-align:right">' +
+                        '<td style="text-align:right; cursor: pointer;">' +
                         '<input name="selected-course[]" value="' + value.course_code + '" type="checkbox" id="btn-check-' + value.course_code + '">' +
                         '</td>' +
                         '</tr>';

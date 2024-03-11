@@ -258,8 +258,8 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
                             <table id="search-other-courses-tbl" class="table table-striped">
                                 <thead>
                                     <tr>
-                                        <th style="text-align: left;">COURSE TITLE</th>
-                                        <th style="text-align: right;"></th>
+                                        <th style="width: 90% !important; text-align: left;">COURSE TITLE</th>
+                                        <th style="width: 10% !important; text-align: right;"></th>
                                     </tr>
                                 </thead>
                                 <tbody id="other-semester-courses">
@@ -382,11 +382,10 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
             });
 
             // Add click event handler to the tr
-            $('#search-other-courses-tbl').on('click', 'tr', function() {
-                var checkbox = $(this).find('input[type="checkbox"]');
-                checkbox.prop('checked', !checkbox.prop('checked'));
-            });
-
+            // $('#search-other-courses-tbl').on('click', 'tr', function() {
+            //     var checkbox = $(this).find('input[type="checkbox"]');
+            //     checkbox.prop('checked', !checkbox.prop('checked'));
+            // });
 
             $(document).on({
                 ajaxStart: function() {
