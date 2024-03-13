@@ -245,29 +245,29 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-
-                            <form id="add-course-search-form" class="mb-4 ">
-                                <div style="display: flex; justify-content: right; align-items: center;">
-                                    <div class="add-course-search" style="display: flex; justify-content: center; align-items:center">
-                                        <input type="text" id="search-input" class="form-control form-control-sm" placeholder="Search...">
-                                        <span class="bi bi-search btn"></span>
+                            <div class="unregistered-courses-disp">
+                                <form id="add-course-search-form" class="mb-4 ">
+                                    <div style="display: flex; justify-content: right; align-items: center;">
+                                        <div class="add-course-search" style="display: flex; justify-content: center; align-items:center">
+                                            <input type="text" id="search-input" class="form-control form-control-sm" placeholder="Search...">
+                                            <span class="bi bi-search btn"></span>
+                                        </div>
                                     </div>
-                                </div>
-                            </form>
-
-                            <table id="search-other-courses-tbl" class="table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th style="text-align: left;">COURSE TITLE</th>
-                                        <th style="text-align: right;"></th>
-                                    </tr>
-                                </thead>
-                                <tbody id="other-semester-courses">
-                                </tbody>
-                            </table>
+                                </form>
+                                <table id="search-other-courses-tbl" class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 90% !important; text-align: left;">COURSE TITLE</th>
+                                            <th style="width: 10% !important; text-align: right;"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="other-semester-courses">
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-outline-primary-dark">Save</button>
+                        <div class="modal-footer" id="save-unreg-courses-btn-area">
+                            <button type="button" class="btn btn-outline-primary-dark" id="add-courses-to-reg-btn">Add Courses</button>
                         </div>
                     </div>
                 </div>
@@ -382,11 +382,32 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
             });
 
             // Add click event handler to the tr
-            $('#search-other-courses-tbl').on('click', 'tr', function() {
-                var checkbox = $(this).find('input[type="checkbox"]');
-                checkbox.prop('checked', !checkbox.prop('checked'));
-            });
+            // $('#search-other-courses-tbl').on('click', 'tr', function() {
+            //     var checkbox = $(this).find('input[type="checkbox"]');
+            //     checkbox.prop('checked', !checkbox.prop('checked'));
+            // });
 
+            $(document).on("click", "#add-courses-to-reg-btn", function() {
+                $.ajax({
+                    type: "POST",
+                    url: "api/student/add-course-to-register",
+                    success: function(result) {
+                        console.log(result);
+                        if (result.success) {
+                            semesterCourses();
+                            registrationSummary();
+                        } else alert(result.message);
+                    },
+                    error: function(xhr, status, error) {
+                        if (xhr.status == 401) {
+                            alert("Your session expired, logging you out...");
+                            window.location.href = "?logout";
+                        } else {
+                            console.log("Error: " + status + " - " + error);
+                        }
+                    }
+                });
+            });
 
             $(document).on({
                 ajaxStart: function() {

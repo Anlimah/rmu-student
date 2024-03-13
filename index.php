@@ -38,8 +38,12 @@ $student_data = $studentObj->fetchData($student_index);
 $semster = new Semester($config["database"]["mysql"]);
 $current_semester = $semster->currentSemester();
 
-if (!empty($current_semester)) $semester = $current_semester["semester_name"] . "<sup>st</sup>";
-else $semster = $current_semester["semester_name"] . "<sup>nd</sup>";
+if (!empty($current_semester)) {
+    if ($current_semester["semester_name"] == 1)
+        $semester = $current_semester["semester_name"] . "<sup>st</sup>";
+    elseif ($current_semester["semester_name"] == 2)
+        $semester = $current_semester["semester_name"] . "<sup>nd</sup>";
+}
 
 $student_level = 100;
 $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_data["photo"];

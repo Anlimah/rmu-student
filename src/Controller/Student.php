@@ -82,10 +82,13 @@ class Student
 
     public function fetchSemesterCourses($index_number, $semester): mixed
     {
-        $query = "SELECT co.`code` AS course_code, co.`name` AS course_name,  co.`credits` AS credits, 
+        $query = "SELECT 
+        co.`code` AS course_code, co.`name` AS course_name,  co.`credits` AS credits, 
         cr.`registered` AS reg_status, cc.`id` AS category_id, cc.`name` AS category_name 
-        FROM `course_registration` AS cr, `course` AS co, `course_category` AS cc, `semester` AS sm, `student` AS st 
-        WHERE cr.`fk_course` = co.`code` AND cr.`fk_student` = st.`index_number` AND cr.`fk_semester` = sm.`id` AND 
+        FROM 
+        `course_registration` AS cr, `course` AS co, `course_category` AS cc, `semester` AS sm, `student` AS st 
+        WHERE 
+        cr.`fk_course` = co.`code` AND cr.`fk_student` = st.`index_number` AND cr.`fk_semester` = sm.`id` AND 
         co.`fk_category` = cc.`id` AND st.`index_number` = :i AND sm.`id` = :s";
         return $this->dm->run($query, array(':i' => $index_number, ':s' => $semester))->all();
     }
@@ -122,7 +125,7 @@ class Student
         return $this->dm->run($query, array(':i' => $index_number, ':s' => $semester))->all();
     }
 
-    public function fetchRegOrUnregCoursesBySemName(string $index_number, int $semester = 1, int $registered = 0): mixed
+    public function fetchRegOrUnregCoursesBySemester(string $index_number, int $semester = 1, int $registered = 0): mixed
     {
         $query = "SELECT co.`code` AS course_code, co.`name` AS course_name,  co.`credits` AS credits, 
         cr.`registered` AS reg_status, cc.`id` AS category_id, cc.`name` AS category_name 
@@ -134,11 +137,15 @@ class Student
 
     public function fetchRegOrUnregCourses(string $index_number, int $registered = 0): mixed
     {
-        $query = "SELECT co.`code` AS course_code, co.`name` AS course_name,  co.`credits` AS credits, 
+        $query = "SELECT 
+        cs.`code` AS course_code, cs.`name` AS course_name,  cs.`credits` AS credits, 
         cr.`registered` AS reg_status, cc.`id` AS category_id, cc.`name` AS category_name 
-        FROM `course_registration` AS cr, `course` AS co, `course_category` AS cc, `semester` AS sm, `student` AS st 
-        WHERE cr.`fk_course` = co.`code` AND cr.`fk_student` = st.`index_number` AND cr.`fk_semester` = sm.`id` AND 
-        co.`fk_category` = cc.`id` AND st.`index_number` = :i AND cr.`registered` = :r";
+        FROM 
+        `course_registration` AS cr, `course` AS cs, `course_category` AS cc, `semester` AS sm, `student` AS st 
+        WHERE 
+        cr.`fk_course` = cs.`code`AND cr.`fk_student` = st.`index_number` AND 
+        cr.`fk_semester` = sm.`id` AND cs.`fk_category` = cc.`id` AND 
+        cr.`registered` = :r AND st.`index_number` = :i";
         return $this->dm->run($query, array(':i' => $index_number, ':r' => $registered))->all();
     }
 
@@ -162,26 +169,19 @@ class Student
         )->all();
     }
 
-    public function fetchCoursesBySemAndLevel(int $semester, int $level, int $department, int $registered = 0): mixed
+    public function fetchCoursesBySemAndLevel(string $index_number, int $semester, int $level, int $registered = 0): mixed
     {
         $query = "SELECT 
-        co.`code` AS course_code, co.`name` AS course_name,  co.`credits` AS credits, 
+        cs.`code` AS course_code, cs.`name` AS course_name,  cs.`credits` AS credits, 
         cr.`registered` AS reg_status, cc.`id` AS category_id, cc.`name` AS category_name 
         FROM 
-        `course_registration` AS cr, `course` AS co, `course_category` AS cc, 
-        `semester` AS sm, `student` AS st, `class` AS cl, `section` AS se 
+        `course_registration` AS cr, `course` AS cs, `course_category` AS cc, `semester` AS sm, `student` AS st 
         WHERE 
-        cr.`fk_course` = co.`code` AND cl.`fk_course` = co.`code` AND cr.`fk_student` = st.`index_number` AND 
-        cr.`fk_semester` = sm.`id` AND co.`fk_category` = cc.`id` AND co.`fk_department` = d.`id` AND 
-        d.`id` = :d AND sm.`name` = :s AND co.`level` <= :l AND cr.`registered` = :r";
-        return $this->dm->run(
-            $query,
-            array(
-                ':d' => $department,
-                ':s' => $semester,
-                ':l' => $level,
-                ':r' => $registered
-            )
-        )->all();
+        cr.`fk_course` = cs.`code`AND cr.`fk_student` = st.`index_number` AND 
+        cr.`fk_semester` = sm.`id` AND cs.`fk_category` = cc.`id` AND 
+        sm.`name` = :s AND cs.`level` < :l AND cr.`registered` = :r AND st.`index_number` = :i";
+        return $this->dm->run($query, array(
+            ':s' => $semester, ':l' => $level, ':r' => $registered, ':i' => $index_number
+        ))->all();
     }
 }

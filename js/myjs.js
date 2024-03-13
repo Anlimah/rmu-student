@@ -131,26 +131,29 @@ function otherSemesterCourses() {
                 $("#other-semester-courses").html('');
 
                 result.message.forEach(function (value) {
-                    var courseHtml = '<tr style="cursor: pointer">' +
+                    var courseHtml = '<tr>' +
                         '<td style="display: flex;">' +
                         '<span class="me-2">[' + value.course_code + ']</span>' +
                         '<span>' + value.course_name + '</span>' +
                         '</td>' +
-                        '<td style="text-align:right">' +
+                        '<td style="text-align:right; cursor: pointer;">' +
                         '<input name="selected-course[]" value="' + value.course_code + '" type="checkbox" id="btn-check-' + value.course_code + '">' +
                         '</td>' +
                         '</tr>';
                     $("#other-semester-courses").append(courseHtml);
                 });
+                $("#save-unreg-courses-btn-area").show();
                 return;
             }
 
-            $("#course-registration-section").html(
+            $(".unregistered-courses-disp").html(
                 '<div class="alert alert-danger d-flex align-items-start" role="alert">' +
                 '<span class="bi bi-exclamation-triangle-fill me-2"></span>' +
                 '<div style="text-transform: uppercase"><b>' + result.message + '</b></div>' +
                 '</div>'
             );
+
+            $("#save-unreg-courses-btn-area").hide();
 
         },
         error: function (xhr, status, error) {

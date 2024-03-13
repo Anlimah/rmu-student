@@ -126,7 +126,7 @@ elseif ($_SERVER['REQUEST_METHOD'] == "POST") {
                 );
 
                 if (empty($st_semester_courses)) {
-                    die(json_encode(array("success" => false, "message" => "No courses assigned to your class yet.")));
+                    die(json_encode(array("success" => false, "message" => "No courses assigned to you yet.")));
                 }
                 die(json_encode(array("success" => true, "message" => $st_semester_courses)));
 
@@ -178,14 +178,27 @@ elseif ($_SERVER['REQUEST_METHOD'] == "POST") {
 
                 // gets all the assigned semester courses 
             case 'other-semester-courses':
-
-                $st_semester_courses = $studentObj->fetchSemesterCourses(
+                $st_semester_courses = $studentObj->fetchCoursesBySemAndLevel(
                     $_SESSION["student"]["index_number"],
-                    $_SESSION["semester"]["id"]
+                    $_SESSION["semester"]["name"],
+                    200
                 );
 
                 if (empty($st_semester_courses)) {
-                    die(json_encode(array("success" => false, "message" => "No courses assigned to your class yet.")));
+                    die(json_encode(array("success" => false, "message" => "You don't have unregistered courses.")));
+                }
+                die(json_encode(array("success" => true, "message" => $st_semester_courses)));
+
+                // gets all the assigned semester courses 
+            case 'add-course-to-register':
+                $st_semester_courses = $studentObj->fetchCoursesBySemAndLevel(
+                    $_SESSION["student"]["index_number"],
+                    $_SESSION["semester"]["name"],
+                    200
+                );
+
+                if (empty($st_semester_courses)) {
+                    die(json_encode(array("success" => false, "message" => "You don't have unregistered courses.")));
                 }
                 die(json_encode(array("success" => true, "message" => $st_semester_courses)));
 
