@@ -93,6 +93,10 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
             box-shadow: inset 0 1px 0 #fff, inset 0 -1px 0 #fff, inset 1px 0 0 #fff, inset -1px 0 0 #fff, inset 0 1px 1px rgba(0, 0, 0, 0.1);
         }
 
+        .sunken-border-d {
+            box-shadow: inset 0 1px 0 #fff, inset 0 -1px 0 #fff, inset 1px 0 0 #fff, inset -1px 0 0 #fff, inset 0 1px 1px rgba(0, 0, 0, 0.1);
+        }
+
         .cr-card {
             display: flex;
             flex-direction: column;
@@ -137,6 +141,90 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
             }
         }
     </style>
+    <style>
+        .item-card {
+            display: flex;
+            align-items: center;
+            height: 100%;
+            padding: 5px 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            /* Add shadow here */
+        }
+
+        .item-card:hover {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .item-card img {
+            width: 50px;
+            height: 50px;
+            margin-right: 20px;
+        }
+
+        .item-card p {
+            color: #003262;
+            font-size: 18px;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .arrow-link {
+            margin-left: auto;
+            color: #003262;
+            text-decoration: none;
+            padding-left: 10px;
+            font-size: 18px;
+        }
+
+        .transform-text {
+            text-transform: uppercase !important;
+        }
+
+        .profile-card {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
+            background-color: #003262 !important;
+            border-radius: 5px !important;
+            border-color: transparent !important;
+            padding: 15px 15px !important;
+        }
+
+        .title-pill {
+            padding: 6px 12px;
+            border-radius: 25px;
+            background-color: #fff;
+            color: #353535;
+            border-radius: 25px;
+            margin-bottom: 10px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            margin-right: 8px;
+            border: 1px solid #aaa;
+        }
+
+        .title-pill:hover {
+            background-color: #fff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .title-pill.active {
+            background-color: #353535;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            color: #fff !important;
+            font-weight: 500 !important;
+        }
+
+        .title-pill.active:hover {
+            background-color: #003262 !important;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            color: #fff !important;
+            font-weight: 500 !important;
+            border: 1px solid #aaa !important;
+        }
+    </style>
 </head>
 
 <body id="body">
@@ -147,67 +235,132 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
 
         <main class="container">
 
-            <div class="row sunken-border mb-4">
+            <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item" style="text-transform: uppercase;"><a href="index.php">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page" style="text-transform: uppercase;">My Courses</li>
+                </ol>
+            </nav>
+
+            <div class="row sunken-border-d mb-4">
                 <div class="col-xxl-12 col-md-12">
-                    <div id="course-registration-section">
-                        <div id="course-registration-form-section">
-                            <div class="alert alert-info" style="text-transform: uppercase; margin-bottom: 30px !important;"><b>SELECT SEMESTER COURSES FOR REGISTRATION</b></div>
-                            <form id="register-semester-courses-form" method="post" enctype="multipart/form-data">
-                                <table class="table table-borderless" style="margin-bottom: 30px !important;">
-                                    <colgroup>
-                                        <col style="width: 90%">
-                                        <col>
-                                    </colgroup>
-                                    <thead>
-                                        <tr>
-                                            <th>COURSE TITLE</th>
-                                            <th>CREDITS</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="compulsory-courses-display">
-                                    </tbody>
-                                    <tbody id="elective-courses-display">
-                                    </tbody>
-                                </table>
 
-                                <div style="display: flex; justify-content: space-between; margin-top: 30px; margin-bottom: 20px;">
-                                    <button type="button" class="btn btn-outline-secondary-dark" id="reset-semester-courses-btn" style="padding: 10px 15px;">
-                                        <span class="bi bi-x-square me-2"></span> <b>RESET</b>
-                                    </button>
+                    <h1 class="mt-4" style="text-transform: uppercase; font-size: 18px !important; font-weight:bold">My Courses</h1>
 
-                                    <button class="btn btn-outline-primary-dark" id="register-semester-courses-btn" style="padding: 10px 15px;">
-                                        <span class="bi bi-save me-2"></span> <b>REGISTER</b>
-                                    </button>
+                    <div class="row">
+
+                        <div class="col-xxl-12 col-md-12 mb-4">
+                            <a style="text-transform: uppercase; " class="col title-pill <?= isset($_GET["myCoursesTab"]) && $_GET["myCoursesTab"] == 'THIS_SEMESTER' ? 'active' : '' ?>" href="?myCoursesTab=THIS_SEMESTER">This Semester</a>
+                            <a style="text-transform: uppercase; " class="col title-pill <?= isset($_GET["myCoursesTab"]) && $_GET["myCoursesTab"] == 'REGISTERED' ? 'active' : '' ?>" href="?myCoursesTab=REGISTERED">Registered</a>
+                        </div>
+
+                        <div class="col-xxl-12 col-md-12 mb-4">
+                            <?php if (isset($_GET["myCoursesTab"]) && $_GET["myCoursesTab"] == 'THIS_SEMESTER') { ?>
+                                <div style="padding: 0px 5px; background: #ddd; width: 100%">
+                                    <span style="text-transform: uppercase;">
+                                        Total: <span style="font-size: large;"><?= 10 ?></span> | Credits: <span style="font-size: large;"><?= 19 ?></span>
+                                    </span>
                                 </div>
-                            </form>
+                            <?php } elseif (isset($_GET["myCoursesTab"]) && $_GET["myCoursesTab"] == 'REGISTERED') { ?>
+                                <div style="padding: 0px 5px; background: #ddd; width: 100%">
+                                    <span style="text-transform: uppercase;">
+                                        Total: <span style="font-size: large;"><?= 5 ?></span>
+                                    </span>
+                                </div>
+                            <?php } ?>
                         </div>
+
+                        <?php
+                        if (isset($_GET["myCoursesTab"]) && $_GET["myCoursesTab"] === 'THIS_SEMESTER') {
+                            $semster_courses = $studentObj->fetchSemesterCourses($_SESSION["student"]["index_number"], $_SESSION["semester"]["id"]);
+                            foreach ($semster_courses as $course) {
+                        ?>
+                                <div class="col-xxl-6 col-md-12 mb-3">
+                                    <div class="item-card" id="<?= $course["course_code"] ?>">
+                                        <img src="assets/images/icons8-course-assign-96.png" alt="Icon">
+                                        <div style="text-transform: uppercase;">
+                                            <p><?= Base::shortenText($course["course_name"]) ?></p>
+                                            <div>Level: <?= $course["level"] ?> | Semester: <?= $course["semester"] ?></div>
+                                        </div>
+                                        <i class="arrow-link bi bi-caret-down-fill"></i>
+                                    </div>
+                                </div>
+                            <?php } ?>
+
+                        <?php } elseif (isset($_GET["myCoursesTab"]) && $_GET["myCoursesTab"] === 'REGISTERED') { ?>
+
+                            <?php
+                            $semster_courses = $studentObj->fetchRegCoursesBySemester($_SESSION["student"]["index_number"], $_SESSION["semester"]["id"], $_SESSION["semester"]["name"]);
+                            foreach ($semster_courses as $course) {
+                            ?>
+                                <div class="col-xxl-6 col-md-12 mb-3">
+                                    <div class="item-card" id="<?= $course["course_code"] ?>">
+                                        <img src="assets/images/icons8-course-assign-reg-96.png" alt="Icon">
+                                        <div style="text-transform: uppercase;">
+                                            <p><?= Base::shortenText($course["course_name"]) ?></p>
+                                            <div>Level: <?= $course["level"] ?> | Semester: <?= $course["semester"] ?></div>
+                                        </div>
+                                        <i class="arrow-link bi bi-caret-down-fill"></i>
+                                    </div>
+                                </div>
+                            <?php } ?>
+
+                        <?php } ?>
+
                     </div>
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col-xxl-12 col-md-12">
-                    <div class="cr-card bg-secondary">
-                        <div class="cr-card-item-group transform-text">
-                            <div class="cr-card-item-info">
-                                <?= $current_semester["academic_year_name"] ?> Semester <?= $current_semester["semester_name"] ?>
+            <!-- Modal for adding a course for registration -->
+            <div class="modal fade" id="aboutCourseModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="aboutCourseModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-fullscreen modal-dialog-scrollable">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="aboutCourseModalLabel">About Course</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <h1>Introduction to Web Software Architecture</h1>
+                            <div>
+                                <h2>Department</h2>
+                                <p>ICT</p>
                             </div>
-                            <div class="cr-card-item-title">Academic Session</div>
-                        </div>
-                        <div class="cr-card-item-group transform-text">
-                            <div class="cr-card-item-info" id="total-registered-courses">0</div>
-                            <div class="cr-card-item-title">Registered Courses</div>
-                        </div>
-                        <div class="cr-card-item-group transform-text">
-                            <div class="cr-card-item-info" id="total-registered-credits">0</div>
-                            <div class="cr-card-item-title">Total Credits</div>
+                            <div>
+                                <h2>Level</h2>
+                                <p>100</p>
+                            </div>
+                            <div>
+                                <h2>Semester</h2>
+                                <p>1</p>
+                            </div>
+                            <div>
+                                <h2>Learning Objectives</h2>
+                                <ul>
+                                    <li>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quaerat vitae quos ipsa, harum at commodi cumque, eius in deserunt distinctio cum velit dolor totam minima debitis magni nulla. Aliquam, consectetur!</li>
+                                    <li>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatibus eum non dicta perspiciatis odio, qui sapiente necessitatibus? Qui cupiditate, a id assumenda voluptatum nam illum commodi optio, ullam eos recusandae!</li>
+                                    <li>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illum ad, mollitia aspernatur natus, iusto cupiditate ab distinctio culpa et in aliquid temporibus, sunt itaque labore fuga a? Molestiae, repellendus tenetur.</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h2>Resources</h2>
+                                <h3>Books</h3>
+                                <ul>
+                                    <li>Quaerat vitae quos ipsa, harum at commodi cumque</li>
+                                    <li>Qui cupiditate, a id assumenda voluptatum nam illum</li>
+                                    <li>Illum ad, mollitia aspernatur natus, iusto cupiditate</li>
+                                </ul>
+                                <h3>Links</h3>
+                                <ul>
+                                    <li><a href="#">Quaerat vitae quos ipsa, harum at commodi cumque</a></li>
+                                    <li><a href="#">Qui cupiditate, a id assumenda voluptatum nam illum</a></li>
+                                    <li><a href="#">Illum ad, mollitia aspernatur natus, iusto cupiditate</a></li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <input type="hidden" name="student" id="student" value="<?= $_SESSION["student"]["index_number"] ?>">
-            <input type="hidden" name="semester" id="semester" value="<?= $_SESSION["semester"]["id"] ?>">
         </main>
 
         <?php require_once("inc/app-sections-menu.php"); ?>
@@ -218,8 +371,13 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
     <script>
         jQuery(document).ready(function($) {
 
+            $(document).on("click", ".item-card", function() {
+                $cid = $(this).attr("id");
+                courseInfo($cid);
+                $("#aboutCourseModal").modal("show");
+            });
+
             $(document).on("click", ".logout-btn", function() {
-                alert("ok")
                 window.location.href = "?logout";
             });
 
@@ -240,60 +398,6 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
                 }
             });
 
-            semesterCourses();
-            registrationSummary();
-
-            $(document).on("submit", "#register-semester-courses-form", function(e) {
-                e.preventDefault();
-                formData = new FormData(this);
-
-                $.ajax({
-                    type: "POST",
-                    url: "api/student/register-courses",
-                    data: formData,
-                    contentType: false,
-                    cache: false,
-                    processData: false,
-                    success: function(result) {
-                        console.log(result);
-                        if (result.success) {
-                            semesterCourses();
-                            registrationSummary();
-                        }
-                        alert(result.message);
-                    },
-                    error: function(xhr, status, error) {
-                        if (xhr.status == 401) {
-                            alert("Your session expired, logging you out...");
-                            window.location.href = "?logout";
-                        } else {
-                            console.log("Error: " + status + " - " + error);
-                        }
-                    }
-                });
-            });
-
-            $(document).on("click", "#reset-semester-courses-btn", function() {
-                $.ajax({
-                    type: "POST",
-                    url: "api/student/reset-course-registration",
-                    success: function(result) {
-                        console.log(result);
-                        if (result.success) {
-                            semesterCourses();
-                            registrationSummary();
-                        } else alert(result.message);
-                    },
-                    error: function(xhr, status, error) {
-                        if (xhr.status == 401) {
-                            alert("Your session expired, logging you out...");
-                            window.location.href = "?logout";
-                        } else {
-                            console.log("Error: " + status + " - " + error);
-                        }
-                    }
-                });
-            });
         });
     </script>
     <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>

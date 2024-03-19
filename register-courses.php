@@ -1,33 +1,21 @@
 <?php
 session_start();
 
+require_once('bootstrap.php');
+
+use Src\Core\Base;
+
+Base::killSessionRedirect();
+
 if (!isset($_SESSION["student"]['login']) || $_SESSION["student"]['login'] !== true) header('Location: login.php');
 if ($_SESSION["student"]['default_password']) header("Location: create-password.php");
 
 if (isset($_GET['logout'])) {
-    session_destroy();
-    $_SESSION = array();
-    if (ini_get("session.use_cookies")) {
-        $params = session_get_cookie_params();
-        setcookie(
-            session_name(),
-            '',
-            time() - 42000,
-            $params["path"],
-            $params["domain"],
-            $params["secure"],
-            $params["httponly"]
-        );
-    }
-
-    header('Location: login.php');
+    Base::killSessionRedirect();
 }
-
-require_once('bootstrap.php');
 
 use Src\Controller\Semester;
 use Src\Controller\Student;
-use Src\Core\Base;
 
 $config = require('config/database.php');
 
@@ -167,19 +155,28 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
 
         <main class="container">
 
+            <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item" style="text-transform: uppercase;"><a href="index.php">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page" style="text-transform: uppercase;">Course Registration</li>
+                </ol>
+            </nav>
+
             <div class="row sunken-border mb-4">
                 <div class="col-xxl-12 col-md-12">
-                    <h1 class="mt-4" style="font-size: 18px !important; font-weight:bold">REGISTRATION</h1>
+
+                    <h1 class="mt-4" style="text-transform: uppercase; font-size: 18px !important; font-weight:bold">Course Registration</h1>
+
                     <div id="course-registration-section">
                         <div id="course-registration-form-section">
                             <div class="alert alert-info" style="text-transform: uppercase; margin-bottom: 30px !important;"><b>SELECT SEMESTER COURSES FOR REGISTRATION</b></div>
 
-                            <div class="mb-4" style="display:flex; justify-content: flex-end; align-items: flex-end;">
+                            <!--<div class="mb-4" style="display:flex; justify-content: flex-end; align-items: flex-end;">
                                 <div class="add-new-course">
                                     <img class="add-new-course-img" src="assets/images/icons8-add-48.png" width="30px" alt="add a course">
                                     <span class="add-new-course-txt" style="color:#003262; font-weight:bolder">ADD A COURSE</span>
                                 </div>
-                            </div>
+                            </div>-->
 
                             <form id="register-semester-courses-form" method="post" enctype="multipart/form-data">
                                 <table class="table" style="margin-bottom: 30px !important;">
@@ -196,6 +193,8 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
                                     <tbody id="compulsory-courses-display">
                                     </tbody>
                                     <tbody id="elective-courses-display">
+                                    </tbody>
+                                    <tbody id="other-semester-courses-display">
                                     </tbody>
                                 </table>
 
@@ -236,7 +235,7 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
                 </div>
             </div>
 
-            <!-- Modal for adding a course for registration -->
+            <!-- Modal for adding a course for registration
             <div class="modal fade" id="addCourseModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="addCourseModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                     <div class="modal-content">
@@ -271,7 +270,7 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
         </main>
 
@@ -281,12 +280,12 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
     <script src="js/jquery-3.6.0.min.js"></script>
     <script src="js/myjs.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
-
     <script>
         jQuery(document).ready(function($) {
 
             semesterCourses();
             registrationSummary();
+            otherSemesterCourses();
 
             $(document).on("click", ".logout-btn", function() {
                 window.location.href = "?logout";
@@ -324,6 +323,7 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
                         if (result.success) {
                             semesterCourses();
                             registrationSummary();
+                            otherSemesterCourses();
                         }
                         alert(result.message);
                     },
@@ -347,6 +347,7 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
                         if (result.success) {
                             semesterCourses();
                             registrationSummary();
+                            otherSemesterCourses();
                         } else alert(result.message);
                     },
                     error: function(xhr, status, error) {
@@ -360,7 +361,7 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
                 });
             });
 
-            $(document).on("click", ".add-new-course", function() {
+            /*$(document).on("click", ".add-new-course", function() {
                 otherSemesterCourses();
                 $("#addCourseModal").modal("show");
             });
@@ -381,13 +382,19 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
                 });
             });
 
-            // Add click event handler to the tr
-            // $('#search-other-courses-tbl').on('click', 'tr', function() {
-            //     var checkbox = $(this).find('input[type="checkbox"]');
-            //     checkbox.prop('checked', !checkbox.prop('checked'));
-            // });
+            Add click event handler to the tr
+            $('#search-other-courses-tbl').on('click', 'tr', function() {
+                var checkbox = $(this).find('input[type="checkbox"]');
+                checkbox.prop('checked', !checkbox.prop('checked'));
+            });*/
 
-            $(document).on("click", "#add-courses-to-reg-btn", function() {
+            /*$(document).on("click", "#add-courses-to-reg-btn", function() {
+
+                if ($(".unreg-courses-selected").prop("checked")) {
+                    alert("");
+                    return;
+                }
+
                 $.ajax({
                     type: "POST",
                     url: "api/student/add-course-to-register",
@@ -396,6 +403,7 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
                         if (result.success) {
                             semesterCourses();
                             registrationSummary();
+                            otherSemesterCourses();
                         } else alert(result.message);
                     },
                     error: function(xhr, status, error) {
@@ -407,7 +415,7 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
                         }
                     }
                 });
-            });
+            });*/
 
             $(document).on({
                 ajaxStart: function() {
