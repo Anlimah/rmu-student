@@ -1,16 +1,6 @@
 <?php
 session_start();
 
-if (!isset($_SESSION["lastAccessed"])) $_SESSION["lastAccessed"] = time();
-$_SESSION["currentAccess"] = time();
-
-$diff = $_SESSION["currentAccess"] - $_SESSION["lastAccessed"];
-
-if ($diff > 1800) {
-    http_response_code(401);
-    die(json_encode(array("success" => false, "message" => "logout")));
-}
-
 /*
 * Designed and programmed by
 * @Author: Francis A. Anlimah
@@ -23,14 +13,16 @@ header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
 require "../bootstrap.php";
+
+use Src\Controller\Course;
+use Src\Core\Base;
+
+Base::sessionExpire();
+
 $config = require('../config/database.php');
 
-use Src\Controller\Programs;
 use Src\Controller\Student;
-use Src\Core\Base;
 use Src\Core\Validator;
-use Src\Controller\Courses;
-use Src\Controller\Classes;
 use Src\Controller\Semester;
 
 $fullUrl = $_SERVER["REQUEST_URI"];
@@ -50,13 +42,61 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
 
         switch ($action) {
             case 'semester-courses':
-                $st_semester_courses = $studentObj->fetchSemesterCourses($_GET["index"], $_GET["sem"]);
+                $st_semester_courses = $studentObj->fetchSemesterCourses(
+                    $_SESSION["student"]["index_number"],
+                    $_SESSION["semester"]["id"]
+                );
+
                 if (empty($st_semester_courses)) {
-                    die(json_encode(array("success" => false, "message" => "No courses assigned to your class yet.")));
+                    die(json_encode(array("success" => false, "message" => "No courses assigned to you yet.")));
+                }
+                die(json_encode(array("success" => true, "message" => $st_semester_courses)));
+
+            case 'registration-summary':
+
+                $result = $studentObj->fetchCourseRegistrationSummary(
+                    $_SESSION["student"]["index_number"],
+                    $_SESSION["semester"]["id"]
+                );
+                $feed = Validator::SendResult($result, $result, $result);
+                die(json_encode($feed));
+
+                // gets all the assigned semester courses 
+            case 'other-semester-courses':
+                //die(json_encode($_SESSION["semester"]["name"]));
+                $st_semester_courses = $studentObj->fetchCoursesBySemAndLevel(
+                    $_SESSION["student"]["index_number"],
+                    $_SESSION["semester"]["id"],
+                    $_SESSION["semester"]["name"],
+                    200
+                );
+
+                if (empty($st_semester_courses)) {
+                    die(json_encode(array("success" => false, "message" => "You don't have unregistered courses.")));
                 }
                 die(json_encode(array("success" => true, "message" => $st_semester_courses)));
             default:
                 die(json_encode(array("success" => false, "message" => "No match found for your request!")));
+        }
+    } else if ($module === 'course') {
+        $courseObj = new Course($config["database"]["mysql"]);
+
+        switch ($action) {
+            case 'info':
+                if (!isset($_GET["cc"]) || empty($_GET["cc"])) {
+                    die(json_encode(array("success" => false, "message" => "Invalid request!")));
+                }
+
+                $course_info = $courseObj->courseInfo($_GET["cc"]);
+                if (empty($course_info)) {
+                    die(json_encode(array("success" => false, "message" => "No results found for this course!")));
+                }
+                die(json_encode(array("success" => true, "message" => $course_info)));
+                break;
+
+            default:
+                # code...
+                break;
         }
     }
 }
@@ -131,12 +171,12 @@ elseif ($_SERVER['REQUEST_METHOD'] == "POST") {
                 die(json_encode(array("success" => true, "message" => $st_semester_courses)));
 
             case 'register-courses':
-
                 if (isset($_POST['selected-course']) && is_array($_POST['selected-course'])) {
-                    $selectedCourses = Validator::InputTextNumberForArray($_POST['selected-course']);
+                    $selected_courses = Validator::InputTextNumberForArray($_POST['selected-course']);
+                    //die(json_encode($selected_courses));
 
                     $result = $studentObj->registerSemesterCourses(
-                        $selectedCourses,
+                        $selected_courses,
                         $_SESSION["student"]["index_number"],
                         $_SESSION["semester"]["id"]
                     );
@@ -167,32 +207,11 @@ elseif ($_SERVER['REQUEST_METHOD'] == "POST") {
 
                 die(json_encode($feed));
 
-            case 'registration-summary':
-
-                $result = $studentObj->fetchCourseRegistrationSummary(
-                    $_SESSION["student"]["index_number"],
-                    $_SESSION["semester"]["id"]
-                );
-                $feed = Validator::SendResult($result, $result, $result);
-                die(json_encode($feed));
-
-                // gets all the assigned semester courses 
-            case 'other-semester-courses':
-                $st_semester_courses = $studentObj->fetchCoursesBySemAndLevel(
-                    $_SESSION["student"]["index_number"],
-                    $_SESSION["semester"]["name"],
-                    200
-                );
-
-                if (empty($st_semester_courses)) {
-                    die(json_encode(array("success" => false, "message" => "You don't have unregistered courses.")));
-                }
-                die(json_encode(array("success" => true, "message" => $st_semester_courses)));
-
                 // gets all the assigned semester courses 
             case 'add-course-to-register':
                 $st_semester_courses = $studentObj->fetchCoursesBySemAndLevel(
                     $_SESSION["student"]["index_number"],
+                    $_SESSION["semester"]["id"],
                     $_SESSION["semester"]["name"],
                     200
                 );

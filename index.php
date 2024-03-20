@@ -66,8 +66,11 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
             border: 1px solid #ccc;
             border-radius: 5px;
             margin-bottom: 10px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .item-card:hover {
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            /* Add shadow here */
         }
 
         .item-card img {
@@ -177,52 +180,64 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
 
                         <div class="row">
 
-                            <div class="col-xxl-4 col-md-6 mb-4">
-                                <div class="item-card">
-                                    <img src="assets/images/icons8-courses-64.png" alt="Icon">
-                                    <p>SEMESTER COURSES</p>
-                                    <a href="semester-courses.php" class="arrow-link"><i class="bi bi-box-arrow-in-down-right"></i></a>
-                                </div>
+                            <div class="col-xxl-4 col-md-6 mb-2">
+                                <a href="semester-courses.php?myCoursesTab=THIS_SEMESTER">
+                                    <div class="item-card">
+                                        <img src="assets/images/icons8-courses-64.png" alt="Icon">
+                                        <p>MY COURSES</p>
+                                        <i class="arrow-link bi bi-box-arrow-in-down-right"></i>
+                                    </div>
+                                </a>
                             </div>
 
-                            <div class="col-xxl-4 col-md-6 mb-4">
-                                <div class="item-card">
-                                    <img src="assets/images/icons8-timetable-96(1).png" alt="Icon">
-                                    <p>EXAM & CLASS TIMETABLE</p>
-                                    <a href="timetable.php" class="arrow-link"><i class="bi bi-box-arrow-in-down-right"></i></a>
-                                </div>
+                            <div class="col-xxl-4 col-md-6 mb-2">
+                                <a href="timetable.php">
+                                    <div class="item-card">
+                                        <img src="assets/images/icons8-timetable-96(1).png" alt="Icon">
+                                        <p>EXAM & CLASS TIMETABLE</p>
+                                        <i class="arrow-link bi bi-box-arrow-in-down-right"></i>
+                                    </div>
+                                </a>
                             </div>
 
-                            <div class="col-xxl-4 col-md-6 mb-4">
-                                <div class="item-card">
-                                    <img src="assets/images/icons8-exam-96.png" alt="Icon">
-                                    <p>EXAM RESULTS</p>
-                                    <a href="exam-results.php" class="arrow-link"><i class="bi bi-box-arrow-in-down-right"></i></a>
-                                </div>
+                            <div class="col-xxl-4 col-md-6 mb-2">
+                                <a href="exam-results.php">
+                                    <div class="item-card">
+                                        <img src="assets/images/icons8-exam-96.png" alt="Icon">
+                                        <p>EXAM RESULTS</p>
+                                        <i class="arrow-link bi bi-box-arrow-in-down-right"></i>
+                                    </div>
+                                </a>
                             </div>
 
-                            <div class="col-xxl-4 col-md-6 mb-4">
-                                <div class="item-card">
-                                    <img src="assets/images/icons8-report-card-64(1).png" alt="Icon">
-                                    <p>COURSE & LECTURER EVALUATION</p>
-                                    <a href="#" class="arrow-link"><i class="bi bi-box-arrow-in-down-right"></i></a>
-                                </div>
+                            <div class="col-xxl-4 col-md-6 mb-2">
+                                <a href="#">
+                                    <div class="item-card">
+                                        <img src="assets/images/icons8-report-card-64(1).png" alt="Icon">
+                                        <p>COURSE & LECTURER EVALUATION</p>
+                                        <i class="arrow-link bi bi-box-arrow-in-down-right"></i>
+                                    </div>
+                                </a>
                             </div>
 
-                            <div class="col-xxl-4 col-md-6 mb-4">
-                                <div class="item-card">
-                                    <img src="assets/images/icons8-hostel-64.png" alt="Icon">
-                                    <p>HOSTEL & ACCOMMODATION</p>
-                                    <a href="#" class="arrow-link"><i class="bi bi-box-arrow-in-down-right"></i></a>
-                                </div>
+                            <div class="col-xxl-4 col-md-6 mb-2">
+                                <a href="#">
+                                    <div class="item-card">
+                                        <img src="assets/images/icons8-hostel-64.png" alt="Icon">
+                                        <p>HOSTEL & ACCOMMODATION</p>
+                                        <i class="arrow-link bi bi-box-arrow-in-down-right"></i>
+                                    </div>
+                                </a>
                             </div>
 
-                            <div class="col-xxl-4 col-md-6 mb-4">
-                                <div class="item-card">
-                                    <img src="assets/images/icons8-books-emoji-96.png" alt="Icon">
-                                    <p>LIBRARY</p>
-                                    <a href="#" class="arrow-link"><i class="bi bi-box-arrow-in-down-right"></i></a>
-                                </div>
+                            <div class="col-xxl-4 col-md-6 mb-2">
+                                <a href="#">
+                                    <div class="item-card">
+                                        <img src="assets/images/icons8-books-emoji-96.png" alt="Icon">
+                                        <p>LIBRARY</p>
+                                        <i class="arrow-link bi bi-box-arrow-in-down-right"></i>
+                                    </div>
+                                </a>
                             </div>
 
                         </div>

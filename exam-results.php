@@ -147,41 +147,35 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
 
         <main class="container">
 
+            <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item" style="text-transform: uppercase;"><a href="index.php">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page" style="text-transform: uppercase;">Exam Results</li>
+                </ol>
+            </nav>
+
             <div class="row sunken-border mb-4">
                 <div class="col-xxl-12 col-md-12">
-                    <div id="course-registration-section">
-                        <div id="course-registration-form-section">
-                            <div class="alert alert-info" style="text-transform: uppercase; margin-bottom: 30px !important;"><b>SELECT SEMESTER COURSES FOR REGISTRATION</b></div>
-                            <form id="register-semester-courses-form" method="post" enctype="multipart/form-data">
-                                <table class="table table-borderless" style="margin-bottom: 30px !important;">
-                                    <colgroup>
-                                        <col style="width: 90%">
-                                        <col>
-                                    </colgroup>
-                                    <thead>
-                                        <tr>
-                                            <th>COURSE TITLE</th>
-                                            <th>CREDITS</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="compulsory-courses-display">
-                                    </tbody>
-                                    <tbody id="elective-courses-display">
-                                    </tbody>
-                                </table>
 
-                                <div style="display: flex; justify-content: space-between; margin-top: 30px; margin-bottom: 20px;">
-                                    <button type="button" class="btn btn-outline-secondary-dark" id="reset-semester-courses-btn" style="padding: 10px 15px;">
-                                        <span class="bi bi-x-square me-2"></span> <b>RESET</b>
-                                    </button>
+                    <h1 class="mt-4" style="text-transform: uppercase; font-size: 18px !important; font-weight:bold">Exam Results</h1>
 
-                                    <button class="btn btn-outline-primary-dark" id="register-semester-courses-btn" style="padding: 10px 15px;">
-                                        <span class="bi bi-save me-2"></span> <b>REGISTER</b>
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
+                    <table class="table table-borderless" style="margin-bottom: 30px !important;">
+                        <colgroup>
+                            <col style="width: 90%">
+                            <col>
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th>COURSE TITLE</th>
+                                <th>CREDITS</th>
+                            </tr>
+                        </thead>
+                        <tbody id="compulsory-courses-display">
+                        </tbody>
+                        <tbody id="elective-courses-display">
+                        </tbody>
+                    </table>
+
                 </div>
             </div>
 

@@ -29,26 +29,27 @@ function validatePassword(password) {
 
 function semesterCourses() {
     $.ajax({
-        type: "POST",
+        type: "GET",
         url: "api/student/semester-courses",
         success: function (result) {
             console.log(result);
 
             if (result.success) {
 
-                // $("#compulsory-courses-display").html(
-                //     '<tr class="alert alert-warning">' +
-                //     '<td colspan="2"><strong>COMPULSORY COURSES</strong></td>' +
-                //     '</tr>'
-                // );
+                $("#compulsory-courses-display").html('');
+                $("#elective-courses-display").html('');
+
+                $("#compulsory-courses-display").html(
+                    '<tr class="alert alert-success">' +
+                    '<td colspan="2"><strong>COURSES FOR THIS SEMESTER</strong></td>' +
+                    '</tr>'
+                );
+
                 // $("#elective-courses-display").html(
                 //     '<tr class="alert alert-warning">' +
                 //     '<td colspan="2"><strong>ELECTIVE COURSES</strong></td>' +
                 //     '</tr>'
                 // );
-
-                $("#compulsory-courses-display").html('');
-                $("#elective-courses-display").html('');
 
                 result.message.forEach(function (value) {
                     var disable = value.reg_status ? 'disabled' : '';
@@ -94,9 +95,69 @@ function semesterCourses() {
     });
 }
 
+function otherSemesterCourses() {
+    $.ajax({
+        type: "GET",
+        url: "api/student/other-semester-courses",
+        success: function (result) {
+            console.log(result);
+
+            if (result.success) {
+
+                $("#other-semester-courses-display").html('');
+
+                $("#other-semester-courses-display").html(
+                    '<tr class="alert alert-warning">' +
+                    '<td colspan="2"><strong>UNREGISTERED COURSES FROM PREVIOUS SEMESTERS</strong></td>' +
+                    '</tr>'
+                );
+
+                result.message.forEach(function (value) {
+                    var disable = value.reg_status ? 'disabled' : '';
+                    var image = value.reg_status ? 'assets/images/icons8-correct-24.png' : 'assets/images/icons8-stop-48.png';
+                    var status = value.reg_status ? 'active' : '';
+
+                    var courseHtml = '<tr>' +
+                        '<td style="display: flex;">' +
+                        '<span class="me-2">' +
+                        '<img src="' + image + '" alt="" style="width: 24px !important">' +
+                        '</span>' +
+                        '<span>[' + value.course_code + '] ' + value.course_name + '</span>' +
+                        '</td>' +
+                        '<td style="text-align: right">' +
+                        '<input ' + disable + ' name="selected-course[]" value="' + value.course_code + '" type="checkbox" id="btn-check-' + value.course_code + '" class="btn-check" autocomplete="off" style="display: none;">' +
+                        '<label class="btn btn-light btn-outline-success-dark ' + status + '" style="width: 40px !important; padding: 0px !important" for="btn-check-' + value.course_code + '">' + value.credits + '</label>' +
+                        '</td>' +
+                        '</tr>';
+
+                    $("#other-semester-courses-display").append(courseHtml);
+                });
+                return;
+            }
+
+            $(".unregistered-courses-disp").html(
+                '<div class="alert alert-danger d-flex align-items-start" role="alert">' +
+                '<span class="bi bi-exclamation-triangle-fill me-2"></span>' +
+                '<div style="text-transform: uppercase"><b>' + result.message + '</b></div>' +
+                '</div>'
+            );
+
+            $("#save-unreg-courses-btn-area").hide();
+        },
+        error: function (xhr, status, error) {
+            if (xhr.status == 401) {
+                alert("Your session expired, logging you out...");
+                window.location.href = "?logout";
+            } else {
+                console.log("Error: " + status + " - " + error);
+            }
+        }
+    });
+}
+
 function registrationSummary() {
     $.ajax({
-        type: "POST",
+        type: "GET",
         url: "api/student/registration-summary",
         success: function (result) {
             console.log(result);
@@ -121,40 +182,20 @@ function registrationSummary() {
     });
 }
 
-function otherSemesterCourses() {
+function courseInfo(course_code) {
+    if (!course_code) return;
+
     $.ajax({
-        type: "POST",
-        url: "api/student/other-semester-courses",
+        type: "GET",
+        url: "api/course/info?cc=" + course_code,
         success: function (result) {
             console.log(result);
+
             if (result.success) {
-                $("#other-semester-courses").html('');
-
-                result.message.forEach(function (value) {
-                    var courseHtml = '<tr>' +
-                        '<td style="display: flex;">' +
-                        '<span class="me-2">[' + value.course_code + ']</span>' +
-                        '<span>' + value.course_name + '</span>' +
-                        '</td>' +
-                        '<td style="text-align:right; cursor: pointer;">' +
-                        '<input name="selected-course[]" value="' + value.course_code + '" type="checkbox" id="btn-check-' + value.course_code + '">' +
-                        '</td>' +
-                        '</tr>';
-                    $("#other-semester-courses").append(courseHtml);
-                });
-                $("#save-unreg-courses-btn-area").show();
-                return;
+                console.log(result.message);
+            } else {
+                alert(result.message);
             }
-
-            $(".unregistered-courses-disp").html(
-                '<div class="alert alert-danger d-flex align-items-start" role="alert">' +
-                '<span class="bi bi-exclamation-triangle-fill me-2"></span>' +
-                '<div style="text-transform: uppercase"><b>' + result.message + '</b></div>' +
-                '</div>'
-            );
-
-            $("#save-unreg-courses-btn-area").hide();
-
         },
         error: function (xhr, status, error) {
             if (xhr.status == 401) {
