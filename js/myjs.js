@@ -27,6 +27,21 @@ function validatePassword(password) {
     return { success: false, message: 'Password passed' };
 }
 
+function capitalizeEachWord(sentence) {
+    const smallWords = ['and', 'to', 'of', 'a', 'the', 'in', 'on', 'at', 'for', 'with', 'by', 'from'];
+    return sentence.split(' ').map((word, index) => {
+        if (index === 0 || !smallWords.includes(word.toLowerCase()))
+            return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+        else return word.toLowerCase();
+    }).join(' ');
+}
+
+function shortenText(text, max = 17) {
+    if (text.length <= max) return text;
+    let shortenedText = text.substring(0, max);
+    return shortenedText + '...';
+}
+
 function semesterCourses() {
     $.ajax({
         type: "GET",
