@@ -127,19 +127,19 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
                                         <img src="<?= $student_image ?>" alt="<?= $student_data["full_name"] ?>" style="border-radius: 50%; border: 2px solid white; width: 100px; height: 100px;">
                                     </div>
 
-                                    <div class="student-name transform-text" style="text-align: center; color: #FFA000; padding-top: 10px; font-weight: 600">
+                                    <div class="student-name " style="text-align: center; color: #FFA000; padding-top: 10px; font-weight: 600">
                                         <?= $student_data["full_name"] ?>
                                     </div>
 
-                                    <div class="student-index transform-text" style="text-align: center; color: white; font-weight: 600">
+                                    <div class="student-index " style="text-align: center; color: white; font-weight: 600">
                                         <?= $student_index ?>
                                     </div>
 
                                     <div style="display: flex; justify-content: center; align-items:center; margin-top: 40px; ">
-                                        <div class="student-program me-2 transform-text" style="color: white; font-weight: 600">
+                                        <div class="student-program me-2 " style="color: white; font-weight: 600">
                                             <?= $student_data["program_name"] ?>
                                         </div>
-                                        <div class="student-program transform-text" style="color: #FFA000; font-weight: 600">
+                                        <div class="student-program " style="color: #FFA000; font-weight: 600">
                                             [<?= $student_data["class_code"] ?>]
                                         </div>
                                     </div>
@@ -165,13 +165,13 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
                                     <div class="alert alert-success" role="alert">
                                         <h6 class="alert-heading d-flex align-items-center">
                                             <span class="bi bi-exclamation-triangle-fill me-2"></span>
-                                            <b class="transform-text"><?= $semester ?> semester course registration opened.</b>
+                                            <b class=""><?= $semester ?> semester course registration opened.</b>
                                         </h6>
                                         <hr>
-                                        <p class="mb-0 transform-text">Registration ends on <b><?= $registration_end ?> at 11:59 PM.</b></p>
+                                        <p class="mb-0 ">Registration ends on <b><?= $registration_end ?> at 11:59 PM.</b></p>
                                         <hr>
                                         <p class="mb-0 d-flex" style="justify-content: right;">
-                                            <button class="btn btn-outline-success transform-text" id="register-here-btn">Register Here</button>
+                                            <button class="btn btn-outline-success " id="register-here-btn">Register Here</button>
                                         </p>
                                     </div>
                                 </div>
@@ -184,17 +184,7 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
                                 <a href="semester-courses.php?myCoursesTab=THIS_SEMESTER">
                                     <div class="item-card">
                                         <img src="assets/images/icons8-courses-64.png" alt="Icon">
-                                        <p>MY COURSES</p>
-                                        <i class="arrow-link bi bi-box-arrow-in-down-right"></i>
-                                    </div>
-                                </a>
-                            </div>
-
-                            <div class="col-xxl-4 col-md-6 mb-2">
-                                <a href="timetable.php">
-                                    <div class="item-card">
-                                        <img src="assets/images/icons8-timetable-96(1).png" alt="Icon">
-                                        <p>EXAM & CLASS TIMETABLE</p>
+                                        <p>Semeter Courses</p>
                                         <i class="arrow-link bi bi-box-arrow-in-down-right"></i>
                                     </div>
                                 </a>
@@ -204,7 +194,17 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
                                 <a href="exam-results.php">
                                     <div class="item-card">
                                         <img src="assets/images/icons8-exam-96.png" alt="Icon">
-                                        <p>EXAM RESULTS</p>
+                                        <p>Exam Results</p>
+                                        <i class="arrow-link bi bi-box-arrow-in-down-right"></i>
+                                    </div>
+                                </a>
+                            </div>
+
+                            <div class="col-xxl-4 col-md-6 mb-2">
+                                <a href="timetable.php">
+                                    <div class="item-card">
+                                        <img src="assets/images/icons8-timetable-94.png" alt="Icon">
+                                        <p>Timetable</p>
                                         <i class="arrow-link bi bi-box-arrow-in-down-right"></i>
                                     </div>
                                 </a>
@@ -213,8 +213,8 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
                             <div class="col-xxl-4 col-md-6 mb-2">
                                 <a href="#">
                                     <div class="item-card">
-                                        <img src="assets/images/icons8-report-card-64(1).png" alt="Icon">
-                                        <p>COURSE & LECTURER EVALUATION</p>
+                                        <img src="assets/images/icons8-exam-96(1).png" alt="Icon">
+                                        <p>Course & Lectruer Evaluation</p>
                                         <i class="arrow-link bi bi-box-arrow-in-down-right"></i>
                                     </div>
                                 </a>
@@ -223,8 +223,8 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
                             <div class="col-xxl-4 col-md-6 mb-2">
                                 <a href="#">
                                     <div class="item-card">
-                                        <img src="assets/images/icons8-hostel-64.png" alt="Icon">
-                                        <p>HOSTEL & ACCOMMODATION</p>
+                                        <img src="assets/images/icons8-hostel-55.png" alt="Icon">
+                                        <p>Hostel & Accomodation</p>
                                         <i class="arrow-link bi bi-box-arrow-in-down-right"></i>
                                     </div>
                                 </a>
@@ -233,8 +233,8 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
                             <div class="col-xxl-4 col-md-6 mb-2">
                                 <a href="#">
                                     <div class="item-card">
-                                        <img src="assets/images/icons8-books-emoji-96.png" alt="Icon">
-                                        <p>LIBRARY</p>
+                                        <img src="assets/images/icons8-books-94.png" alt="Icon">
+                                        <p>Library</p>
                                         <i class="arrow-link bi bi-box-arrow-in-down-right"></i>
                                     </div>
                                 </a>

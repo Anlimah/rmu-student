@@ -295,7 +295,7 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
                             ?>
                                 <div class="col-xxl-6 col-md-12 mb-3">
                                     <div class="item-card" id="<?= $course["course_code"] ?>">
-                                        <img src="assets/images/icons8-course-assign-reg-96.png" alt="Icon">
+                                        <img src="assets/images/icons8-course-registered-96.png" alt="Icon">
                                         <div style="text-transform: uppercase;">
                                             <p><?= Base::shortenText($course["course_name"]) ?></p>
                                             <div>Level: <?= $course["level"] ?> | Semester: <?= $course["semester"] ?></div>
