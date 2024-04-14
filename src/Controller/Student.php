@@ -42,10 +42,7 @@ class Student
             $query = "UPDATE `course_registration` SET `registered` = 1,  `fk_semester_registered` = :fkm
             WHERE `fk_course` = :fkc AND `fk_student` = :fks";
 
-            $registered_courses += $this->dm->run(
-                $query,
-                array(':fkc' => $course, ':fks' => $student, ':fkm' => $semester)
-            )->edit();
+            $registered_courses += $this->dm->run($query, array(':fkc' => $course, ':fks' => $student, ':fkm' => $semester))->edit();
         }
         return $registered_courses;
     }
@@ -218,8 +215,8 @@ class Student
                 OR (
                     cr.`fk_course` NOT IN (
                         SELECT cr2.`fk_course` 
-                        FROM `course_registration` AS cr2
-                        JOIN `semester` AS sm2 ON cr2.`fk_semester_registered` = sm2.`id`
+                        FROM `course_registration` AS cr2 
+                        JOIN `semester` AS sm2 ON cr2.`fk_semester_registered` = sm2.`id` 
                         WHERE cr2.`fk_student` = st.`index_number` AND sm2.`id` != :cs
                     )
                     AND sm.`id` = :cs

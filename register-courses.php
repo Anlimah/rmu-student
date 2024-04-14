@@ -74,6 +74,24 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
             --bs-gradient: none;
         }
 
+        /* Darker Green Outline Button */
+        .btn-outline-success-dark {
+            --bs-btn-color: #086132;
+            --bs-btn-border-color: #086132;
+            --bs-btn-hover-color: #fff;
+            --bs-btn-hover-bg: #086132;
+            --bs-btn-hover-border-color: #086132;
+            --bs-btn-focus-shadow-rgb: 0, 100, 0;
+            --bs-btn-active-color: #fff;
+            --bs-btn-active-bg: #086132;
+            --bs-btn-active-border-color: #086132;
+            --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+            --bs-btn-disabled-color: #086132;
+            --bs-btn-disabled-bg: transparent;
+            --bs-btn-disabled-border-color: #086132;
+            --bs-gradient: none;
+        }
+
         .sunken-border {
             border-bottom-left-radius: 15px;
             border-bottom-right-radius: 15px;
@@ -157,26 +175,19 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
 
             <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item" style="text-transform: uppercase;"><a href="index.php">Home</a></li>
-                    <li class="breadcrumb-item active" aria-current="page" style="text-transform: uppercase;">Course Registration</li>
+                    <li class="breadcrumb-item"><a href="index.php">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Course Registration</li>
                 </ol>
             </nav>
 
             <div class="row sunken-border mb-4">
                 <div class="col-xxl-12 col-md-12">
 
-                    <h1 class="mt-4" style="text-transform: uppercase; font-size: 18px !important; font-weight:bold">Course Registration</h1>
+                    <h1 class="mt-4" style="font-size: 18px !important; font-weight:bold">Course Registration</h1>
 
                     <div id="course-registration-section">
                         <div id="course-registration-form-section">
-                            <div class="alert alert-info" style="text-transform: uppercase; margin-bottom: 30px !important;"><b>SELECT SEMESTER COURSES FOR REGISTRATION</b></div>
-
-                            <!--<div class="mb-4" style="display:flex; justify-content: flex-end; align-items: flex-end;">
-                                <div class="add-new-course">
-                                    <img class="add-new-course-img" src="assets/images/icons8-add-48.png" width="30px" alt="add a course">
-                                    <span class="add-new-course-txt" style="color:#003262; font-weight:bolder">ADD A COURSE</span>
-                                </div>
-                            </div>-->
+                            <div class="alert alert-info" style="margin-bottom: 30px !important;"><b>Select Semester Courses For Registration</b></div>
 
                             <form id="register-semester-courses-form" method="post" enctype="multipart/form-data">
                                 <table class="table" style="margin-bottom: 30px !important;">
@@ -186,8 +197,8 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
                                     </colgroup>
                                     <thead>
                                         <tr>
-                                            <th style="text-align: left;">COURSE TITLE</th>
-                                            <th style="text-align: right;">CREDITS</th>
+                                            <th style="text-align: left;">Course Title</th>
+                                            <th style="text-align: right;">Credits</th>
                                         </tr>
                                     </thead>
                                     <tbody id="compulsory-courses-display">
@@ -200,11 +211,11 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
 
                                 <div style="display: flex; justify-content: space-between; margin-top: 30px; margin-bottom: 30px;">
                                     <button type="button" class="btn btn-outline-secondary-dark" id="reset-semester-courses-btn">
-                                        <span class="bi bi-x-square me-2"></span> <b>RESET</b>
+                                        <span class="bi bi-x-square me-2"></span> <b>Reset</b>
                                     </button>
 
                                     <button class="btn btn-outline-primary-dark" id="register-semester-courses-btn">
-                                        <span class="bi bi-save me-2"></span> <b>REGISTER</b>
+                                        <span class="bi bi-save me-2"></span> <b>Register</b>
                                     </button>
                                 </div>
                             </form>
@@ -215,19 +226,19 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
 
             <div class="row mb-4">
                 <div class="col-xxl-12 col-md-12">
-                    <h1 style="font-size: 18px !important; font-weight:bold">SUMMARY</h1>
+                    <h1 style="font-size: 18px !important; font-weight:bold">Summary</h1>
                     <div class="cr-card bg-secondary">
-                        <div class="cr-card-item-group transform-text">
+                        <div class="cr-card-item-group">
                             <div class="cr-card-item-info">
                                 <?= $current_semester["academic_year_name"] ?> Semester <?= $current_semester["semester_name"] ?>
                             </div>
                             <div class="cr-card-item-title">Academic Session</div>
                         </div>
-                        <div class="cr-card-item-group transform-text">
+                        <div class="cr-card-item-group">
                             <div class="cr-card-item-info" id="total-registered-courses">0</div>
                             <div class="cr-card-item-title">Registered Courses</div>
                         </div>
-                        <div class="cr-card-item-group transform-text">
+                        <div class="cr-card-item-group">
                             <div class="cr-card-item-info" id="total-registered-credits">0</div>
                             <div class="cr-card-item-title">Total Credits</div>
                         </div>
@@ -256,7 +267,7 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
                                 <table id="search-other-courses-tbl" class="table table-striped">
                                     <thead>
                                         <tr>
-                                            <th style="width: 90% !important; text-align: left;">COURSE TITLE</th>
+                                            <th style="width: 90% !important; text-align: left;">Course Title</th>
                                             <th style="width: 10% !important; text-align: right;"></th>
                                         </tr>
                                     </thead>
@@ -298,7 +309,7 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
 
                 if (!label.hasClass("disabled")) {
                     if (checkbox.prop("checked")) {
-                        image.attr("src", "assets/images/icons8-correct-24.png");
+                        image.attr("src", "assets/images/icons8-check-30.png");
                     } else {
                         image.attr("src", "assets/images/icons8-stop-48.png");
                     }
@@ -360,62 +371,6 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
                     }
                 });
             });
-
-            /*$(document).on("click", ".add-new-course", function() {
-                otherSemesterCourses();
-                $("#addCourseModal").modal("show");
-            });
-
-            $(document).on("keyup", "#search-input", function() {
-                if (this.value && this.value.length >= 3) $("#add-course-search-form").submit();
-                if ($(this).val() === '') $('#search-other-courses-tbl tbody tr').show();
-            });
-
-            $(document).on("submit", "#add-course-search-form", function(e) {
-                e.preventDefault();
-                var searchText = $('#search-input').val().toLowerCase();
-
-                $('#search-other-courses-tbl tbody tr').each(function() {
-                    var rowText = $(this).text().toLowerCase();
-                    if (searchText === '' || rowText.indexOf(searchText) === -1) $(this).hide();
-                    else $(this).show();
-                });
-            });
-
-            Add click event handler to the tr
-            $('#search-other-courses-tbl').on('click', 'tr', function() {
-                var checkbox = $(this).find('input[type="checkbox"]');
-                checkbox.prop('checked', !checkbox.prop('checked'));
-            });*/
-
-            /*$(document).on("click", "#add-courses-to-reg-btn", function() {
-
-                if ($(".unreg-courses-selected").prop("checked")) {
-                    alert("");
-                    return;
-                }
-
-                $.ajax({
-                    type: "POST",
-                    url: "api/student/add-course-to-register",
-                    success: function(result) {
-                        console.log(result);
-                        if (result.success) {
-                            semesterCourses();
-                            registrationSummary();
-                            otherSemesterCourses();
-                        } else alert(result.message);
-                    },
-                    error: function(xhr, status, error) {
-                        if (xhr.status == 401) {
-                            alert("Your session expired, logging you out...");
-                            window.location.href = "?logout";
-                        } else {
-                            console.log("Error: " + status + " - " + error);
-                        }
-                    }
-                });
-            });*/
 
             $(document).on({
                 ajaxStart: function() {

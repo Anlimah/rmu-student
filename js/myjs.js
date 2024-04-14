@@ -24,7 +24,7 @@ function validatePassword(password) {
         return { success: false, message: 'Password must have at least one special character!' };
     }
 
-    return { success: false, message: 'Password passed' };
+    return { success: true, message: 'Password passed' };
 }
 
 function capitalizeEachWord(sentence) {
@@ -56,31 +56,25 @@ function semesterCourses() {
 
                 $("#compulsory-courses-display").html(
                     '<tr class="alert alert-success">' +
-                    '<td colspan="2"><strong>COURSES FOR THIS SEMESTER</strong></td>' +
+                    '<td colspan="2"><strong>Courses For This Semester</strong></td>' +
                     '</tr>'
                 );
 
-                // $("#elective-courses-display").html(
-                //     '<tr class="alert alert-warning">' +
-                //     '<td colspan="2"><strong>ELECTIVE COURSES</strong></td>' +
-                //     '</tr>'
-                // );
-
                 result.message.forEach(function (value) {
                     var disable = value.reg_status ? 'disabled' : '';
-                    var image = value.reg_status ? 'assets/images/icons8-correct-24.png' : 'assets/images/icons8-stop-48.png';
+                    var image = value.reg_status ? 'assets/images/icons8-check-30.png' : 'assets/images/icons8-stop-48.png';
                     var status = value.reg_status ? 'active' : '';
 
                     var courseHtml = '<tr>' +
                         '<td style="display: flex;">' +
                         '<span class="me-2">' +
-                        '<img src="' + image + '" alt="" style="width: 24px !important">' +
+                        '<img src="' + image + '" alt="" style="width: 20px !important">' +
                         '</span>' +
                         '<span>[' + value.course_code + '] ' + value.course_name + '</span>' +
                         '</td>' +
-                        '<td style="text-align: right">' +
+                        '<td style="text-align: right; padding: 0 !important">' +
                         '<input ' + disable + ' name="selected-course[]" value="' + value.course_code + '" type="checkbox" id="btn-check-' + value.course_code + '" class="btn-check" autocomplete="off" style="display: none;">' +
-                        '<label class="btn btn-light btn-outline-success-dark ' + status + '" style="width: 40px !important; padding: 0px !important" for="btn-check-' + value.course_code + '">' + value.credits + '</label>' +
+                        '<label class="btn btn-outline-success-dark ' + status + '" style="width: 40px !important; margin: 0px !important; padding: 0px !important" for="btn-check-' + value.course_code + '">' + value.credits + '</label>' +
                         '</td>' +
                         '</tr>';
 
@@ -103,9 +97,7 @@ function semesterCourses() {
             if (xhr.status == 401) {
                 alert("Your session expired, logging you out...");
                 window.location.href = "?logout";
-            } else {
-                console.log("Error: " + status + " - " + error);
-            }
+            } else console.log("Error: " + status + " - " + error);
         }
     });
 }
@@ -123,25 +115,25 @@ function otherSemesterCourses() {
 
                 $("#other-semester-courses-display").html(
                     '<tr class="alert alert-warning">' +
-                    '<td colspan="2"><strong>UNREGISTERED COURSES FROM PREVIOUS SEMESTERS</strong></td>' +
+                    '<td colspan="2"><strong>Unregistered Courses From Previous Semesters</strong></td>' +
                     '</tr>'
                 );
 
                 result.message.forEach(function (value) {
                     var disable = value.reg_status ? 'disabled' : '';
-                    var image = value.reg_status ? 'assets/images/icons8-correct-24.png' : 'assets/images/icons8-stop-48.png';
+                    var image = value.reg_status ? 'assets/images/icons8-check-30.png' : 'assets/images/icons8-stop-48.png';
                     var status = value.reg_status ? 'active' : '';
 
                     var courseHtml = '<tr>' +
                         '<td style="display: flex;">' +
                         '<span class="me-2">' +
-                        '<img src="' + image + '" alt="" style="width: 24px !important">' +
+                        '<img src="' + image + '" alt="" style="width: 20px !important">' +
                         '</span>' +
                         '<span>[' + value.course_code + '] ' + value.course_name + '</span>' +
                         '</td>' +
-                        '<td style="text-align: right">' +
+                        '<td style="text-align: right; padding: 0 !important">' +
                         '<input ' + disable + ' name="selected-course[]" value="' + value.course_code + '" type="checkbox" id="btn-check-' + value.course_code + '" class="btn-check" autocomplete="off" style="display: none;">' +
-                        '<label class="btn btn-light btn-outline-success-dark ' + status + '" style="width: 40px !important; padding: 0px !important" for="btn-check-' + value.course_code + '">' + value.credits + '</label>' +
+                        '<label class="btn btn-outline-success-dark ' + status + '" style="width: 40px !important; margin: 0px !important; padding: 0px !important" for="btn-check-' + value.course_code + '">' + value.credits + '</label>' +
                         '</td>' +
                         '</tr>';
 
@@ -163,9 +155,7 @@ function otherSemesterCourses() {
             if (xhr.status == 401) {
                 alert("Your session expired, logging you out...");
                 window.location.href = "?logout";
-            } else {
-                console.log("Error: " + status + " - " + error);
-            }
+            } else console.log("Error: " + status + " - " + error);
         }
     });
 }
@@ -182,17 +172,13 @@ function registrationSummary() {
                 total_credit = result.message.total_credit ? result.message.total_credit : 0;
                 $("#total-registered-courses").html(total_course);
                 $("#total-registered-credits").html(total_credit);
-            } else {
-                alert(result.message);
-            }
+            } else alert(result.message);
         },
         error: function (xhr, status, error) {
             if (xhr.status == 401) {
                 alert("Your session expired, logging you out...");
                 window.location.href = "?logout";
-            } else {
-                console.log("Error: " + status + " - " + error);
-            }
+            } else console.log("Error: " + status + " - " + error);
         }
     });
 }
@@ -205,20 +191,14 @@ function courseInfo(course_code) {
         url: "api/course/info?cc=" + course_code,
         success: function (result) {
             console.log(result);
-
-            if (result.success) {
-                console.log(result.message);
-            } else {
-                alert(result.message);
-            }
+            if (result.success) console.log(result.message);
+            else alert(result.message);
         },
         error: function (xhr, status, error) {
             if (xhr.status == 401) {
                 alert("Your session expired, logging you out...");
                 window.location.href = "?logout";
-            } else {
-                console.log("Error: " + status + " - " + error);
-            }
+            } else console.log("Error: " + status + " - " + error);
         }
     });
 }
