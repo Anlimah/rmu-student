@@ -1,33 +1,19 @@
 <?php
 session_start();
 
+require_once('bootstrap.php');
+
+use Src\Core\Base;
+
+if (Base::sessionExpire());
+
 if (!isset($_SESSION["student"]['login']) || $_SESSION["student"]['login'] !== true) header('Location: login.php');
 if ($_SESSION["student"]['default_password']) header("Location: create-password.php");
 
-if (isset($_GET['logout'])) {
-    session_destroy();
-    $_SESSION = array();
-    if (ini_get("session.use_cookies")) {
-        $params = session_get_cookie_params();
-        setcookie(
-            session_name(),
-            '',
-            time() - 42000,
-            $params["path"],
-            $params["domain"],
-            $params["secure"],
-            $params["httponly"]
-        );
-    }
-
-    header('Location: login.php');
-}
-
-require_once('bootstrap.php');
+if (isset($_GET['logout'])) Base::logout();
 
 use Src\Controller\Semester;
 use Src\Controller\Student;
-use Src\Core\Base;
 
 $config = require('config/database.php');
 $student_index = isset($_SESSION["student"]['index_number']) && !empty($_SESSION["student"]["index_number"]) ? $_SESSION["student"]["index_number"] : "";
@@ -262,6 +248,10 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
 
             $("#register-here-btn").on("click", function() {
                 window.location.href = "register-courses.php";
+            });
+
+            $(document).on("click", ".logout-btn", function() {
+                window.location.href = "?logout";
             });
 
         });

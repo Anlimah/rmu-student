@@ -33,7 +33,7 @@ class Base
         die("Page Not Found");
     }
 
-    public static function killSession()
+    public static function killSession(): bool
     {
         session_destroy();
         if (ini_get("session.use_cookies")) {
@@ -47,35 +47,29 @@ class Base
                 $params["secure"],
                 $params["httponly"]
             );
-            return 1;
+            return true;
         }
-        return 0;
+        return false;
     }
 
-    public static function sessionExpire()
+    public static function sessionExpire(): bool
     {
         if (!isset($_SESSION["lastAccessed"])) $_SESSION["lastAccessed"] = time();
         $_SESSION["currentAccess"] = time();
-
         $diff = $_SESSION["currentAccess"] - $_SESSION["lastAccessed"];
 
         if ($diff > 1800) {
             if (self::killSession()) $_SESSION = array();
-            http_response_code(401);
-            die(json_encode(array("success" => false, "message" => "logout")));
+            return true;
         }
+        $_SESSION["lastAccessed"] = time();
+        return false;
     }
 
-    public static function killSessionRedirect()
+    public static function logout()
     {
-        if (!isset($_SESSION["lastAccessed"])) $_SESSION["lastAccessed"] = time();
-        $_SESSION["currentAccess"] = time();
-
-        $diff = $_SESSION["currentAccess"] - $_SESSION["lastAccessed"];
-
-        if ($diff > 1800) {
-            if (self::killSession()) $_SESSION = array();
-            header('Location: login.php');
-        }
+        self::killSession();
+        $_SESSION = array();
+        header('Location: login.php');
     }
 }

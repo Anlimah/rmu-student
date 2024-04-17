@@ -1,34 +1,20 @@
 <?php
-session_start();
+
+require_once('bootstrap.php');
+
+use Src\Core\Base;
+
+if (Base::sessionExpire());
 
 if (!isset($_SESSION["student"]['login']) || $_SESSION["student"]['login'] !== true) header('Location: login.php');
-if (isset($_SESSION["student"]["default_password"]) && !$_SESSION["student"]["default_password"])  header('Location: index.php');
+if ($_SESSION["student"]['default_password']) header("Location: create-password.php");
+
+if (isset($_GET['logout'])) Base::logout();
 
 if (!isset($_SESSION["_start_create_password"])) {
     $rstrong = true;
     $_SESSION["_start_create_password"] = hash('sha256', bin2hex(openssl_random_pseudo_bytes(64, $rstrong)));
 }
-
-if (isset($_GET['logout'])) {
-    session_destroy();
-    $_SESSION = array();
-    if (ini_get("session.use_cookies")) {
-        $params = session_get_cookie_params();
-        setcookie(
-            session_name(),
-            '',
-            time() - 42000,
-            $params["path"],
-            $params["domain"],
-            $params["secure"],
-            $params["httponly"]
-        );
-    }
-
-    header('Location: login.php');
-}
-
-$_SESSION["lastAccessed"] = time();
 ?>
 
 <!DOCTYPE html>

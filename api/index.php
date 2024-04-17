@@ -17,7 +17,10 @@ require "../bootstrap.php";
 use Src\Controller\Course;
 use Src\Core\Base;
 
-Base::sessionExpire();
+if (Base::sessionExpire()) {
+    http_response_code(401);
+    die(json_encode(array("success" => false, "message" => "logout")));
+}
 
 $config = require('../config/database.php');
 
