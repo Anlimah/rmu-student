@@ -5,7 +5,9 @@ require_once('bootstrap.php');
 
 use Src\Core\Base;
 
-if (Base::sessionExpire());
+if (Base::sessionExpire()) {
+    echo "<script>alert('Your session expired, logging you out...');</script>";
+}
 
 if (!isset($_SESSION["student"]['login']) || $_SESSION["student"]['login'] !== true) header('Location: login.php');
 if ($_SESSION["student"]['default_password']) header("Location: create-password.php");

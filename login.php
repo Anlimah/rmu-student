@@ -37,12 +37,6 @@ $_SESSION["lastAccessed"] = time();
             box-shadow: none !important;
             border-color: #86b7fe transparent !important;
         }
-
-        @media (width < 769px) {
-            .loginFormContainer {
-                margin-top: 70px;
-            }
-        }
     </style>
 </head>
 
@@ -50,46 +44,45 @@ $_SESSION["lastAccessed"] = time();
 
     <div id="wrapper">
 
-        <?php require_once("inc/page-nav2.php") ?>
+        <?php require_once("inc/page-nav1.php") ?>
 
-        <main>
+        <main class="container">
             <div class="row">
 
                 <div class="col login-section">
                     <section class="login">
 
-                        <div style="width:auto">
-
-                            <!--Form card-->
-                            <div class="card loginFormContainer" style="margin-bottom: 10px; min-width: 360px; max-width: 360px">
-                                <div class="row" style="display: flex; justify-content:center; padding-top: 50px;  padding-bottom: 0;  margin-bottom:0 !important;">
-                                    <img src="assets/images/icons8-id-verified-96.png" alt="sign in image" style="width: 120px;">
-                                    <h1 class="text-center" style="color: #003262; margin: 15px 0px !important;">SIGN IN</h1>
+                        <!--Form card-->
+                        <div class="card loginFormContainer" style="margin-bottom: 10px; min-width: 320px; max-width: 360px">
+                            <div class="row">
+                                <div style="display: flex; flex-direction: column; align-items: center; padding-top: 30px;  padding-bottom: 30px;  margin-bottom:0 !important;">
+                                    <img src="assets/images/icons8-id-verified-96.png" alt="sign in image" style="width: 80px;">
+                                    <h1 class="text-center" style="color: #003262; margin: 0px !important;  padding:0 !important;">Sign In</h1>
                                 </div>
+                            </div>
 
-                                <hr style="padding-top: 15px !important;">
+                            <hr style="padding-top: 0px !important;">
 
-                                <div style="margin: 0px 12% !important">
-                                    <form id="appLoginForm">
-                                        <div class="mb-4">
-                                            <input class="form-control form-control-lg form-control-login" type="text" id="usp_identity" name="usp_identity" placeholder="INDEX NUMBER">
-                                        </div>
-
-                                        <div class="mb-4">
-                                            <input class="form-control form-control-lg form-control-login" type="password" id="usp_password" name="usp_password" placeholder="PASSWORD">
-                                        </div>
-
-                                        <div class="mb-4">
-                                            <button type="submit" class="btn btn-primary form-btn-login">SIGN IN</button>
-                                        </div>
-
-                                        <input type="hidden" name="_logToken" value="<?= $_SESSION['_start'] ?>">
-                                    </form>
-
-                                    <div class="row" style="margin-bottom:30px;">
-                                        <a href="reset-password.php" style="color: #003262 !important; text-decoration:underline !important">FORGOT YOUR PASSWORD?</a>
+                            <div style="margin: 0px 12% !important">
+                                <div id="loginMsgDisplay"> </div>
+                                <form id="appLoginForm">
+                                    <div class="mb-4">
+                                        <input class="form-control form-control-lg form-control-login" type="text" id="usp_identity" name="usp_identity" placeholder="Index Number">
                                     </div>
 
+                                    <div class="mb-4">
+                                        <input class="form-control form-control-lg form-control-login" type="password" id="usp_password" name="usp_password" placeholder="Password">
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <button type="submit" class="btn btn-primary form-btn-login">Submit</button>
+                                    </div>
+
+                                    <input type="hidden" name="_logToken" value="<?= $_SESSION['_start'] ?>">
+                                </form>
+
+                                <div class="row" style="margin-bottom:30px;">
+                                    <a href="forgot-password.php" style="color: #003262 !important; text-decoration:underline !important">Forgot your password?</a>
                                 </div>
 
                             </div>
@@ -133,8 +126,22 @@ $_SESSION["lastAccessed"] = time();
                     processData: false,
                     success: function(result) {
                         console.log(result);
-                        alert(result['message']);
-                        if (result.success) window.location.reload();
+
+                        if (result.success) {
+                            $("#loginMsgDisplay").html(
+                                '<div class="alert alert-success alert-dismissible fade show" role="alert">' +
+                                '<span id="alert-msg"><strong>' + result.message + '</strong> Redirecting...</span>' +
+                                '</div>');
+                            setTimeout(function() {
+                                window.location.reload();
+                            }, 3000);
+                            return;
+                        }
+                        $("#loginMsgDisplay").html(
+                            '<div class="alert alert-danger alert-dismissible fade show" role="alert">' +
+                            '<span id="alert-msg"><strong>' + result.message + '</strong></span>' +
+                            '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' +
+                            '</div>');
                     },
                     error: function(xhr, status, error) {
                         if (xhr.status == 401) {

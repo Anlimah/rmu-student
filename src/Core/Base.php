@@ -47,6 +47,7 @@ class Base
                 $params["secure"],
                 $params["httponly"]
             );
+            $_SESSION = array();
             return true;
         }
         return false;
@@ -59,7 +60,7 @@ class Base
         $diff = $_SESSION["currentAccess"] - $_SESSION["lastAccessed"];
 
         if ($diff > 1800) {
-            if (self::killSession()) $_SESSION = array();
+            self::killSession();
             return true;
         }
         $_SESSION["lastAccessed"] = time();
@@ -69,7 +70,6 @@ class Base
     public static function logout()
     {
         self::killSession();
-        $_SESSION = array();
         header('Location: login.php');
     }
 }

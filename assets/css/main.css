@@ -343,7 +343,7 @@ fieldset legend {
 
 .form-control-login,
 .form-btn-login {
-	padding: 5px !important;
+	padding: 10px !important;
 }
 
 .form-btn-login {
@@ -915,13 +915,13 @@ form {
 	}
 
 	.rmu-logo-letter.logo-letter {
-		font-size: 12px !important;
+		font-size: 14px !important;
 		font-weight: 600 !important;
 		letter-spacing: 0rem !important;
 	}
 
 	.rmu-logo-letter.description {
-		font-size: 12px !important;
+		font-size: 14px !important;
 		letter-spacing: 0.3rem !important;
 	}
 

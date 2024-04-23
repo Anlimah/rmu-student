@@ -49,14 +49,12 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                     $_SESSION["student"]["index_number"],
                     $_SESSION["semester"]["id"]
                 );
-
                 if (empty($st_semester_courses)) {
                     die(json_encode(array("success" => false, "message" => "No courses assigned to you yet.")));
                 }
                 die(json_encode(array("success" => true, "message" => $st_semester_courses)));
 
             case 'registration-summary':
-
                 $result = $studentObj->fetchCourseRegistrationSummary(
                     $_SESSION["student"]["index_number"],
                     $_SESSION["semester"]["id"]
@@ -73,7 +71,6 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                     $_SESSION["semester"]["name"],
                     200
                 );
-
                 if (empty($st_semester_courses)) {
                     die(json_encode(array("success" => false, "message" => "You don't have unregistered courses.")));
                 }
@@ -89,7 +86,6 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                 if (!isset($_GET["cc"]) || empty($_GET["cc"])) {
                     die(json_encode(array("success" => false, "message" => "Invalid request!")));
                 }
-
                 $course_info = $courseObj->courseInfo($_GET["cc"]);
                 if (empty($course_info)) {
                     die(json_encode(array("success" => false, "message" => "No results found for this course!")));
@@ -114,7 +110,6 @@ elseif ($_SERVER['REQUEST_METHOD'] == "POST") {
         switch ($action) {
 
             case 'login':
-
                 if (!isset($_SESSION["_start"]) || empty($_SESSION["_start"]))
                     die(json_encode(array("success" => false, "message" => "Invalid request: 1!")));
                 if (!isset($_POST["_logToken"]) || empty($_POST["_logToken"]))
@@ -145,7 +140,6 @@ elseif ($_SERVER['REQUEST_METHOD'] == "POST") {
                 die(json_encode(array("success" => true,  "message" => "Login successfull!")));
 
             case 'create-password':
-
                 if (!isset($_SESSION["_start_create_password"]) || empty($_SESSION["_start_create_password"]))
                     die(json_encode(array("success" => false, "message" => "Invalid request: 1!")));
                 if (!isset($_POST["_cpToken"]) || empty($_POST["_cpToken"]))
@@ -154,7 +148,6 @@ elseif ($_SERVER['REQUEST_METHOD'] == "POST") {
                     die(json_encode(array("success" => false, "message" => "Invalid request: 3!")));
 
                 $password = Validator::Password2($_POST["new-usp-password"]);
-
                 $result = $studentObj->createNewPassword($_SESSION["student"]["index_number"], $password);
                 if (!$result["success"]) die(json_encode($result));
                 $_SESSION["student"]['default_password'] = 0;
@@ -162,52 +155,43 @@ elseif ($_SERVER['REQUEST_METHOD'] == "POST") {
 
                 // gets all the assigned semester courses 
             case 'semester-courses':
-
                 $st_semester_courses = $studentObj->fetchSemesterCourses(
                     $_SESSION["student"]["index_number"],
                     $_SESSION["semester"]["id"]
                 );
-
                 if (empty($st_semester_courses)) {
                     die(json_encode(array("success" => false, "message" => "No courses assigned to you yet.")));
                 }
                 die(json_encode(array("success" => true, "message" => $st_semester_courses)));
 
             case 'register-courses':
-                if (isset($_POST['selected-course']) && is_array($_POST['selected-course'])) {
-                    $selected_courses = Validator::InputTextNumberForArray($_POST['selected-course']);
-                    //die(json_encode($selected_courses));
-
-                    $result = $studentObj->registerSemesterCourses(
-                        $selected_courses,
-                        $_SESSION["student"]["index_number"],
-                        $_SESSION["semester"]["id"]
-                    );
-
-                    $feed = Validator::SendResult(
-                        $result,
-                        "You have successfully registered $result courses for the semester!",
-                        "Failed to register your semester courses. The process could not complete!"
-                    );
-
-                    die(json_encode($feed));
-                } else {
+                if (!isset($_POST['selected-course']) || !is_array($_POST['selected-course'])) {
                     die(json_encode(array("success" => false,  "message" => "You have not selected any course!")));
                 }
+                $selected_courses = Validator::InputTextNumberForArray($_POST['selected-course']);
+                $result = $studentObj->registerSemesterCourses(
+                    $selected_courses,
+                    $_SESSION["student"]["index_number"],
+                    $_SESSION["semester"]["id"]
+                );
+                $feed = Validator::SendResult(
+                    $result,
+                    "You have successfully registered $result courses for the semester!",
+                    "Failed to register your semester courses. The process could not complete!"
+                );
+                die(json_encode($feed));
+
 
             case 'reset-course-registration':
-
                 $result = $studentObj->resetCourseRegistration(
                     $_SESSION["student"]["index_number"],
                     $_SESSION["semester"]["id"]
                 );
-
                 $feed = Validator::SendResult(
                     $result,
                     "Semester course registration reseted!",
                     "Failed to reset semester courses registration!"
                 );
-
                 die(json_encode($feed));
 
                 // gets all the assigned semester courses 
@@ -218,7 +202,6 @@ elseif ($_SERVER['REQUEST_METHOD'] == "POST") {
                     $_SESSION["semester"]["name"],
                     200
                 );
-
                 if (empty($st_semester_courses)) {
                     die(json_encode(array("success" => false, "message" => "You don't have unregistered courses.")));
                 }
