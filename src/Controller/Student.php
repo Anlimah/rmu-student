@@ -50,7 +50,8 @@ class Student
     public function resetCourseRegistration($student, $semester): mixed
     {
         //return $course . ' ' . $student . ' ' . $semester;
-        $query = "UPDATE `course_registration` SET `registered` = 0 WHERE `fk_student` = :fks AND `fk_semester_registered` = :fkm";
+        $query = "UPDATE `course_registration` SET `registered` = 0, `fk_semester_registered` = NULL 
+        WHERE `fk_student` = :fks AND `fk_semester` = :fkm";
         return $this->dm->run($query, array(':fks' => $student, ':fkm' => $semester))->edit();
     }
 
@@ -217,19 +218,20 @@ class Student
             `course_registration` AS cr 
             JOIN `course` AS cs ON cr.`fk_course` = cs.`code` 
             JOIN `course_category` AS cc ON cs.`fk_category` = cc.`id` 
-            JOIN `semester` AS sm ON cr.`fk_semester_registered` = sm.`id` 
+            JOIN `semester` AS sm ON cr.`fk_semester` = sm.`id` 
             JOIN `student` AS st ON cr.`fk_student` = st.`index_number` 
         WHERE 
-            sm.`name` = :s
-            AND cs.`level` < :l
+            sm.`name` = :s 
+            AND cs.`level` < :l 
             AND (
                 cr.`registered` = :r 
                 OR (
                     cr.`fk_course` NOT IN (
                         SELECT cr2.`fk_course` 
                         FROM `course_registration` AS cr2 
-                        JOIN `semester` AS sm2 ON cr2.`fk_semester_registered` = sm2.`id` 
-                        WHERE cr2.`fk_student` = st.`index_number` AND sm2.`id` != :cs
+                        JOIN `semester` AS sm2 ON cr2.`fk_semester` = sm2.`id` 
+            			JOIN `student` AS st2 ON cr2.`fk_student` = st2.`index_number` 
+                        WHERE cr2.`fk_student` = st2.`index_number` AND sm2.`id` != :cs
                     )
                     AND sm.`id` = :cs
                 )
