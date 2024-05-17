@@ -8,7 +8,6 @@ use Src\Core\Base;
 if (Base::sessionExpire());
 
 if (!isset($_SESSION["student"]['login']) || $_SESSION["student"]['login'] !== true) header('Location: login.php');
-if ($_SESSION["student"]['default_password']) header("Location: create-password.php");
 
 if (isset($_GET['logout'])) Base::logout();
 

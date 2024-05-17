@@ -131,6 +131,15 @@ if (!isset($_SESSION["_start_create_password"])) {
                     }
                 });
             });
+            
+            /*$(document).on({
+                ajaxStart: function() {
+                    $.LoadingOverlay("show");
+                },
+                ajaxStop: function() {
+                    $.LoadingOverlay("hide");
+                }
+            });*/
         });
     </script>
 </body>

@@ -186,16 +186,34 @@ CREATE INDEX `student_default_password_idx1` ON `student` (`default_password`);
 CREATE INDEX `student_archived_idx1` ON `student` (`archived`);
 
 -- -----------------------------------------------------
+-- Table `level`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `level`;
+CREATE TABLE IF NOT EXISTS `level` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `level` INT NOT NULL,
+  `deferred` TINYINT(1) DEFAULT 0,
+  `completed` TINYINT(1) DEFAULT 0,
+  `fk_student` VARCHAR(10) NULL,
+  CONSTRAINT `fk_course_registration_student1` FOREIGN KEY (`fk_student`) REFERENCES `student` (`index_number`) ON DELETE NO ACTION ON UPDATE CASCADE
+);
+
+-- -----------------------------------------------------
 -- Table `curriculum`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `curriculum`;
 CREATE TABLE IF NOT EXISTS `curriculum` (
   `id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(255) NOT NULL,
+  `credits` INT DEFAULT 0,
+  `semester` INT NOT NULL,
+  `level` INT NOT NULL,
   `archived` TINYINT(1) DEFAULT 0,
-  `fk_program` INT NULL,
+  `added_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `fk_class` VARCHAR(10) NULL,
   `fk_course` VARCHAR(10) NULL,
   PRIMARY KEY (`id`),
-  CONSTRAINT `fk_curriculum_program1` FOREIGN KEY (`fk_program`) REFERENCES `programs` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
+  CONSTRAINT `fk_curriculum_class1` FOREIGN KEY (`fk_class`) REFERENCES `class` (`code`) ON DELETE NO ACTION ON UPDATE CASCADE,
   CONSTRAINT `fk_curriculum_course1` FOREIGN KEY (`fk_course`) REFERENCES `course` (`code`) ON DELETE NO ACTION ON UPDATE CASCADE
 );
 CREATE INDEX curriculum_archived_idx1 ON `curriculum` (`archived`);
@@ -259,14 +277,7 @@ CREATE TABLE IF NOT EXISTS `course_registration` (
   CONSTRAINT `fk_course_registration_student1` FOREIGN KEY (`fk_student`) REFERENCES `student` (`index_number`) ON DELETE NO ACTION ON UPDATE CASCADE,
   CONSTRAINT `fk_course_registration_semester1` FOREIGN KEY (`fk_semester`) REFERENCES `semester` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE
 );
-ALTER TABLE `course_registration` 
-ADD COLUMN `registered` TINYINT(1) DEFAULT 0 AFTER `fk_semester`,
-ADD COLUMN `fk_semester_registered` INT AFTER `fk_semester`,
-ADD COLUMN `semester` INT AFTER `fk_semester_registered`,
-ADD COLUMN `level` INT AFTER `fk_semester_registered`,
-ADD CONSTRAINT `fk_course_registration_semester2` FOREIGN KEY (`fk_semester_registered`) REFERENCES `semester` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE;
 CREATE INDEX course_registration_archived_idx1 ON `course_registration` (`archived`);
-CREATE INDEX course_registration_registered_idx1 ON `course_registration` (`registered`);
 
 -- -----------------------------------------------------
 -- Table `staff`
@@ -312,3 +323,5 @@ CREATE TABLE IF NOT EXISTS `lecture` (
 CREATE INDEX lecture_archived_idx1 ON `lecture` (`archived`);
 
 ALTER TABLE `admission_period` ADD CONSTRAINT `fk_admission_period_academic_year` FOREIGN KEY (`fk_academic_year`) REFERENCES `academic_year`(`id`) ON DELETE NO ACTION ON UPDATE CASCADE; 
+
+ALTER TABLE `course` ADD CONSTRAINT `fk_course_category1` FOREIGN KEY (`fk_category`) REFERENCES `course_category`(`id`) ON DELETE NO ACTION ON UPDATE CASCADE; ALTER TABLE `course` ADD CONSTRAINT `fk_course_department1` FOREIGN KEY (`fk_department`) REFERENCES `department`(`id`) ON DELETE NO ACTION ON UPDATE CASCADE; 

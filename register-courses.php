@@ -244,43 +244,6 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
                 </div>
             </div>
 
-            <!-- Modal for adding a course for registration
-            <div class="modal fade" id="addCourseModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="addCourseModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="addCourseModalLabel">Add Course(s) to register</h1>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="unregistered-courses-disp">
-                                <form id="add-course-search-form" class="mb-4 ">
-                                    <div style="display: flex; justify-content: right; align-items: center;">
-                                        <div class="add-course-search" style="display: flex; justify-content: center; align-items:center">
-                                            <input type="text" id="search-input" class="form-control form-control-sm" placeholder="Search...">
-                                            <span class="bi bi-search btn"></span>
-                                        </div>
-                                    </div>
-                                </form>
-                                <table id="search-other-courses-tbl" class="table table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th style="width: 90% !important; text-align: left;">Course Title</th>
-                                            <th style="width: 10% !important; text-align: right;"></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="other-semester-courses">
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <div class="modal-footer" id="save-unreg-courses-btn-area">
-                            <button type="button" class="btn btn-outline-primary-dark" id="add-courses-to-reg-btn">Add Courses</button>
-                        </div>
-                    </div>
-                </div>
-            </div> -->
-
         </main>
 
         <?php require_once("inc/app-sections-menu.php"); ?>
@@ -370,14 +333,14 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
                 });
             });
 
-            $(document).on({
+            /*$(document).on({
                 ajaxStart: function() {
                     $.LoadingOverlay("show");
                 },
                 ajaxStop: function() {
                     $.LoadingOverlay("hide");
                 }
-            });
+            });*/
         });
     </script>
 </body>

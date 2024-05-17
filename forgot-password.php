@@ -56,7 +56,7 @@ if (!isset($_SESSION["_start_forgot_password"])) {
                             <!--Form card-->
                             <div class="card loginFormContainer" style="margin-bottom: 10px; min-width: 360px; max-width: 360px;">
                                 <div class="row" style="display: flex; justify-content:center; padding-top: 50px;  padding-bottom: 0;  margin-bottom:0 !important;">
-                                    <img src="assets/images/icons8-authentication-100.png" alt="sign in image" style="width: 120px;">
+                                    <img src="assets/images/icons8-forgot-password-96(1).png" alt="sign in image" style="width: 120px;">
                                     <h1 class="text-center" style="color: #003262; margin: 15px 0px !important;">Forgot Password</h1>
                                 </div>
                                 <hr style="padding-top: 15px !important;">
