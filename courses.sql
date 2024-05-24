@@ -16,10 +16,6 @@ INSERT INTO `course`(`code`, `name`, `credits`, `semester`, `level`, `fk_categor
 ("BINT 405", "Artificial Intelligence", "3", "1", "400", "1", "1"),
 ("BINT 407", "Wireless Technologies", "3", "1", "400", "1", "1"),
 ("BINT 400", "Project", "6", "1", "400", "1", "1"),
--- ("BCME 409", "Artificial Intelligence", "3", "1", "400", "1", "1"),
--- ("BPSA 301", "Principles of Management", "3", "1", "400", "1", "1"),
--- ("BINT 403", "Management Information Systems (MIS)", "3", "1", "400", "1", "1"),
-
 
 ("BCME 303", "Computer Communication Networks", "3", "1", "300", "1", "1"),
 ("BCME 309", "Design & Analysis Of Digital Systems", "3", "1", "300", "1", "1"),
@@ -76,15 +72,6 @@ INSERT INTO `course`(`code`, `name`, `credits`, `semester`, `level`, `fk_categor
 ("BINT 209", "Computer Architecture", "3", "1", "200", "1", "1"),
 ("BINT 205", "Programming (WITH C++)", "3", "1", "200", "1", "1"),
 
--- ("BSMA 201", "Multivarialculus & Differential Equations", "3", "1", "200", "1", "1"),
--- ("BACC 205", "Principles of Accounting I", "3", "1", "200", "1", "1"),
--- ("BINT 201", "Systems Analysis & Design", "3", "1", "200", "1", "1"),
--- ("BINT 203", "Object Oriented Programming (Principles)", "3", "1", "200", "1", "1"),
--- ("BINT 205", "Programming (With C++)", "3", "1", "200", "1", "1"),
--- ("BINT 207", "Introduction to Organizational Behaviour", "3", "1", "200", "1", "1"),
--- ("BINT 209", "Computer Architecture", "3", "1", "200", "1", "1"),
-
-
 ("BEEE 101", "Applied Electricity", "3", "1", "100", "1", "1"),
 ("BMAE 101", "Basic Mechanics", "3", "1", "100", "1", "1"),
 ("BCME 101", "Computer Studies I (Intro To Computer Applications)", "3", "1", "100", "1", "1"),
@@ -106,16 +93,4 @@ INSERT INTO `course`(`code`, `name`, `credits`, `semester`, `level`, `fk_categor
 ("DITE 101", "Introduction To Computing", "3", "1", "100", "1", "1"),
 ("DITE 103", "Principles of Programming and Problem Solving", "3", "1", "100", "1", "1"),
 ("DITE 105", "Critical Thinking and Practical Reasoning", "3", "1", "100", "1", "1")
-;
-
--- ("BEEE 101", "Applied Electricity", "3", "1", "100", "1", "1"),
--- ("BCME 101", "Computer Studies I (Intro. to Computer Applications)", "3", "1", "100", "1", "1"),
--- ("BSMA 101", "Mathematics I (Algebra With Analysis)", "3", "1", "100", "1", "1"),
--- ("UCOM 101", "Communication Skills I", "2", "1", "100", "1", "1"),
--- ("UFRE 103", "French I", "2", "1", "100", "1", "1"),
--- ("BSMA 101", "Calculus I", "3", "1", "100", "1", "1"),
--- ("UCOM 101", "Communication Skills", "2", "1", "100", "1", "1"),
--- ("UFRE 103", "French I", "2", "1", "100", "1", "1"),
--- ("BSMA 101", "Calculus I", "3", "1", "100", "1", "1")
--- ("SBUS 105", "Principles of Management", "3", "1", "100", "1", "1"),
 
