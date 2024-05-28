@@ -34,6 +34,60 @@ class Student
         return array("success" => false, "message" => "New password creation failed!");
     }
 
+    public function setSemesterCourses($data): mixed
+    {
+        // add student semester courses to course registration
+        // get current semester courses for level 100
+        $q1 = "SELECT * FROM course WHERE `semester` = 1 AND `level` = 100 AND fk_department = :d";
+        $q1_result = $this->dm->run($q1, array(":d" => $data["department"]))->all();
+        //return array("success" => false, "message" => $q1_result);
+        if (!empty($q1_result)) {
+            $q2 = "SELECT `id` FROM semester WHERE `active` = 1";
+            $q2_result = $this->dm->run($q2)->one();
+            //return array("success" => false, "message" => $q2_result[0]["id"]);
+            if (!empty($q2_result)) {
+                foreach ($q1_result as $course) {
+                    //return array("success" => false, "message" => $course);
+                    $q3 = "INSERT INTO `course_registration` (`fk_course`, `fk_student`, `fk_semester`, `level`, `semester`) 
+                        VALUES (:fkc, :fks, :fkt, :l, :s)";
+                    $params3 = array(
+                        ":fkc" => $course["code"],
+                        ":fks" => $data["index_number"],
+                        ":fkt" => $q2_result[0]["id"],
+                        ":l" => 100,
+                        ":s" => 1
+                    );
+                    $this->dm->run($q3, $params3)->add();
+                }
+            }
+        }
+        // add student semester courses to course registration
+        // get current semester courses for level 100
+        /*$q1 = "SELECT * FROM course WHERE `semester` = 1 AND `level` = 100 AND fk_department = :d";
+        $q1_result = $this->dm->run($q1, array(":d" => $data["department"]))->all();
+        //return array("success" => false, "message" => $q1_result);
+        if (!empty($q1_result)) {
+            $q2 = "SELECT `id` FROM semester WHERE `active` = 1";
+            $q2_result = $this->dm->run($q2)->one();
+            //return array("success" => false, "message" => $q2_result[0]["id"]);
+            if (!empty($q2_result)) {
+                foreach ($q1_result as $course) {
+                    //return array("success" => false, "message" => $course);
+                    $q3 = "INSERT INTO `course_registration` (`fk_course`, `fk_student`, `fk_semester`, `level`, `semester`) 
+                        VALUES (:fkc, :fks, :fkt, :l, :s)";
+                    $params3 = array(
+                        ":fkc" => $course["code"],
+                        ":fks" => $data["index_number"],
+                        ":fkt" => $q2_result[0]["id"],
+                        ":l" => 100,
+                        ":s" => 1
+                    );
+                    $this->dm->run($q3, $params3)->add();
+                }
+            }
+        }*/
+    }
+
     public function registerSemesterCourses(array $courses, $student, $semester): mixed
     {
         $registered_courses = 0;

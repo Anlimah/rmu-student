@@ -156,6 +156,11 @@ elseif ($_SERVER['REQUEST_METHOD'] == "POST") {
                 $_SESSION["student"]['default_password'] = 0;
                 die(json_encode($result));
 
+            case 'set-semester-courses':
+                if (!isset($_SESSION["_start_create_password"]) || empty($_SESSION["_start_create_password"]))
+                    die(json_encode(array("success" => false, "message" => "Invalid request: 1!")));
+                $result = $studentObj->setSemesterCourses($POST);
+
                 // gets all the assigned semester courses 
             case 'semester-courses':
                 $st_semester_courses = $studentObj->fetchSemesterCourses(
