@@ -213,24 +213,12 @@ CREATE INDEX level_archived_idx1 ON `level` (`archived`);
 DROP TABLE IF EXISTS `curriculum`;
 CREATE TABLE IF NOT EXISTS `curriculum` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(255) NOT NULL,
-  `credits` INT DEFAULT 0,
-  `semester` INT NOT NULL,
-  `level` INT NOT NULL,
-  `archived` TINYINT(1) DEFAULT 0,
-  `added_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  `fk_class` VARCHAR(10) NULL,
+  `fk_program` VARCHAR(10) NULL,
   `fk_course` VARCHAR(10) NULL,
   PRIMARY KEY (`id`),
-  CONSTRAINT `fk_curriculum_class1` FOREIGN KEY (`fk_class`) REFERENCES `class` (`code`) ON DELETE NO ACTION ON UPDATE CASCADE,
+  CONSTRAINT `fk_curriculum_program1` FOREIGN KEY (`fk_program`) REFERENCES `program` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
   CONSTRAINT `fk_curriculum_course1` FOREIGN KEY (`fk_course`) REFERENCES `course` (`code`) ON DELETE NO ACTION ON UPDATE CASCADE
 );
-CREATE INDEX curriculum_name_idx1 ON `curriculum` (`name`);
-CREATE INDEX curriculum_credits_idx1 ON `curriculum` (`credits`);
-CREATE INDEX curriculum_semester_idx1 ON `curriculum` (`semester`);
-CREATE INDEX curriculum_level_idx1 ON `curriculum` (`level`);
-CREATE INDEX curriculum_archived_idx1 ON `curriculum` (`archived`);
-CREATE INDEX curriculum_added_at_idx1 ON `curriculum` (`added_at`);
 
 -- -----------------------------------------------------
 -- Table `section`
