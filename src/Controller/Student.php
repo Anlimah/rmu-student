@@ -38,8 +38,9 @@ class Student
     {
         // add student semester courses to course registration
         // get current semester courses for level 100
-        
-        $q1 = "SELECT * FROM course WHERE `semester` = 1 AND `level` = 100 AND fk_department = :d";
+
+        $q1 = "SELECT * FROM course AS cs, curriculum AS cr, programs AS pg 
+        WHERE cr.`fk_course` = cs.`code`AND cr.`fk_program` = pg.`id` AND cr.fk_program = :pg";
         $q1_result = $this->dm->run($q1, array(":d" => $data["department"]))->all();
         //return array("success" => false, "message" => $q1_result);
         if (!empty($q1_result)) {
