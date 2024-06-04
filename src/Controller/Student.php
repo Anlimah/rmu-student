@@ -38,6 +38,7 @@ class Student
     {
         // add student semester courses to course registration
         // get current semester courses for level 100
+        
         $q1 = "SELECT * FROM course WHERE `semester` = 1 AND `level` = 100 AND fk_department = :d";
         $q1_result = $this->dm->run($q1, array(":d" => $data["department"]))->all();
         //return array("success" => false, "message" => $q1_result);
