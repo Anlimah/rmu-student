@@ -119,7 +119,35 @@ if (!isset($_SESSION["_start_create_password"])) {
                     success: function(result) {
                         console.log(result);
                         alert(result['message']);
-                        if (result.success) window.location.reload();
+                        if (result.success) {
+                            payload = {
+                                "index_number": result.data
+                            }
+                            $.ajax({
+                                type: "POST",
+                                url: "api/student/setup-courses",
+                                data: payload,
+                                contentType: false,
+                                cache: false,
+                                success: function(result) {
+                                    console.log(result);
+                                    alert(result['message']);
+                                    if (result.success) {
+
+                                        window.location.reload();
+                                    }
+                                },
+                                error: function(xhr, status, error) {
+                                    if (xhr.status == 401) {
+                                        alert("Your session expired, logging you out...");
+                                        window.location.href = "?logout";
+                                    } else {
+                                        console.log("Error: " + status + " - " + error);
+                                    }
+                                }
+                            });
+                            window.location.reload();
+                        }
                     },
                     error: function(xhr, status, error) {
                         if (xhr.status == 401) {
@@ -131,7 +159,7 @@ if (!isset($_SESSION["_start_create_password"])) {
                     }
                 });
             });
-            
+
             /*$(document).on({
                 ajaxStart: function() {
                     $.LoadingOverlay("show");

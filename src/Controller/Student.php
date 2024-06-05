@@ -30,18 +30,18 @@ class Student
         $hashed_pass = password_hash($password, PASSWORD_BCRYPT);
         $sql = "UPDATE `student` SET `password` = :p, `default_password` = 0 WHERE `index_number` = :u";
         $data = $this->dm->run($sql, array(':p' => $hashed_pass, ':u' => $index_number))->edit();
-        if (!empty($data)) return array("success" => true, "message" => "New password created successfully!");
+        if (!empty($data)) return array("success" => true, "message" => "New password created successfully!", "data" => $index_number);
         return array("success" => false, "message" => "New password creation failed!");
     }
 
-    public function setSemesterCourses($data): mixed
+    public function setupSemester($index_number): mixed
     {
         // add student semester courses to course registration
         // get current semester courses for level 100
 
-        $q1 = "SELECT * FROM course AS cs, curriculum AS cr, programs AS pg 
-        WHERE cr.`fk_course` = cs.`code`AND cr.`fk_program` = pg.`id` AND cr.fk_program = :pg";
-        $q1_result = $this->dm->run($q1, array(":d" => $data["department"]))->all();
+        $q1 = "SELECT * FROM course AS cs, curriculum AS cr, programs AS pg, student AS st 
+        WHERE cr.`fk_course` = cs.`code`AND cr.`fk_program` = pg.`id` AND pg.`id` = st.`fk_program` AND st.`index_number` = :i";
+        $q1_result = $this->dm->run($q1, array(":i" => $index_number))->all();
         //return array("success" => false, "message" => $q1_result);
         if (!empty($q1_result)) {
             $q2 = "SELECT `id` FROM semester WHERE `active` = 1";
