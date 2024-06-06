@@ -226,16 +226,14 @@ CREATE TABLE IF NOT EXISTS `curriculum` (
 DROP TABLE IF EXISTS `section`;
 CREATE TABLE IF NOT EXISTS `section` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `archived` TINYINT(1) DEFAULT 0,
   `fk_class` VARCHAR(10) NULL,
   `fk_course` VARCHAR(10) NULL,
-  `fk_semester` INT NULL,
+  -- `fk_semester` INT NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT `fk_section_class1` FOREIGN KEY (`fk_class`) REFERENCES `class` (`code`) ON DELETE NO ACTION ON UPDATE CASCADE,
   CONSTRAINT `fk_section_course1` FOREIGN KEY (`fk_course`) REFERENCES `course` (`code`) ON DELETE NO ACTION ON UPDATE CASCADE,
-  CONSTRAINT `fk_section_semester1` FOREIGN KEY (`fk_semester`) REFERENCES `semester` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE
+  -- CONSTRAINT `fk_section_semester1` FOREIGN KEY (`fk_semester`) REFERENCES `semester` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE
 );
-CREATE INDEX section_archived_idx1 ON `section` (`archived`);
 
 -- -----------------------------------------------------
 -- Table `schedule`
@@ -249,11 +247,13 @@ CREATE TABLE IF NOT EXISTS `schedule` (
   `minutes` INT DEFAULT 50,
   `end_time` TIME GENERATED ALWAYS AS (`start_time` + (`course_crdt_hrs` * `minutes`)),
   `archived` TINYINT(1) DEFAULT 0,
-  `fk_course` VARCHAR(10) NULL,
+  -- `fk_course` VARCHAR(10) NULL,
+  `fk_section` INT NULL,
   `fk_room` VARCHAR(10) NULL,
   `fk_semester` INT NULL,
   PRIMARY KEY (`id`),
-  CONSTRAINT `fk_schedule_course1` FOREIGN KEY (`fk_course`) REFERENCES `course` (`code`) ON DELETE NO ACTION ON UPDATE CASCADE,
+  -- CONSTRAINT `fk_schedule_course1` FOREIGN KEY (`fk_course`) REFERENCES `course` (`code`) ON DELETE NO ACTION ON UPDATE CASCADE,
+  CONSTRAINT `fk_schedule_section1` FOREIGN KEY (`fk_section`) REFERENCES `section` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
   CONSTRAINT `fk_schedule_room1` FOREIGN KEY (`fk_room`) REFERENCES `room` (`number`) ON DELETE NO ACTION ON UPDATE CASCADE,
   CONSTRAINT `fk_schedule_semester1` FOREIGN KEY (`fk_semester`) REFERENCES `semester` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE
 );
@@ -270,13 +270,12 @@ CREATE INDEX schedule_archived_idx1 ON `schedule` (`archived`);
 DROP TABLE IF EXISTS `course_registration`;
 CREATE TABLE IF NOT EXISTS `course_registration` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `archived` TINYINT(1) DEFAULT 0,
-  `fk_curriculum` INT,
+  `fk_course` INT,
   `fk_student` VARCHAR(10),
   `fk_semester` INT,
   `added_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  CONSTRAINT `fk_course_registration_curriculum1` FOREIGN KEY (`fk_curriculum`) REFERENCES `curriculum` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
+  CONSTRAINT `fk_course_registration_course1` FOREIGN KEY (`fk_course`) REFERENCES `course` (`code`) ON DELETE NO ACTION ON UPDATE CASCADE,
   CONSTRAINT `fk_course_registration_student1` FOREIGN KEY (`fk_student`) REFERENCES `student` (`index_number`) ON DELETE NO ACTION ON UPDATE CASCADE,
   CONSTRAINT `fk_course_registration_semester1` FOREIGN KEY (`fk_semester`) REFERENCES `semester` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE
 );

@@ -83,6 +83,7 @@ function semesterCourses() {
                 });
 
                 $("#courses-register-btn-div").show();
+                registrationSummary();
                 return;
             }
 
@@ -172,7 +173,11 @@ function registrationSummary() {
                 total_credit = result.message.total_credit ? result.message.total_credit : 0;
                 $("#total-registered-courses").html(total_course);
                 $("#total-registered-credits").html(total_credit);
-            } else alert(result.message);
+                $(".registration-summary").show();
+            } else {
+                $(".registration-summary").hide();
+                alert(result.message);
+            }
         },
         error: function (xhr, status, error) {
             if (xhr.status == 401) {

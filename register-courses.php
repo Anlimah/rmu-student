@@ -222,7 +222,7 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
                 </div>
             </div>
 
-            <div class="row mb-4">
+            <div class="row mb-4 registration-summary hide">
                 <div class="col-xxl-12 col-md-12">
                     <h1 style="font-size: 18px !important; font-weight:bold">Summary</h1>
                     <div class="cr-card bg-secondary">
@@ -251,12 +251,11 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
 
     <script src="js/jquery-3.6.0.min.js"></script>
     <script src="js/myjs.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
+    <script src="js/loadingoverlay.min.js"></script>
     <script>
         jQuery(document).ready(function($) {
 
             semesterCourses();
-            registrationSummary();
             otherSemesterCourses();
 
             $(document).on("click", ".logout-btn", function() {
@@ -294,7 +293,6 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
                         console.log(result);
                         if (result.success) {
                             semesterCourses();
-                            registrationSummary();
                             otherSemesterCourses();
                         }
                         alert(result.message);
@@ -318,7 +316,6 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
                         console.log(result);
                         if (result.success) {
                             semesterCourses();
-                            registrationSummary();
                             otherSemesterCourses();
                         } else alert(result.message);
                     },
