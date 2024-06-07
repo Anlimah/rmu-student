@@ -29,53 +29,46 @@ class Student
         $hashed_pass = password_hash($password, PASSWORD_BCRYPT);
         $sql = "UPDATE `student` SET `password` = :p, `default_password` = 0 WHERE `index_number` = :u";
         $data = $this->dm->run($sql, array(':p' => $hashed_pass, ':u' => $index_number))->edit();
-        if (!empty($data)) return array("success" => true, "message" => "New password created successfully!", "data" => $data);
+        if (!empty($data)) return array(
+            "success" => true,
+            "message" => "New password created successfully!",
+            "data" => array(
+                "index_number" => $index_number
+            )
+        );
         return array("success" => false, "message" => "New password creation failed!");
     }
 
     public function setupAccount($data): mixed
     {
-        $semester_count = $data["duration"] * 2;
+        $total_semesters = $this->dm->run(
+            "SELECT COUNT(`id`) AS `total_semesters` FROM `level` WHERE `fk_student` = :fks",
+            array(":fks" => $data["index_number"])
+        )->one()["total_semesters"];
+        if ($total_semesters) return array(
+            "success" => true,
+            "message" => "Program setup was successful!",
+            "data" => $total_semesters
+        );
 
+        $semester_count = $data["programme_duration"] * 2;
         $sem_count = 0;
+
         for ($semester = 1; $semester <= $semester_count; $semester++) {
-            if ($semester === 1) $active = 1;
-            else $active = 0;
+            $active = 0;
+            if ($semester === 1) $active = 1; // set the first semester as active
+            $sem = ($semester % 2 == 0) ? 2 : 1; // set semester for level
+
+            if ($semester === 3 || $semester === 5 || $semester === 7) $data["level_admitted"] += 100;
+
             $sem_count += $this->dm->run(
                 "INSERT INTO `level` (`level`, `semester`, `active`, `fk_student`) VALUES (:l, :s, :a, :fks)",
-                array(":l" => $data["level"], ":s" => $semester, ":a" => $active, ":fks" => $data["index_number"])
-            )->insert();
+                array(":l" => $data["level_admitted"], ":s" => $sem, ":a" => $active, ":fks" => $data["index_number"])
+            )->add();
         }
 
         if ($sem_count === $semester_count) return array("success" => true, "message" => "Program setup was successful!");
-        return array("success" => true, "message" => "Failed to setup program!");
-
-
-        // add student semester courses to course registration
-        // get current semester courses for level 100
-        /*$q1 = "SELECT * FROM course WHERE `semester` = 1 AND `level` = 100 AND fk_department = :d";
-        $q1_result = $this->dm->run($q1, array(":d" => $data["department"]))->all();
-        //return array("success" => false, "message" => $q1_result);
-        if (!empty($q1_result)) {
-            $q2 = "SELECT `id` FROM semester WHERE `active` = 1";
-            $q2_result = $this->dm->run($q2)->one();
-            //return array("success" => false, "message" => $q2_result[0]["id"]);
-            if (!empty($q2_result)) {
-                foreach ($q1_result as $course) {
-                    //return array("success" => false, "message" => $course);
-                    $q3 = "INSERT INTO `course_registration` (`fk_course`, `fk_student`, `fk_semester`, `level`, `semester`) 
-                        VALUES (:fkc, :fks, :fkt, :l, :s)";
-                    $params3 = array(
-                        ":fkc" => $course["code"],
-                        ":fks" => $data["index_number"],
-                        ":fkt" => $q2_result[0]["id"],
-                        ":l" => 100,
-                        ":s" => 1
-                    );
-                    $this->dm->run($q3, $params3)->add();
-                }
-            }
-        }*/
+        return array("success" => false, "message" => "Failed to setup program. Kindly contact registry!");
     }
 
     public function registerSemesterCourses(array $courses, $student, $semester): mixed

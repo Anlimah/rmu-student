@@ -70,7 +70,7 @@ if (!isset($_SESSION["_start_create_password"])) {
                             <!--Form card-->
                             <div class="card loginFormContainer" style="margin-bottom: 10px; min-width: 360px; max-width: 360px;">
                                 <div class="row" style="display: flex; justify-content:center; padding-top: 50px;  padding-bottom: 0;  margin-bottom:0 !important;">
-                                    <img src="assets/images/icons8-authentication-100.png" alt="sign in image" style="width: 120px;">
+                                    <img src="assets/images/icons8-security-user-male-96.png" alt="sign in image" style="width: 120px;">
                                     <h1 class="text-center" style="color: #003262; margin: 15px 0px !important;">Create New Password</h1>
                                 </div>
 
@@ -144,14 +144,15 @@ if (!isset($_SESSION["_start_create_password"])) {
                             return;
                         } else {
                             if (result.success) {
-                                $("#loginMsgDisplay").html('<div class="text-success" style="font-weight: bold">' + result.message + "..." + '</div>');
+                                $("#loginMsgDisplay").html('<div class="alert alert-success" role="alert">' + result.message + '</div>');
 
                                 setTimeout(function() {
                                     payload = result.data;
+                                    $("#loginMsgDisplay").html('<div class="alert alert-success" role="alert">Setting up account...</div>');
 
                                     $.ajax({
                                         type: "POST",
-                                        url: "../endpoint/setup-account",
+                                        url: "api/student/setup-account",
                                         data: payload,
                                         success: function(result) {
                                             console.log(result);
@@ -161,12 +162,12 @@ if (!isset($_SESSION["_start_create_password"])) {
                                             } else {
                                                 setTimeout(function() {
                                                     if (result.success) {
-                                                        $("#loginMsgDisplay").html('<div class="text-success" style="font-weight: bold">' + result.message + "..." + '</div>');
+                                                        $("#loginMsgDisplay").html('<div class="alert alert-success" role="alert">' + result.message + '</div>');
                                                     } else {
-                                                        $("#loginMsgDisplay").html('<div class="text-danger" style="font-weight: bold">' + result.message + "..." + '</div>');
+                                                        $("#loginMsgDisplay").html('<div class="alert alert-danger" role="alert">' + result.message + '</div>');
                                                     }
                                                     setTimeout(function() {
-                                                        window.location.reload();
+                                                        window.location.href = "index.php";
                                                     }, 1000);
                                                 }, 1000);
                                             }
@@ -175,14 +176,12 @@ if (!isset($_SESSION["_start_create_password"])) {
                                             console.log(error);
                                         }
                                     });
-                                }, 1000);
+                                }, 2000);
                             } else {
-                                $("#loginMsgDisplay").html('<div class="text-danger" style="font-weight: bold">' + result.message + "..." + '</div>');
+                                $("#loginMsgDisplay").html('<div class="alert alert-danger" role="alert" style="font-weight: bold">' + result.message + '</div>');
                             }
                             $("#enrollAppBtn-text").text("Enroll");
                         }
-                        alert(result['message']);
-                        if (result.success) window.location.reload();
                     },
                     error: function(xhr, status, error) {
                         if (xhr.status == 401) {

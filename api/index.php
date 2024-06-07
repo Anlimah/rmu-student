@@ -140,6 +140,8 @@ elseif ($_SERVER['REQUEST_METHOD'] == "POST") {
                 $_SESSION["student"]['login'] = true;
                 $_SESSION["student"]['index_number'] = $result["message"]["index_number"];
                 $_SESSION["student"]['default_password'] = $result["message"]["default_password"];
+                $_SESSION["student"]['level_admitted'] = $result["message"]["level_admitted"];
+                $_SESSION["student"]['programme_duration'] = $result["message"]["programme_duration"];
                 die(json_encode(array("success" => true,  "message" => "Login successfull!")));
 
             case 'create-password':
@@ -160,17 +162,15 @@ elseif ($_SERVER['REQUEST_METHOD'] == "POST") {
 
                 if (!isset($_POST["index_number"]) || empty($_POST["index_number"]))
                     die(json_encode(array("success" => false, "message" => "Missing parameter in request: index number!")));
-                if (!isset($_POST["level"]) || empty($_POST["level"]))
-                    die(json_encode(array("success" => false, "message" => "Missing parameter in request: level admitted!")));
-                if (!isset($_POST["duration"]) || empty($_POST["duration"]))
-                    die(json_encode(array("success" => false, "message" => "Missing parameter in request: program duration!")));
-
                 if (!isset($_SESSION["student"]["index_number"]) || empty($_SESSION["student"]["index_number"]))
-                    die(json_encode(array("success" => false, "message" => "Invalid request: 2!")));
+                    die(json_encode(array("success" => false, "message" => "Missing parameter in request: index number!")));
+                if (!isset($_SESSION["student"]["level_admitted"]) || empty($_SESSION["student"]["level_admitted"]))
+                    die(json_encode(array("success" => false, "message" => "Missing parameter in request: level admitted!")));
+                if (!isset($_SESSION["student"]["programme_duration"]) || empty($_SESSION["student"]["programme_duration"]))
+                    die(json_encode(array("success" => false, "message" => "Missing parameter in request: program duration!")));
                 if ($_POST["index_number"] !== $_SESSION["student"]["index_number"])
                     die(json_encode(array("success" => false, "message" => "Invalid request: 3!")));
-
-                $result = $studentObj->setupAccount($POST);
+                die(json_encode($studentObj->setupAccount($_SESSION["student"])));
 
                 // gets all the assigned semester courses 
             case 'semester-courses':
