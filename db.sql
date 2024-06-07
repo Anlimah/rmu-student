@@ -123,12 +123,12 @@ CREATE INDEX room_archived_idx1 ON `room` (`archived`);
 DROP TABLE IF EXISTS `class`;
 CREATE TABLE IF NOT EXISTS `class` (
   `code` VARCHAR(10) NOT NULL,
-  `archived` TINYINT(1) DEFAULT 0,
+  -- `archived` TINYINT(1) DEFAULT 0,
   `fk_program` INT NOT NULL,
   PRIMARY KEY (`code`),
   CONSTRAINT `fk_class_program1`FOREIGN KEY (`fk_program`) REFERENCES `programs` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE
 );
-CREATE INDEX class_archived_idx1 ON `class` (`archived`);
+-- CREATE INDEX class_archived_idx1 ON `class` (`archived`);
 
 -- -----------------------------------------------------
 -- Table `student`
@@ -270,7 +270,7 @@ CREATE INDEX schedule_archived_idx1 ON `schedule` (`archived`);
 DROP TABLE IF EXISTS `course_registration`;
 CREATE TABLE IF NOT EXISTS `course_registration` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `fk_course` INT,
+  `fk_course` VARCHAR(10),
   `fk_student` VARCHAR(10),
   `fk_semester` INT,
   `added_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -280,7 +280,7 @@ CREATE TABLE IF NOT EXISTS `course_registration` (
   CONSTRAINT `fk_course_registration_semester1` FOREIGN KEY (`fk_semester`) REFERENCES `semester` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE
 );
 CREATE INDEX course_registration_added_at_idx1 ON `course_registration` (`added_at`);
-CREATE INDEX course_registration_archived_idx1 ON `course_registration` (`archived`);
+--CREATE INDEX course_registration_archived_idx1 ON `course_registration` (`archived`);
 
 -- -----------------------------------------------------
 -- Table `staff`

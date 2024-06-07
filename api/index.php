@@ -50,7 +50,8 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
             case 'semester-courses':
                 $st_semester_courses = $studentObj->fetchSemesterCourses(
                     $_SESSION["student"]["index_number"],
-                    $_SESSION["semester"]["id"]
+                    $_SESSION["student"]["level"]["level"],
+                    $_SESSION["semester"]["name"]
                 );
                 if (empty($st_semester_courses)) {
                     die(json_encode(array("success" => false, "message" => "No courses assigned to you yet.")));
@@ -70,9 +71,8 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                 //die(json_encode($_SESSION["semester"]["name"]));
                 $st_semester_courses = $studentObj->fetchCoursesBySemAndLevel(
                     $_SESSION["student"]["index_number"],
-                    $_SESSION["semester"]["id"],
-                    $_SESSION["semester"]["name"],
-                    200
+                    $_SESSION["student"]["level"]["level"],
+                    $_SESSION["semester"]["name"]
                 );
                 if (empty($st_semester_courses)) {
                     die(json_encode(array("success" => false, "message" => "You don't have unregistered courses.")));
@@ -126,22 +126,39 @@ elseif ($_SERVER['REQUEST_METHOD'] == "POST") {
                 $result = $studentObj->login($username, $password);
                 if (!$result["success"]) die(json_encode($result));
 
-                $semesterObj = new Semester($config["database"]["mysql"]);
-                $semester_data = $semesterObj->currentSemester();
-                if (!empty($semester_data)) {
-                    $_SESSION["semester"]["id"] = $semester_data["semester_id"];
-                    $_SESSION["semester"]["name"] = $semester_data["semester_name"];
-                    $_SESSION["semester"]["reg_status"] = $semester_data["reg_open_status"];
-                    $_SESSION["semester"]["reg_date"] = $semester_data["reg_end_date"];
-                    $_SESSION["semester"]["acad_y_id"] = $semester_data["academic_year_id"];
-                    $_SESSION["semester"]["acad_y_name"] = $semester_data["academic_year_name"];
-                }
+                // $semesterObj = new Semester($config["database"]["mysql"]);
+                // $semester_data = $semesterObj->currentSemester();
+                // if (!empty($semester_data)) {
+                //     $_SESSION["semester"]["id"] = $semester_data["semester_id"];
+                //     $_SESSION["semester"]["name"] = $semester_data["semester_name"];
+                //     $_SESSION["semester"]["reg_status"] = $semester_data["reg_open_status"];
+                //     $_SESSION["semester"]["reg_date"] = $semester_data["reg_end_date"];
+                //     $_SESSION["semester"]["acad_y_id"] = $semester_data["academic_year_id"];
+                //     $_SESSION["semester"]["acad_y_name"] = $semester_data["academic_year_name"];
+                // }
 
+                if ($result["message"]["default_password"]) $_SESSION["student"]['level_admitted'] = $result["message"]["level_admitted"];
                 $_SESSION["student"]['login'] = true;
                 $_SESSION["student"]['index_number'] = $result["message"]["index_number"];
                 $_SESSION["student"]['default_password'] = $result["message"]["default_password"];
-                $_SESSION["student"]['level_admitted'] = $result["message"]["level_admitted"];
                 $_SESSION["student"]['programme_duration'] = $result["message"]["programme_duration"];
+
+                $current_level = $studentObj->getCurrentLevel($_SESSION["student"]['index_number']);
+                if (!empty($current_level)) {
+                    $_SESSION["student"]['level'] = $current_level;
+
+                    $semesterObj = new Semester($config["database"]["mysql"]);
+                    $semester_data = $semesterObj->currentSemester();
+                    if (!empty($semester_data)) {
+                        $_SESSION["semester"]["id"] = $semester_data["semester_id"];
+                        $_SESSION["semester"]["name"] = $semester_data["semester_name"];
+                        $_SESSION["semester"]["reg_status"] = $semester_data["reg_open_status"];
+                        $_SESSION["semester"]["reg_date"] = $semester_data["reg_end_date"];
+                        $_SESSION["semester"]["acad_y_id"] = $semester_data["academic_year_id"];
+                        $_SESSION["semester"]["acad_y_name"] = $semester_data["academic_year_name"];
+                    }
+                }
+
                 die(json_encode(array("success" => true,  "message" => "Login successfull!")));
 
             case 'create-password':
@@ -170,13 +187,32 @@ elseif ($_SERVER['REQUEST_METHOD'] == "POST") {
                     die(json_encode(array("success" => false, "message" => "Missing parameter in request: program duration!")));
                 if ($_POST["index_number"] !== $_SESSION["student"]["index_number"])
                     die(json_encode(array("success" => false, "message" => "Invalid request: 3!")));
-                die(json_encode($studentObj->setupAccount($_SESSION["student"])));
+
+                $setup_result = $studentObj->setupAccount($_SESSION["student"]);
+
+                if (isset($setup_result) && isset($setup_result["data"]) && !empty($setup_result["data"]["current_level"])) {
+                    $_SESSION["student"]['level'] = $setup_result["data"]["current_level"];
+
+                    $semesterObj = new Semester($config["database"]["mysql"]);
+                    $semester_data = $semesterObj->currentSemester();
+                    if (!empty($semester_data)) {
+                        $_SESSION["semester"]["id"] = $semester_data["semester_id"];
+                        $_SESSION["semester"]["name"] = $semester_data["semester_name"];
+                        $_SESSION["semester"]["reg_status"] = $semester_data["reg_open_status"];
+                        $_SESSION["semester"]["reg_date"] = $semester_data["reg_end_date"];
+                        $_SESSION["semester"]["acad_y_id"] = $semester_data["academic_year_id"];
+                        $_SESSION["semester"]["acad_y_name"] = $semester_data["academic_year_name"];
+                    }
+                }
+
+                die(json_encode($setup_result));
 
                 // gets all the assigned semester courses 
             case 'semester-courses':
                 $st_semester_courses = $studentObj->fetchSemesterCourses(
                     $_SESSION["student"]["index_number"],
-                    $_SESSION["semester"]["id"]
+                    $_SESSION["student"]["level"]["level"],
+                    $_SESSION["semester"]["name"]
                 );
                 if (empty($st_semester_courses)) {
                     die(json_encode(array("success" => false, "message" => "No courses assigned to you yet.")));
@@ -217,9 +253,8 @@ elseif ($_SERVER['REQUEST_METHOD'] == "POST") {
             case 'add-course-to-register':
                 $st_semester_courses = $studentObj->fetchCoursesBySemAndLevel(
                     $_SESSION["student"]["index_number"],
-                    $_SESSION["semester"]["id"],
-                    $_SESSION["semester"]["name"],
-                    200
+                    $_SESSION["student"]["level"]["level"],
+                    $_SESSION["semester"]["name"]
                 );
                 if (empty($st_semester_courses)) {
                     die(json_encode(array("success" => false, "message" => "You don't have unregistered courses.")));
