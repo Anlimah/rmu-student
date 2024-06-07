@@ -77,6 +77,7 @@ if (!isset($_SESSION["_start_create_password"])) {
                                 <hr style="padding-top: 15px !important;">
 
                                 <div style="margin: 0px 12% !important">
+                                    <div id="loginMsgDisplay"> </div>
                                     <form id="appLoginForm">
                                         <div class="mb-4">
                                             <input type="password" id="new-usp-password" name="new-usp-password" class="form-control form-control-lg form-control-login" placeholder="New Password" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*['@,$,#,!,*,+,\-.,\\])(?=.*\d).{8,16}$" title="Password must be at least 8 and most 16 characters long and contain at least one uppercase letter, one lowercase letter, one digit, and one special character">
@@ -137,6 +138,49 @@ if (!isset($_SESSION["_start_create_password"])) {
                     processData: false,
                     success: function(result) {
                         console.log(result);
+                        if (!result.success && result.message == "logout") {
+                            alert(result.message);
+                            window.location.href = "?logout=true";
+                            return;
+                        } else {
+                            if (result.success) {
+                                $("#loginMsgDisplay").html('<div class="text-success" style="font-weight: bold">' + result.message + "..." + '</div>');
+
+                                setTimeout(function() {
+                                    payload = result.data;
+
+                                    $.ajax({
+                                        type: "POST",
+                                        url: "../endpoint/setup-account",
+                                        data: payload,
+                                        success: function(result) {
+                                            console.log(result);
+                                            if (!result.success && result.message == "logout") {
+                                                window.location.href = "?logout=true";
+                                                return;
+                                            } else {
+                                                setTimeout(function() {
+                                                    if (result.success) {
+                                                        $("#loginMsgDisplay").html('<div class="text-success" style="font-weight: bold">' + result.message + "..." + '</div>');
+                                                    } else {
+                                                        $("#loginMsgDisplay").html('<div class="text-danger" style="font-weight: bold">' + result.message + "..." + '</div>');
+                                                    }
+                                                    setTimeout(function() {
+                                                        window.location.reload();
+                                                    }, 1000);
+                                                }, 1000);
+                                            }
+                                        },
+                                        error: function(error) {
+                                            console.log(error);
+                                        }
+                                    });
+                                }, 1000);
+                            } else {
+                                $("#loginMsgDisplay").html('<div class="text-danger" style="font-weight: bold">' + result.message + "..." + '</div>');
+                            }
+                            $("#enrollAppBtn-text").text("Enroll");
+                        }
                         alert(result['message']);
                         if (result.success) window.location.reload();
                     },

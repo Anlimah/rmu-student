@@ -331,3 +331,6 @@ ALTER TABLE `course`
 ADD CONSTRAINT `fk_course_category1` FOREIGN KEY (`fk_category`) REFERENCES `course_category`(`id`) ON DELETE NO ACTION ON UPDATE CASCADE; 
 ALTER TABLE `course` 
 ADD CONSTRAINT `fk_course_department1` FOREIGN KEY (`fk_department`) REFERENCES `department`(`id`) ON DELETE NO ACTION ON UPDATE CASCADE; 
+
+ALTER TABLE `level` ADD `active` TINYINT(1) DEFAULT 0 AFTER `completed`;
+CREATE INDEX level_active_idx1 ON `level` (`active`);

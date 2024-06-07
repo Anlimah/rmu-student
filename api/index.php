@@ -156,14 +156,21 @@ elseif ($_SERVER['REQUEST_METHOD'] == "POST") {
                 $_SESSION["student"]['default_password'] = 0;
                 die(json_encode($result));
 
-            case 'setup-courses':
+            case 'setup-account':
+
                 if (!isset($_POST["index_number"]) || empty($_POST["index_number"]))
-                    die(json_encode(array("success" => false, "message" => "Invalid request: 1!")));
+                    die(json_encode(array("success" => false, "message" => "Missing parameter in request: index number!")));
+                if (!isset($_POST["level"]) || empty($_POST["level"]))
+                    die(json_encode(array("success" => false, "message" => "Missing parameter in request: level admitted!")));
+                if (!isset($_POST["duration"]) || empty($_POST["duration"]))
+                    die(json_encode(array("success" => false, "message" => "Missing parameter in request: program duration!")));
+
                 if (!isset($_SESSION["student"]["index_number"]) || empty($_SESSION["student"]["index_number"]))
                     die(json_encode(array("success" => false, "message" => "Invalid request: 2!")));
                 if ($_POST["index_number"] !== $_SESSION["student"]["index_number"])
                     die(json_encode(array("success" => false, "message" => "Invalid request: 3!")));
-                $result = $studentObj->setupSemester($POST);
+
+                $result = $studentObj->setupAccount($POST);
 
                 // gets all the assigned semester courses 
             case 'semester-courses':
