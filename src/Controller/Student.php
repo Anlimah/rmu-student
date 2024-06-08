@@ -275,10 +275,9 @@ class Student
     {
         $query = "SELECT cs.`code` AS course_code, cs.`name` AS course_name, cs.`credits` AS credits, cs.`level`, cs.`semester`
         FROM `course` AS cs
-        WHERE  cs.`level` = :l AND cs.`semester` = :s AND cs.`code` NOT IN (
-            SELECT cr.`fk_course` FROM `course_registration` AS cr WHERE cr.`fk_student` = :i AND cr.`semester` = :s
-        )
-        ";
+        WHERE  cs.`level` < :l AND cs.`semester` = :s AND cs.`code` NOT IN (
+            SELECT cr.`fk_course` FROM `course_registration` AS cr WHERE cr.`fk_student` = :i
+        )";
         return $this->dm->run($query, array(':i' => $index_number, ':l' => $level, ':s' => $current_semester_name))->all();
         // $query = "SELECT 
         // cs.`code` AS course_code, cs.`name` AS course_name, cs.`credits` AS credits, cs.`level`, cs.`semester`, 
