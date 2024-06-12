@@ -5,6 +5,8 @@ require_once('bootstrap.php');
 
 use Src\Core\Base;
 
+// Base::dd($_SESSION);/
+
 if (Base::sessionExpire());
 
 if (!isset($_SESSION["student"]['login']) || $_SESSION["student"]['login'] !== true) header('Location: login.php');

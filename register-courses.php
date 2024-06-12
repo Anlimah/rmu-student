@@ -4,6 +4,7 @@ session_start();
 require_once('bootstrap.php');
 
 use Src\Core\Base;
+// Base::dd($_SESSION);
 
 if (Base::sessionExpire());
 

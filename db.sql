@@ -265,22 +265,27 @@ CREATE INDEX schedule_end_time_idx1 ON `schedule` (`end_time`);
 CREATE INDEX schedule_archived_idx1 ON `schedule` (`archived`);
 
 -- -----------------------------------------------------
--- Table `course_registration`
+-- Table `assigned_courses`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `course_registration`;
-CREATE TABLE IF NOT EXISTS `course_registration` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `fk_course` VARCHAR(10),
-  `fk_student` VARCHAR(10),
-  `fk_semester` INT,
-  `added_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+DROP TABLE IF EXISTS `assigned_courses`;
+CREATE TABLE IF NOT EXISTS `assigned_courses` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `fk_student` VARCHAR(10),
+    `fk_course` VARCHAR(10),
+    `fk_semester` INT,
+    `credits` INT NOT NULL,
+    `level` INT NOT NULL,
+    `semester` INT NOT NULL,
+    `added_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  CONSTRAINT `fk_course_registration_course1` FOREIGN KEY (`fk_course`) REFERENCES `course` (`code`) ON DELETE NO ACTION ON UPDATE CASCADE,
-  CONSTRAINT `fk_course_registration_student1` FOREIGN KEY (`fk_student`) REFERENCES `student` (`index_number`) ON DELETE NO ACTION ON UPDATE CASCADE,
-  CONSTRAINT `fk_course_registration_semester1` FOREIGN KEY (`fk_semester`) REFERENCES `semester` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE
+  CONSTRAINT `fk_assigned_courses_student1` FOREIGN KEY (`fk_student`) REFERENCES `student` (`index_number`) ON DELETE NO ACTION ON UPDATE CASCADE,
+  CONSTRAINT `fk_assigned_courses_course1` FOREIGN KEY (`fk_course`) REFERENCES `course` (`code`) ON DELETE NO ACTION ON UPDATE CASCADE,
+  CONSTRAINT `fk_assigned_courses_semester1` FOREIGN KEY (`fk_semester`) REFERENCES `semester` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE
 );
-CREATE INDEX course_registration_added_at_idx1 ON `course_registration` (`added_at`);
---CREATE INDEX course_registration_archived_idx1 ON `course_registration` (`archived`);
+CREATE INDEX assigned_courses_credits_idx1 ON `assigned_courses` (`credits`);
+CREATE INDEX assigned_courses_level_idx1 ON `assigned_courses` (`level`);
+CREATE INDEX assigned_courses_semester_idx1 ON `assigned_courses` (`semester`);
+CREATE INDEX assigned_courses_added_at_idx1 ON `assigned_courses` (`added_at`);
 
 -- -----------------------------------------------------
 -- Table `staff`
