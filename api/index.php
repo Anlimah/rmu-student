@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
 
         switch ($action) {
             case 'semester-courses':
-                $st_semester_courses = $studentObj->fetchSemesterCourses(
+                $st_semester_courses = $studentObj->fetchRegisteredUnregisteredCoursesForCurrent(
                     $_SESSION["student"]["index_number"],
                     $_SESSION["student"]["level"]["level"],
                     $_SESSION["student"]["level"]["semester"]
@@ -60,24 +60,34 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
 
                 // gets all the assigned semester courses 
             case 'other-semester-courses':
-                //die(json_encode($_SESSION["semester"]["name"]));
-                $st_semester_courses = $studentObj->fetchCoursesBySemAndLevel(
+                $st_semester_courses = $studentObj->fetchRegisteredUnregisteredCoursesForPrevious(
                     $_SESSION["student"]["index_number"],
                     $_SESSION["student"]["level"]["level"],
-                    $_SESSION["student"]["level"]["semester"]
+                    $_SESSION["student"]["level"]["semester"],
+                    $_SESSION["semester"]["id"]
                 );
                 if (empty($st_semester_courses)) {
-                    die(json_encode(array("success" => false, "message" => "You don't have unregistered courses.")));
+                    die(json_encode(array("success" => false, "message" => "You do not have unregistered courses.")));
                 }
                 die(json_encode(array("success" => true, "message" => $st_semester_courses)));
+
+                // gets all the assigned semester courses 
+            case 'registered-semester-courses':
+                $reg_semester_courses = $studentObj->fetchRegisteredCoursesForCurrent(
+                    $_SESSION["student"]["index_number"],
+                    $_SESSION["semester"]["id"]
+                );
+                if (empty($reg_semester_courses)) {
+                    die(json_encode(array("success" => false, "message" => "You have not registered any course(s) this semester.")));
+                }
+                die(json_encode(array("success" => true, "message" => $reg_semester_courses)));
 
             case 'registration-summary':
                 $result = $studentObj->fetchCourseRegistrationSummary(
                     $_SESSION["student"]["index_number"],
                     $_SESSION["semester"]["id"]
                 );
-                $feed = Validator::SendResult($result, $result, $result);
-                die(json_encode($feed));
+                die(json_encode(array("success" => true, "message" => $result)));
 
             default:
                 die(json_encode(array("success" => false, "message" => "No match found for your request!")));
@@ -167,7 +177,6 @@ elseif ($_SERVER['REQUEST_METHOD'] == "POST") {
                 die(json_encode($result));
 
             case 'setup-account':
-
                 if (!isset($_POST["index_number"]) || empty($_POST["index_number"]))
                     die(json_encode(array("success" => false, "message" => "Missing parameter in request: index number!")));
                 if (!isset($_SESSION["student"]["index_number"]) || empty($_SESSION["student"]["index_number"]))
@@ -195,7 +204,6 @@ elseif ($_SERVER['REQUEST_METHOD'] == "POST") {
                         $_SESSION["semester"]["acad_y_name"] = $semester_data["academic_year_name"];
                     }
                 }
-
                 die(json_encode($setup_result));
 
                 // gets all the assigned semester courses 
@@ -226,7 +234,6 @@ elseif ($_SERVER['REQUEST_METHOD'] == "POST") {
                     "Failed to register your semester courses. The process could not complete!"
                 );
                 die(json_encode($feed));
-
 
             case 'reset-course-registration':
                 $result = $studentObj->resetCourseRegistration(

@@ -1,3 +1,10 @@
+
+function getURLParam(param) {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(param);
+}
+
+let quizId = getURLParam('quizId');
 function validatePassword(password) {
     // Password must be at least 8 characters long
     if (password.length < 8) {
@@ -61,9 +68,9 @@ function semesterCourses() {
                 );
 
                 result.message.forEach(function (value) {
-                    var disable = value.reg_status ? 'disabled' : '';
-                    var image = value.reg_status ? 'assets/images/icons8-check-30.png' : 'assets/images/icons8-stop-48.png';
-                    var status = value.reg_status ? 'active' : '';
+                    var disable = value.registered ? 'disabled' : '';
+                    var image = value.registered ? 'assets/images/icons8-check-30.png' : 'assets/images/icons8-stop-48.png';
+                    var status = value.registered ? 'active' : '';
 
                     var courseHtml = '<tr>' +
                         '<td style="display: flex;">' +
@@ -121,9 +128,9 @@ function otherSemesterCourses() {
                 );
 
                 result.message.forEach(function (value) {
-                    var disable = value.reg_status ? 'disabled' : '';
-                    var image = value.reg_status ? 'assets/images/icons8-check-30.png' : 'assets/images/icons8-stop-48.png';
-                    var status = value.reg_status ? 'active' : '';
+                    var disable = value.registered ? 'disabled' : '';
+                    var image = value.registered ? 'assets/images/icons8-check-30.png' : 'assets/images/icons8-stop-48.png';
+                    var status = value.registered ? 'active' : '';
 
                     var courseHtml = '<tr>' +
                         '<td style="display: flex;">' +
@@ -167,12 +174,12 @@ function registrationSummary() {
         url: "api/student/registration-summary",
         success: function (result) {
             console.log(result);
-
             if (result.success) {
-                total_course = result.message.total_course ? result.message.total_course : 0;
-                total_credit = result.message.total_credit ? result.message.total_credit : 0;
-                $("#total-registered-courses").html(total_course);
-                $("#total-registered-credits").html(total_credit);
+                const { total_course, total_credit } = result.message;
+                t_course = total_course ? total_course : 0;
+                t_credit = total_credit ? total_credit : 0;
+                $("#total-registered-courses").html(t_course);
+                $("#total-registered-credits").html(t_credit);
                 $(".registration-summary").show();
             } else {
                 $(".registration-summary").hide();

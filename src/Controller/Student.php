@@ -158,9 +158,7 @@ class Student
 
     public function resetCourseRegistration($student, $semester): mixed
     {
-        //return $course . ' ' . $student . ' ' . $semester;
-        $query = "UPDATE `course_registration` SET `registered` = 0, `fk_semester_registered` = NULL 
-        WHERE `fk_student` = :fks AND `fk_semester` = :fkm";
+        $query = "DELETE FROM `course_registration` WHERE `fk_student` = :fks AND `fk_semester` = :fkm";
         return $this->dm->run($query, array(':fks' => $student, ':fkm' => $semester))->edit();
     }
 
@@ -168,7 +166,7 @@ class Student
     {
         $query = "SELECT COUNT(cr.`id`) AS total_course, SUM(c.`credits`) AS total_credit 
         FROM `course_registration` AS cr, `course` AS c 
-        WHERE cr.`fk_course` = c.`code` AND cr.`fk_student` = :fks AND cr.`fk_semester_registered` = :fkm AND cr.`registered` = 1";
+        WHERE cr.`fk_course` = c.`code` AND cr.`fk_student` = :fks AND cr.`fk_semester` = :fkm";
         return $this->dm->run($query, array(':fks' => $student, ':fkm' => $semester))->one();
     }
 
@@ -185,6 +183,69 @@ class Student
         WHERE s.`fk_academic_year` = ay.`id` AND s.`fk_department` = d.`id` AND s.`fk_program` = p.`id` AND 
         s.`fk_class` = c.`code` AND s.`index_number` = :i";
         return $this->dm->run($query, array(':i' => $index_number))->one();
+    }
+
+    public function fetchRegisteredUnregisteredCoursesForCurrent($index_number, $level, $semester): mixed
+    {
+        $query = "SELECT 
+        cs.`code` AS course_code, cs.`name` AS course_name, cs.`credits` AS credits, 
+        cs.`level`, cs.`semester`, cc.`id` AS category_id, cc.`name` AS category_name,
+        CASE
+            WHEN cr.`fk_course` IS NOT NULL THEN 1
+            ELSE 0
+        END AS registered
+        FROM 
+            `course` AS cs
+        LEFT JOIN 
+            `course_category` AS cc ON cs.`fk_category` = cc.`id`
+        LEFT JOIN 
+            `assigned_courses` AS ac ON ac.`fk_course` = cs.`code`
+        LEFT JOIN 
+            `student` AS st ON ac.`fk_student` = st.`index_number`
+        LEFT JOIN 
+            `course_registration` AS cr ON cr.`fk_course` = cs.`code` AND cr.`fk_student` = st.`index_number`
+        WHERE 
+            st.`index_number` = :i AND cs.`level` = :l AND cs.`semester` = :s
+        ";
+        $courses = $this->dm->run($query, array(':i' => $index_number, ':l' => $level, ':s' => $semester))->all();
+        return $courses;
+    }
+
+    public function fetchRegisteredUnregisteredCoursesForPrevious($index_number, $level, $semester, $semester_id): mixed
+    {
+        $query = "SELECT 
+        cs.`code` AS course_code, cs.`name` AS course_name, cs.`credits` AS credits, 
+        cs.`level`, cs.`semester`, cc.`id` AS category_id, cc.`name` AS category_name,
+        CASE
+            WHEN cr.`fk_course` IS NOT NULL THEN 1
+            ELSE 0
+        END AS registered
+        FROM 
+            `course` AS cs
+        LEFT JOIN 
+            `course_category` AS cc ON cs.`fk_category` = cc.`id`
+        LEFT JOIN 
+            `assigned_courses` AS ac ON ac.`fk_course` = cs.`code`
+        LEFT JOIN 
+            `student` AS st ON ac.`fk_student` = st.`index_number`
+        LEFT JOIN 
+            `course_registration` AS cr ON cr.`fk_course` = cs.`code` AND 
+            cr.`fk_student` = st.`index_number` AND cr.`fk_semester` = :fks
+        WHERE 
+            st.`index_number` = :i AND cs.`level` < :l AND cs.`semester` = :s
+        ";
+        $courses = $this->dm->run($query, array(':i' => $index_number, ':l' => $level, ':s' => $semester, ':fks' => $semester_id))->all();
+        return $courses;
+    }
+
+    public function fetchRegisteredCoursesForCurrent($index_number, $semester_id): mixed
+    {
+        $query = "SELECT 
+        cs.`code` AS course_code, cs.`name` AS course_name, cs.`credits` AS credits, 
+        cs.`level`, cs.`semester`, cc.`id` AS category_id, cc.`name` AS category_name 
+        FROM `course_registration` AS cr, `course` AS cs, `course_category` AS cc 
+        WHERE cr.`fk_course` = cs.`code` AND cc.`id` = cs.`fk_category` AND cr.`fk_student` = :fks AND cr.`fk_semester` = :fkm";
+        return $this->dm->run($query, array(':fks' => $index_number, ':fkm' => $semester_id))->all();
     }
 
     public function fetchSemesterCourses($index_number, $level, $semester): mixed

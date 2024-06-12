@@ -223,7 +223,7 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
                 </div>
             </div>
 
-            <div class="row mb-4 registration-summary hide">
+            <div class="row mb-4 registration-summary" style="display: none;">
                 <div class="col-xxl-12 col-md-12">
                     <h1 style="font-size: 18px !important; font-weight:bold">Summary</h1>
                     <div class="cr-card bg-secondary">

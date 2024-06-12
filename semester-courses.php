@@ -127,8 +127,7 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
                 margin: 0 20px;
             }
         }
-    </style>
-    <style>
+
         .item-card {
             display: flex;
             align-items: center;
@@ -224,75 +223,33 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
 
             <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item" style="text-transform: uppercase;"><a href="index.php">Home</a></li>
-                    <li class="breadcrumb-item active" aria-current="page" style="text-transform: uppercase;">My Courses</li>
+                    <li class="breadcrumb-item"><a href="index.php">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">My Courses</li>
                 </ol>
             </nav>
 
             <div class="row sunken-border-d mb-4">
                 <div class="col-xxl-12 col-md-12">
 
-                    <h1 class="mt-4" style="text-transform: uppercase; font-size: 18px !important; font-weight:bold">My Courses</h1>
+                    <h1 class="mt-4" style="font-size: 18px !important; font-weight:bold">My Courses</h1>
 
                     <div class="row">
 
                         <div class="col-xxl-12 col-md-12 mb-4">
-                            <a style="text-transform: uppercase; " class="col title-pill <?= isset($_GET["myCoursesTab"]) && $_GET["myCoursesTab"] == 'THIS_SEMESTER' ? 'active' : '' ?>" href="?myCoursesTab=THIS_SEMESTER">This Semester</a>
-                            <a style="text-transform: uppercase; " class="col title-pill <?= isset($_GET["myCoursesTab"]) && $_GET["myCoursesTab"] == 'REGISTERED' ? 'active' : '' ?>" href="?myCoursesTab=REGISTERED">Registered</a>
+                            <a style="text-transform: uppercase; " id="SEMESTER_COURSES" class="col title-pill <?= isset($_GET["myCoursesTab"]) && $_GET["myCoursesTab"] == 'SEMESTER_COURSES' ? 'active' : '' ?>" href="?myCoursesTab=SEMESTER_COURSES">This Semester</a>
+                            <a style="text-transform: uppercase; " id="REGISTERED_COURSES" class="col title-pill <?= isset($_GET["myCoursesTab"]) && $_GET["myCoursesTab"] == 'REGISTERED_COURSES' ? 'active' : '' ?>" href="?myCoursesTab=REGISTERED_COURSES">Registered</a>
                         </div>
 
                         <div class="col-xxl-12 col-md-12 mb-4">
-                            <?php if (isset($_GET["myCoursesTab"]) && $_GET["myCoursesTab"] == 'THIS_SEMESTER') { ?>
-                                <div style="padding: 0px 5px; background: #ddd; width: 100%">
-                                    <span style="text-transform: uppercase;">
-                                        Total: <span style="font-size: large;"><?= 10 ?></span> | Credits: <span style="font-size: large;"><?= 19 ?></span>
-                                    </span>
-                                </div>
-                            <?php } elseif (isset($_GET["myCoursesTab"]) && $_GET["myCoursesTab"] == 'REGISTERED') { ?>
-                                <div style="padding: 0px 5px; background: #ddd; width: 100%">
-                                    <span style="text-transform: uppercase;">
-                                        Total: <span style="font-size: large;"><?= 5 ?></span>
-                                    </span>
-                                </div>
-                            <?php } ?>
+                            <div style="padding: 0px 5px; background: #ddd; width: 100%">
+                                <span style="text-transform: uppercase;">
+                                    Total: <span style="font-size: large;" id="total_courses"></span> | Credits: <span style="font-size: large;" id="total_credits"></span>
+                                </span>
+                            </div>
                         </div>
+                        <div id="semester-courses" style="display: none;"></div>
+                        <div id="registered-courses" style="display: none;"></div>
 
-                        <?php
-                        if (isset($_GET["myCoursesTab"]) && $_GET["myCoursesTab"] === 'THIS_SEMESTER') {
-                            $semster_courses = $studentObj->fetchSemesterCourses($_SESSION["student"]["index_number"], $_SESSION["semester"]["id"]);
-                            foreach ($semster_courses as $course) {
-                        ?>
-                                <div class="col-xxl-6 col-md-12 mb-3">
-                                    <div class="item-card" id="<?= $course["course_code"] ?>">
-                                        <img src="assets/images/icons8-course-assign-96.png" alt="Icon">
-                                        <div style="text-transform: uppercase;">
-                                            <p><?= Base::shortenText($course["course_name"]) ?></p>
-                                            <div>Level: <?= $course["level"] ?> | Semester: <?= $course["semester"] ?></div>
-                                        </div>
-                                        <i class="arrow-link bi bi-caret-down-fill"></i>
-                                    </div>
-                                </div>
-                            <?php } ?>
-
-                        <?php } elseif (isset($_GET["myCoursesTab"]) && $_GET["myCoursesTab"] === 'REGISTERED') { ?>
-
-                            <?php
-                            $semster_courses = $studentObj->fetchRegCoursesBySemester($_SESSION["student"]["index_number"], $_SESSION["semester"]["id"], $_SESSION["semester"]["name"]);
-                            foreach ($semster_courses as $course) {
-                            ?>
-                                <div class="col-xxl-6 col-md-12 mb-3">
-                                    <div class="item-card" id="<?= $course["course_code"] ?>">
-                                        <img src="assets/images/icons8-course-registered-96.png" alt="Icon">
-                                        <div style="text-transform: uppercase;">
-                                            <p><?= Base::shortenText($course["course_name"]) ?></p>
-                                            <div>Level: <?= $course["level"] ?> | Semester: <?= $course["semester"] ?></div>
-                                        </div>
-                                        <i class="arrow-link bi bi-caret-down-fill"></i>
-                                    </div>
-                                </div>
-                            <?php } ?>
-
-                        <?php } ?>
 
                     </div>
                 </div>
@@ -385,19 +342,108 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
                 }
             });
 
+            switch (getURLParam('myCoursesTab')) {
+                case 'SEMESTER_COURSES':
+                    $.ajax({
+                        type: "GET",
+                        url: "api/student/semester-courses",
+                        success: function(result) {
+                            console.log(result);
+
+                            if (result.success) {
+                                $("#registered-courses").hide();
+                                $("#semester-courses").html('');
+
+                                total_courses = result.message.length;
+                                total_credits = 0;
+                                result.message.forEach(function(value) {
+                                    total_credits += value.credits;
+                                    var courseHtml = '<div class="col-xxl-6 col-md-12 mb-3">' +
+                                        '<div class="item-card" id="' + value.course_code + '">' +
+                                        '<img src="assets/images/icons8-course-assign-96.png" alt="Icon">' +
+                                        '<div style="text-transform: uppercase;">' +
+                                        '<p>' + value.course_name + '</p>' +
+                                        '<div>Level: ' + value.level + ' | Semester: ' + value.semester + ' | Credits: ' + value.credits + '</div>' +
+                                        '</div>' +
+                                        '<i class="arrow-link bi bi-caret-right-fill"></i>' +
+                                        '</div>' +
+                                        '</div>';
+                                    $("#semester-courses").append(courseHtml);
+                                });
+                                $("#total_courses").text(total_courses);
+                                $("#total_credits").text(total_credits);
+                                $("#semester-courses").show();
+                                return;
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            if (xhr.status == 401) {
+                                alert("Your session expired, logging you out...");
+                                window.location.href = "?logout";
+                            } else console.log("Error: " + status + " - " + error);
+                        }
+                    });
+                    break;
+
+                case 'REGISTERED_COURSES':
+                    $.ajax({
+                        type: "GET",
+                        url: "api/student/registered-semester-courses",
+                        success: function(result) {
+                            console.log(result);
+
+                            if (result.success) {
+                                $("#semester-courses").hide('');
+                                $("#registered-courses").html();
+
+                                total_courses = result.message.length;
+                                total_credits = 0;
+                                result.message.forEach(function(value) {
+                                    total_credits += value.credits;
+                                    var courseHtml = '<div class="col-xxl-6 col-md-12 mb-3">' +
+                                        '<div class="item-card" id="' + value.course_code + '">' +
+                                        '<img src="assets/images/icons8-course-registered-96.png" alt="Icon">' +
+                                        '<div style="text-transform: uppercase;">' +
+                                        '<p>' + value.course_name + '</p>' +
+                                        '<div>Level: ' + value.level + ' | Semester: ' + value.semester + ' | Credits: ' + value.credits + '</div>' +
+                                        '</div>' +
+                                        '<i class="arrow-link bi bi-caret-right-fill"></i>' +
+                                        '</div>' +
+                                        '</div>';
+                                    $("#registered-courses").append(courseHtml);
+                                });
+                                $("#total_courses").text(total_courses);
+                                $("#total_credits").text(total_credits);
+                                $("#registered-courses").show();
+                                return;
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            if (xhr.status == 401) {
+                                alert("Your session expired, logging you out...");
+                                window.location.href = "?logout";
+                            } else console.log("Error: " + status + " - " + error);
+                        }
+                    });
+                    break;
+
+                default:
+                    break;
+            };
+
         });
     </script>
     <script src="js/loadingoverlay.min.js"></script>
     <script>
         $(document).ready(function() {
-            /*$(document).on({
+            $(document).on({
                 ajaxStart: function() {
                     $.LoadingOverlay("show");
                 },
                 ajaxStop: function() {
                     $.LoadingOverlay("hide");
                 }
-            });*/
+            });
         });
     </script>
 </body>
