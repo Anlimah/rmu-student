@@ -171,7 +171,7 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
                         <div class="row">
 
                             <div class="col-xxl-4 col-md-6 mb-2">
-                                <a href="semester-courses.php?myCoursesTab=THIS_SEMESTER">
+                                <a href="semester-courses.php?myCoursesTab=SEMESTER_COURSES">
                                     <div class="item-card">
                                         <img src="assets/images/icons8-courses-64.png" alt="Icon">
                                         <p>Semeter Courses</p>

@@ -159,7 +159,7 @@ class Student
     public function resetCourseRegistration($student, $semester): mixed
     {
         $query = "DELETE FROM `course_registration` WHERE `fk_student` = :fks AND `fk_semester` = :fkm";
-        return $this->dm->run($query, array(':fks' => $student, ':fkm' => $semester))->edit();
+        return $this->dm->run($query, array(':fks' => $student, ':fkm' => $semester))->del();
     }
 
     public function fetchCourseRegistrationSummary($student, $semester): mixed

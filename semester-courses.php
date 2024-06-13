@@ -311,6 +311,7 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
     </div>
 
     <script src="js/jquery-3.6.0.min.js"></script>
+    <script src="js/loadingoverlay.min.js"></script>
     <script src="js/myjs.js"></script>
     <script>
         jQuery(document).ready(function($) {
@@ -431,11 +432,6 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
                     break;
             };
 
-        });
-    </script>
-    <script src="js/loadingoverlay.min.js"></script>
-    <script>
-        $(document).ready(function() {
             $(document).on({
                 ajaxStart: function() {
                     $.LoadingOverlay("show");
