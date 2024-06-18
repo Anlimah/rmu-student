@@ -191,74 +191,79 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
                 </ol>
             </nav>
 
-            <div class="row sunken-border mb-4">
-                <div class="col-xxl-12 col-md-12">
+            <div id="courses-area">
+                <div class="row sunken-border mb-4">
+                    <div class="col-xxl-12 col-md-12">
 
-                    <h1 class="mt-4" style="font-size: 18px !important; font-weight:bold">Course Registration</h1>
+                        <h1 class="mt-4" style="font-size: 18px !important; font-weight:bold">Course Registration</h1>
 
-                    <div id="course-registration-section">
-                        <div id="course-registration-form-section">
+                        <div id="course-registration-section">
+                            <div id="course-registration-form-section">
 
-                            <div class="alert alert-primary d-flex align-items-center" role="alert">
-                                <i class="bi bi-info-circle-fill me-2" role="img"></i>
-                                <div> Select all the courses you want to register for the semester and click register button</div>
-                            </div>
-
-                            <form id="register-semester-courses-form" method="post" enctype="multipart/form-data">
-                                <table class="table" style="margin-bottom: 30px !important;">
-                                    <colgroup>
-                                        <col style="width: 90%; text-align: left;">
-                                        <col style="width: 10%; text-align: right;">
-                                    </colgroup>
-                                    <thead>
-                                        <tr>
-                                            <th style="text-align: left;">Course Title</th>
-                                            <th style="text-align: right;">Credits</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="compulsory-courses-display">
-                                    </tbody>
-                                    <tbody id="elective-courses-display">
-                                    </tbody>
-                                    <tbody id="other-semester-courses-display">
-                                    </tbody>
-                                </table>
-
-                                <div style="display: flex; justify-content: space-between; margin-top: 30px; margin-bottom: 30px;">
-                                    <button type="button" class="btn btn-outline-secondary-dark" id="reset-semester-courses-btn">
-                                        <span class="bi bi-x-square me-2"></span> <b>Reset</b>
-                                    </button>
-
-                                    <button class="btn btn-outline-primary-dark" id="register-semester-courses-btn">
-                                        <span class="bi bi-save me-2"></span> <b>Register</b>
-                                    </button>
+                                <div class="alert alert-primary d-flex align-items-center" role="alert">
+                                    <i class="bi bi-info-circle-fill me-2" role="img"></i>
+                                    <div> Select all the courses you want to register for the semester and click register button</div>
                                 </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
-            <div class="row mb-4 registration-summary" style="display: none;">
-                <div class="col-xxl-12 col-md-12">
-                    <h1 style="font-size: 18px !important; font-weight:bold">Summary</h1>
-                    <div class="cr-card bg-secondary">
-                        <div class="cr-card-item-group">
-                            <div class="cr-card-item-info">
-                                <?= $current_semester["academic_year_name"] ?> Semester <?= $current_semester["semester_name"] ?>
+                                <form id="register-semester-courses-form" method="post" enctype="multipart/form-data">
+                                    <table class="table" style="margin-bottom: 30px !important;">
+                                        <colgroup>
+                                            <col style="width: 90%; text-align: left;">
+                                            <col style="width: 10%; text-align: right;">
+                                        </colgroup>
+                                        <thead>
+                                            <tr>
+                                                <th style="text-align: left;">Course Title</th>
+                                                <th style="text-align: right;">Credits</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="compulsory-courses-display">
+                                        </tbody>
+                                        <tbody id="elective-courses-display">
+                                        </tbody>
+                                        <tbody id="other-semester-courses-display">
+                                        </tbody>
+                                    </table>
+
+                                    <div id="display-message"></div>
+
+                                    <div style="display: flex; justify-content: space-between; margin-top: 30px; margin-bottom: 30px;">
+                                        <button type="button" class="btn btn-outline-secondary-dark" id="reset-semester-courses-btn">
+                                            <span class="bi bi-x-square me-2"></span> <b>Reset</b>
+                                        </button>
+
+                                        <button class="btn btn-outline-primary-dark" id="register-semester-courses-btn">
+                                            <span class="bi bi-save me-2"></span> <b>Register</b>
+                                        </button>
+                                    </div>
+                                </form>
                             </div>
-                            <div class="cr-card-item-title">Academic Session</div>
-                        </div>
-                        <div class="cr-card-item-group">
-                            <div class="cr-card-item-info" id="total-registered-courses">0</div>
-                            <div class="cr-card-item-title">Registered Courses</div>
-                        </div>
-                        <div class="cr-card-item-group">
-                            <div class="cr-card-item-info" id="total-registered-credits">0</div>
-                            <div class="cr-card-item-title">Total Credits</div>
                         </div>
                     </div>
                 </div>
+
+                <div class="row mb-4 registration-summary" style="display: none;">
+                    <div class="col-xxl-12 col-md-12">
+                        <h1 style="font-size: 18px !important; font-weight:bold">Summary</h1>
+                        <div class="cr-card bg-secondary">
+                            <div class="cr-card-item-group">
+                                <div class="cr-card-item-info">
+                                    <?= $current_semester["academic_year_name"] ?> Semester <?= $current_semester["semester_name"] ?>
+                                </div>
+                                <div class="cr-card-item-title">Academic Session</div>
+                            </div>
+                            <div class="cr-card-item-group">
+                                <div class="cr-card-item-info" id="total-registered-courses">0</div>
+                                <div class="cr-card-item-title">Registered Courses</div>
+                            </div>
+                            <div class="cr-card-item-group">
+                                <div class="cr-card-item-info" id="total-registered-credits">0</div>
+                                <div class="cr-card-item-title">Total Credits</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
 
         </main>
@@ -346,15 +351,15 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
                     }
                 });
             });
+        });
 
-            /*$(document).on({
-                ajaxStart: function() {
-                    $.LoadingOverlay("show");
-                },
-                ajaxStop: function() {
-                    $.LoadingOverlay("hide");
-                }
-            });*/
+        $(document).on({
+            ajaxStart: function() {
+                $.LoadingOverlay("show");
+            },
+            ajaxStop: function() {
+                $.LoadingOverlay("hide");
+            }
         });
     </script>
 </body>

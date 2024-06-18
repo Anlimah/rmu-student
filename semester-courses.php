@@ -431,15 +431,15 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
                 default:
                     break;
             };
+        });
 
-            $(document).on({
-                ajaxStart: function() {
-                    $.LoadingOverlay("show");
-                },
-                ajaxStop: function() {
-                    $.LoadingOverlay("hide");
-                }
-            });
+        $(document).on({
+            ajaxStart: function() {
+                $.LoadingOverlay("show");
+            },
+            ajaxStop: function() {
+                $.LoadingOverlay("hide");
+            }
         });
     </script>
 </body>
