@@ -13,9 +13,12 @@ class Database
     private $params;
     private $stmt;
 
-    public function __construct($config, $dbServer, $user, $pass)
+    public function __construct($config)
     {
-        $dsn = "{$dbServer}:" . http_build_query($config, "", ";");
+        $user = getenv("LOCAL_DB_ADMISSION_USERNAME");
+        $pass = getenv("LOCAL_DB_ADMISSION_PASSWORD");
+
+        $dsn = "mysql:" . http_build_query($config, "", ";");
         try {
             $this->conn = new PDO(
                 $dsn,

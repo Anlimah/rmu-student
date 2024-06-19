@@ -93,7 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                 die(json_encode(array("success" => false, "message" => "No match found for your request!")));
         }
     } else if ($module === 'course') {
-        $courseObj = new Course($config["database"]["mysql"], "mysql", getenv('LOCAL_DB_ADMISSION_USERNAME'), getenv('LOCAL_DB_ADMISSION_PASSWORD'));
+        $courseObj = new Course($config["database"]["mysql"]);
 
         switch ($action) {
             case 'info':
@@ -119,7 +119,7 @@ elseif ($_SERVER['REQUEST_METHOD'] == "POST") {
     $action = $separatePath[1];
 
     if ($module === 'student') {
-        $studentObj = new Student($config["database"]["mysql"], "mysql", getenv('LOCAL_DB_ADMISSION_USERNAME'), getenv('LOCAL_DB_ADMISSION_PASSWORD'));
+        $studentObj = new Student($config["database"]["mysql"]);
 
         switch ($action) {
 
@@ -148,7 +148,7 @@ elseif ($_SERVER['REQUEST_METHOD'] == "POST") {
                 if (!empty($current_level)) {
                     $_SESSION["student"]['level'] = $current_level;
 
-                    $semesterObj = new Semester($config["database"]["mysql"], "mysql", getenv('LOCAL_DB_ADMISSION_USERNAME'), getenv('LOCAL_DB_ADMISSION_PASSWORD'));
+                    $semesterObj = new Semester($config["database"]["mysql"]);
                     $semester_data = $semesterObj->currentSemester();
                     if (!empty($semester_data)) {
                         $_SESSION["semester"]["id"] = $semester_data["semester_id"];
@@ -193,7 +193,7 @@ elseif ($_SERVER['REQUEST_METHOD'] == "POST") {
                 if (isset($setup_result["data"]) && !empty($setup_result["data"]["current_level"])) {
                     $_SESSION["student"]['level'] = $setup_result["data"]["current_level"];
 
-                    $semesterObj = new Semester($config["database"]["mysql"], "mysql", getenv('LOCAL_DB_ADMISSION_USERNAME'), getenv('LOCAL_DB_ADMISSION_PASSWORD'));
+                    $semesterObj = new Semester($config["database"]["mysql"]);
                     $semester_data = $semesterObj->currentSemester();
                     if (!empty($semester_data)) {
                         $_SESSION["semester"]["id"] = $semester_data["semester_id"];

@@ -8,9 +8,9 @@ class Student
 {
     private $dm;
 
-    public function __construct($config, $dbServer, $user, $pass)
+    public function __construct($config)
     {
-        $this->dm = new Database($config, $dbServer, $user, $pass);
+        $this->dm = new Database($config);
     }
 
     public function login($index_number, $password)
