@@ -23,9 +23,6 @@ if (Base::sessionExpire()) {
 }
 
 $config = require('../config/database.php');
-$db_server = "mysql";
-$db_username = isset($_SESSION["connection"]["username"]) && !empty($_SESSION["connection"]["username"]) ? $_SESSION["connection"]["username"] : getenv('LOCAL_DB_ADMISSION_USERNAME');
-$db_password = isset($_SESSION["connection"]["password"]) && !empty($_SESSION["connection"]["password"]) ? $_SESSION["connection"]["password"] : getenv('LOCAL_DB_ADMISSION_PASSWORD');
 
 use Src\Controller\Student;
 use Src\Core\Validator;
@@ -44,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
     $action = $separatePath[1];
 
     if ($module === 'student') {
-        $studentObj = new Student($config["database"][$db_server], $db_server, $db_username, $db_password);
+        $studentObj = new Student($config["database"][$db_server]);
 
         switch ($action) {
             case 'semester-courses':
