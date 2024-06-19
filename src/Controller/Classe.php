@@ -8,7 +8,7 @@ class Classe
 {
     private $dm;
 
-    public function __construct($config, $dbServer = "mysql", $user = "root", $pass = "")
+    public function __construct($config, $dbServer, $user, $pass)
     {
         $this->dm = new Database($config, $dbServer, $user, $pass);
     }

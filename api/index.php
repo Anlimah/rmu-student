@@ -24,8 +24,8 @@ if (Base::sessionExpire()) {
 
 $config = require('../config/database.php');
 $db_server = "mysql";
-$db_username = isset($_SESSION["connection"]["username"]) && !empty($_SESSION["connection"]["username"]) ? $_SESSION["connection"]["username"] : getenv('LOCAL_DB_ADMISSION_USERNAME');
-$db_password = isset($_SESSION["connection"]["password"]) && !empty($_SESSION["connection"]["password"]) ? $_SESSION["connection"]["password"] : getenv('LOCAL_DB_ADMISSION_PASSWORD');
+$db_username = isset($_SESSION["connection"]["username"]) && !empty($_SESSION["connection"]["username"]) ? $_SESSION["connection"]["username"] : getenv('TEST_DB_ADMISSION_USERNAME');
+$db_password = isset($_SESSION["connection"]["password"]) && !empty($_SESSION["connection"]["password"]) ? $_SESSION["connection"]["password"] : getenv('TEST_DB_ADMISSION_PASSWORD');
 
 use Src\Controller\Student;
 use Src\Core\Validator;
@@ -93,7 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                 die(json_encode(array("success" => false, "message" => "No match found for your request!")));
         }
     } else if ($module === 'course') {
-        $courseObj = new Course($config["database"]["mysql"]);
+        $courseObj = new Course($config["database"]["mysql"], "mysql", getenv('TEST_DB_ADMISSION_USERNAME'), getenv('TEST_DB_ADMISSION_PASSWORD'));
 
         switch ($action) {
             case 'info':
@@ -119,7 +119,7 @@ elseif ($_SERVER['REQUEST_METHOD'] == "POST") {
     $action = $separatePath[1];
 
     if ($module === 'student') {
-        $studentObj = new Student($config["database"]["mysql"]);
+        $studentObj = new Student($config["database"]["mysql"], "mysql", getenv('TEST_DB_ADMISSION_USERNAME'), getenv('TEST_DB_ADMISSION_PASSWORD'));
 
         switch ($action) {
 
@@ -148,7 +148,7 @@ elseif ($_SERVER['REQUEST_METHOD'] == "POST") {
                 if (!empty($current_level)) {
                     $_SESSION["student"]['level'] = $current_level;
 
-                    $semesterObj = new Semester($config["database"]["mysql"]);
+                    $semesterObj = new Semester($config["database"]["mysql"], "mysql", getenv('TEST_DB_ADMISSION_USERNAME'), getenv('TEST_DB_ADMISSION_PASSWORD'));
                     $semester_data = $semesterObj->currentSemester();
                     if (!empty($semester_data)) {
                         $_SESSION["semester"]["id"] = $semester_data["semester_id"];
@@ -193,7 +193,7 @@ elseif ($_SERVER['REQUEST_METHOD'] == "POST") {
                 if (isset($setup_result["data"]) && !empty($setup_result["data"]["current_level"])) {
                     $_SESSION["student"]['level'] = $setup_result["data"]["current_level"];
 
-                    $semesterObj = new Semester($config["database"]["mysql"]);
+                    $semesterObj = new Semester($config["database"]["mysql"], "mysql", getenv('TEST_DB_ADMISSION_USERNAME'), getenv('TEST_DB_ADMISSION_PASSWORD'));
                     $semester_data = $semesterObj->currentSemester();
                     if (!empty($semester_data)) {
                         $_SESSION["semester"]["id"] = $semester_data["semester_id"];

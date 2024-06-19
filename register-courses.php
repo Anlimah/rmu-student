@@ -18,8 +18,8 @@ use Src\Controller\Student;
 
 $config = require('config/database.php');
 
-$studentObj = new Student($config["database"]["mysql"]);
-$semster = new Semester($config["database"]["mysql"]);
+$studentObj = new Student($config["database"]["mysql"], "mysql", getenv('TEST_DB_ADMISSION_USERNAME'), getenv('TEST_DB_ADMISSION_PASSWORD'));
+$semster = new Semester($config["database"]["mysql"], "mysql", getenv('TEST_DB_ADMISSION_USERNAME'), getenv('TEST_DB_ADMISSION_PASSWORD'));
 
 $student_index = isset($_SESSION["student"]["index_number"]) && !empty($_SESSION["student"]["index_number"]) ? $_SESSION["student"]["index_number"] : "";
 $student_data = $studentObj->fetchData($student_index);
