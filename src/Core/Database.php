@@ -13,7 +13,7 @@ class Database
     private $params;
     private $stmt;
 
-    public function __construct($config, $dbServer = "mysql", $user = "root", $pass = "")
+    public function __construct($config, $dbServer, $user, $pass)
     {
         $dsn = "{$dbServer}:" . http_build_query($config, "", ";");
         try {
