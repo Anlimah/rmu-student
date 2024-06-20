@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
     $action = $separatePath[1];
 
     if ($module === 'student') {
-        $studentObj = new Student($config["database"][$db_server]);
+        $studentObj = new Student($config["database"]["mysql"]);
 
         switch ($action) {
             case 'semester-courses':

@@ -177,10 +177,9 @@ class Student
         s.`middle_name`, s.`last_name`, s.`suffix`, s.`gender`, s.`dob`, s.`nationality`, 
         s.`photo`, s.`marital_status`, s.`disability`, s.`date_admitted`, s.`term_admitted`, s.`stream_admitted`, 
         s.`level_admitted`, CONCAT(s.`first_name`, ' ', IFNULL(s.`middle_name`, ''), ' ', s.`last_name`) AS full_name, 
-        ay.`id` AS academic_year_id, ay.`name` AS academic_year_name, d.`id` AS department_id, d.`name` AS department_name, 
-        p.`id` AS program_id, p.`code`, p.`name` AS program_name, c.`code` AS class_code 
-        FROM student AS s, academic_year AS ay, department AS d, programs AS p, class AS c 
-        WHERE s.`fk_academic_year` = ay.`id` AND s.`fk_department` = d.`id` AND s.`fk_program` = p.`id` AND 
+        d.`id` AS department_id, d.`name` AS department_name, p.`id` AS program_id, p.`code`, p.`name` AS program_name, c.`code` AS class_code 
+        FROM student AS s, department AS d, programs AS p, class AS c 
+        WHERE s.`fk_department` = d.`id` AND s.`fk_program` = p.`id` AND 
         s.`fk_class` = c.`code` AND s.`index_number` = :i";
         return $this->dm->run($query, array(':i' => $index_number))->one();
     }
