@@ -101,14 +101,11 @@ $_SESSION["lastAccessed"] = time();
 
 
     <script src="js/jquery-3.6.0.min.js"></script>
+    <script src="js/loadingoverlay.min.js"></script>
     <script>
         $(document).ready(function() {
 
-            if (window.location.pathname == "/apply/index.php" || window.location.pathname == "/apply/") {
-                $(".sign-out-1").hide();
-            }
-
-            if (window.location.pathname == "/rmu-student/login.php") {
+            if (window.location.pathname == "/apply/index.php" || window.location.pathname == "/apply/" || window.location.pathname == "/rmu-student/login.php") {
                 $(".sign-out-1").hide();
             }
 
@@ -128,20 +125,30 @@ $_SESSION["lastAccessed"] = time();
                         console.log(result);
 
                         if (result.success) {
+                            $(".form-btn-login").prop("disabled", true);
                             $("#loginMsgDisplay").html(
                                 '<div class="alert alert-success alert-dismissible fade show" role="alert">' +
-                                '<span id="alert-msg"><strong>' + result.message + '</strong> Redirecting...</span>' +
-                                '</div>');
+                                '<span id="alert-msg"><strong>' + result.message + '</strong></span>' +
+                                '</div>'
+                            );
                             setTimeout(function() {
-                                window.location.reload();
-                            }, 3000);
+                                $("#loginMsgDisplay").html(
+                                    '<div class="alert alert-success alert-dismissible fade show" role="alert">' +
+                                    '<span id="alert-msg"><strong>Redirecting...</strong></span>' +
+                                    '</div>'
+                                );
+                                setTimeout(function() {
+                                    window.location.reload();
+                                }, 2000);
+                            }, 2000);
                             return;
                         }
                         $("#loginMsgDisplay").html(
                             '<div class="alert alert-danger alert-dismissible fade show" role="alert">' +
                             '<span id="alert-msg"><strong>' + result.message + '</strong></span>' +
                             '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' +
-                            '</div>');
+                            '</div>'
+                        );
                     },
                     error: function(xhr, status, error) {
                         if (xhr.status == 401) {
@@ -153,6 +160,15 @@ $_SESSION["lastAccessed"] = time();
                     }
                 });
             });
+        });
+
+        $(document).on({
+            ajaxStart: function() {
+                $(".form-btn-login").LoadingOverlay("show");
+            },
+            ajaxStop: function() {
+                $(".form-btn-login").LoadingOverlay("hide");
+            }
         });
     </script>
 </body>

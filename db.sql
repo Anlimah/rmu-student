@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS `academic_year` (
   `start_year` YEAR NOT NULL, 
   `end_year` YEAR NOT NULL,
   `archived` TINYINT(1) DEFAULT 0,
-  `name` VARCHAR(15) GENERATED ALWAYS AS (CONCAT(`start_year`, '-', `end_year`)),
+  `name` VARCHAR(15) GENERATED ALWAYS AS (CONCAT(`start_year`, '-', `end_year`)) PERSISTENT,
   PRIMARY KEY (`id`)
 );
 CREATE INDEX academic_year_active_idx1 ON `academic_year` (`active`);

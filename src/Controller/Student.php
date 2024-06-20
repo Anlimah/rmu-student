@@ -210,30 +210,30 @@ class Student
         return $courses;
     }
 
-    public function fetchRegisteredUnregisteredCoursesForPrevious($index_number, $level, $semester, $semester_id): mixed
+    public function fetchUnregisteredCoursesForPrevious($index_number, $level, $semester): mixed
     {
         $query = "SELECT 
-        cs.`code` AS course_code, cs.`name` AS course_name, cs.`credits` AS credits, 
-        cs.`level`, cs.`semester`, cc.`id` AS category_id, cc.`name` AS category_name,
-        CASE
-            WHEN cr.`fk_course` IS NOT NULL THEN 1
-            ELSE 0
-        END AS registered
-        FROM 
-            `course` AS cs
-        LEFT JOIN 
-            `course_category` AS cc ON cs.`fk_category` = cc.`id`
-        LEFT JOIN 
-            `assigned_courses` AS ac ON ac.`fk_course` = cs.`code`
-        LEFT JOIN 
-            `student` AS st ON ac.`fk_student` = st.`index_number`
-        LEFT JOIN 
-            `course_registration` AS cr ON cr.`fk_course` = cs.`code` AND 
-            cr.`fk_student` = st.`index_number` AND cr.`fk_semester` = :fks
-        WHERE 
-            st.`index_number` = :i AND cs.`level` < :l AND cs.`semester` = :s
+            cs.`code` AS course_code, 
+            cs.`name` AS course_name, 
+            cs.`credits` AS credits, 
+            cs.`level`, 
+            cs.`semester`, 
+            cc.`id` AS category_id, 
+            cc.`name` AS category_name, 
+            CASE WHEN cr.`fk_course` IS NOT NULL THEN 1 ELSE 0 END AS registered 
+            FROM 
+            `course` AS cs 
+            LEFT JOIN `course_category` AS cc ON cs.`fk_category` = cc.`id` 
+            LEFT JOIN `assigned_courses` AS ac ON ac.`fk_course` = cs.`code` 
+            LEFT JOIN `student` AS st ON ac.`fk_student` = st.`index_number` 
+            LEFT JOIN `course_registration` AS cr ON cr.`fk_course` = cs.`code` AND cr.`fk_student` = st.`index_number` 
+            WHERE 
+            st.`index_number` = :i 
+            AND cs.`level` < :l 
+            AND cs.`semester` = :s 
+            AND CASE WHEN cr.`fk_course` IS NOT NULL THEN 1 ELSE 0 END = 0
         ";
-        $courses = $this->dm->run($query, array(':i' => $index_number, ':l' => $level, ':s' => $semester, ':fks' => $semester_id))->all();
+        $courses = $this->dm->run($query, array(':i' => $index_number, ':l' => $level, ':s' => $semester))->all();
         return $courses;
     }
 

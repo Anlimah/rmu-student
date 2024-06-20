@@ -57,11 +57,10 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
 
                 // gets all the assigned semester courses 
             case 'other-semester-courses':
-                $st_semester_courses = $studentObj->fetchRegisteredUnregisteredCoursesForPrevious(
+                $st_semester_courses = $studentObj->fetchUnregisteredCoursesForPrevious(
                     $_SESSION["student"]["index_number"],
                     $_SESSION["student"]["level"]["level"],
-                    $_SESSION["student"]["level"]["semester"],
-                    $_SESSION["semester"]["id"]
+                    $_SESSION["student"]["level"]["semester"]
                 );
                 if (empty($st_semester_courses)) {
                     die(json_encode(array("success" => false, "message" => "You do not have unregistered courses.")));
