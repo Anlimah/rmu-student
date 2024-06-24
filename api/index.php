@@ -60,7 +60,8 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                 $st_semester_courses = $studentObj->fetchUnregisteredCoursesForPrevious(
                     $_SESSION["student"]["index_number"],
                     $_SESSION["student"]["level"]["level"],
-                    $_SESSION["student"]["level"]["semester"]
+                    $_SESSION["student"]["level"]["semester"],
+                    $_SESSION["semester"]["id"]
                 );
                 if (empty($st_semester_courses)) {
                     die(json_encode(array("success" => false, "message" => "You do not have unregistered courses.")));
