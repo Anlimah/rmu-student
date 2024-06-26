@@ -104,6 +104,14 @@ if (!isset($_SESSION["_start_create_password"])) {
                 $(".sign-out-1").hide();
             }
 
+            $(document).on("click", ".logout-btn", function() {
+                window.location.href = "?logout";
+            });
+
+            $(document).on("click", ".user-profile", function() {
+                window.location.href = "profile.php";
+            });
+
             //$("#usp_identity").focus();
 
             $("#appLoginForm").on("submit", function(e) {

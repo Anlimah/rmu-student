@@ -14,13 +14,13 @@
 
             <span class="open-sections-menu dropdown bi bi-list dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside" style="font-size: 28px; color: #fff">
                 <ul class="dropdown-menu">
-                    <li class="dropdown-item" id="user-profile">
+                    <li class="dropdown-item user-profile">
                         <span class="bi bi-person-circle"></span> Your Profile
                     </li>
                     <li>
                         <hr class="dropdown-divider">
                     </li>
-                    <li class="dropdown-item" class="logout-btn">
+                    <li class="dropdown-item logout-btn">
                         <span class="bi bi-box-arrow-right"></span> Sign Out
                     </li>
                 </ul>
