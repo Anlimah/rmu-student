@@ -35,7 +35,7 @@ if (!empty($current_semester)) {
         $semester = $current_semester["semester_name"] . "<sup>nd</sup>";
 }
 
-$student_level = 100;
+$student_level = $studentObj->getCurrentLevel($student_index);
 $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_data["photo"];
 ?>
 
@@ -54,9 +54,9 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
             height: 80px;
             padding: 0 20px;
             border: 1px solid #ccc;
-            border-radius: 5px;
+            border-radius: 15px;
             margin-bottom: 10px;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            /*box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);*/
         }
 
         .item-card:hover {
@@ -89,9 +89,9 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
         }
 
         .profile-card {
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
+            /*box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;*/
             background-color: #003262 !important;
-            border-radius: 5px !important;
+            border-radius: 15px !important;
             border-color: transparent !important;
             padding: 15px 15px !important;
         }

@@ -25,7 +25,7 @@ $student_index = isset($_SESSION["student"]["index_number"]) && !empty($_SESSION
 $student_data = $studentObj->fetchData($student_index);
 $current_semester = $semster->currentSemester();
 
-$student_level = 100;
+$student_level = $studentObj->getCurrentLevel($student_index);
 $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_data["photo"];
 ?>
 
@@ -105,7 +105,7 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
             padding: 20px;
             border-radius: 5px;
             color: white;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+            /*box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);*/
         }
 
         .cr-card-item-group {

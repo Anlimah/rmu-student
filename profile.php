@@ -35,7 +35,7 @@ if (!empty($current_semester)) {
         $semester = $current_semester["semester_name"] . "<sup>nd</sup>";
 }
 
-$student_level = 100;
+$student_level = $studentObj->getCurrentLevel($student_index);
 $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_data["photo"];
 ?>
 

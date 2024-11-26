@@ -313,7 +313,9 @@ class Student
         cr.`fk_semester_registered` = sm.`id` AND cs.`fk_category` = cc.`id` AND 
         st.`index_number` = :i AND sm.`name` = :sn AND cr.`fk_semester_registered` = :srid AND cr.`registered` = 1";
         return $this->dm->run($query, array(
-            ':i' => $index_number, ':sn' => $semester_name, ':srid' => $semester_id
+            ':i' => $index_number,
+            ':sn' => $semester_name,
+            ':srid' => $semester_id
         ))->all();
     }
 
@@ -333,7 +335,9 @@ class Student
         cr.`fk_semester_registered` = sm.`id` AND cs.`fk_category` = cc.`id` AND 
         st.`index_number` = :i AND sm.`name` = :sn AND cr.`fk_semester_registered` = :srid AND cr.`registered` = 0";
         return $this->dm->run($query, array(
-            ':i' => $index_number, ':sn' => $semester_name, ':srid' => $semester_id
+            ':i' => $index_number,
+            ':sn' => $semester_name,
+            ':srid' => $semester_id
         ))->all();
     }
 
