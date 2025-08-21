@@ -57,7 +57,7 @@ class Student
         $courses_assigned = 0;
         foreach ($courses as $course) {
             $courses_assigned += $this->dm->run(
-                "INSERT INTO `assigned_courses` (`fk_course`, `fk_student`, `credit_hours`, `level`, `semester`) 
+                "INSERT INTO `student_course_assignments` (`fk_course`, `fk_student`, `credit_hours`, `level`, `semester`) 
                 VALUES (:fkc, :fks, :c, :l, :s)",
                 array(
                     ":fkc" => $course["course"],
@@ -198,7 +198,7 @@ class Student
         LEFT JOIN 
             `course_category` AS cc ON cs.`fk_category` = cc.`id`
         LEFT JOIN 
-            `assigned_courses` AS ac ON ac.`fk_course` = cs.`code`
+            `student_course_assignments` AS ac ON ac.`fk_course` = cs.`code`
         LEFT JOIN 
             `student` AS st ON ac.`fk_student` = st.`index_number`
         LEFT JOIN 
@@ -223,7 +223,7 @@ class Student
             CASE WHEN cr.`fk_course` IS NOT NULL THEN 1 ELSE 0 END AS registered 
             FROM `course` AS cs 
             LEFT JOIN `course_category` AS cc ON cs.`fk_category` = cc.`id` 
-            LEFT JOIN `assigned_courses` AS ac ON ac.`fk_course` = cs.`code` 
+            LEFT JOIN `student_course_assignments` AS ac ON ac.`fk_course` = cs.`code` 
             LEFT JOIN `student` AS st ON ac.`fk_student` = st.`index_number` 
             LEFT JOIN `course_registration` AS cr ON cr.`fk_course` = cs.`code` AND 
             cr.`fk_student` = st.`index_number` AND cr.`fk_semester` = :fks 
@@ -249,7 +249,7 @@ class Student
         cs.`code` AS course_code, cs.`name` AS course_name, cs.`credit_hours` AS credits, cs.`level`, cs.`semester`, 
         cc.`id` AS category_id, cc.`name` AS category_name 
         FROM 
-        `course` AS cs, `course_category` AS cc, `assigned_courses` AS ac, `student` AS st 
+        `course` AS cs, `course_category` AS cc, `student_course_assignments` AS ac, `student` AS st 
         WHERE 
         ac.`fk_course` = cs.`code` AND ac.`fk_student` = st.`index_number` AND cs.`fk_category` = cc.`id` AND 
         st.`index_number` = :i AND cs.`level` = :l AND cs.`semester` = :s";
@@ -384,11 +384,11 @@ class Student
         cs.`code` AS course_code, cs.`name` AS course_name, cs.`credit_hours` AS credits, cs.`level`, cs.`semester`, 
         cc.`id` AS category_id, cc.`name` AS category_name 
         FROM 
-        `course` AS cs, `course_category` AS cc, `assigned_courses` AS ac, `student` AS st 
+        `course` AS cs, `course_category` AS cc, `student_course_assignments` AS ac, `student` AS st 
         WHERE 
         ac.`fk_course` = cs.`code` AND ac.`fk_student` = st.`index_number` AND cs.`fk_category` = cc.`id` AND 
         st.`index_number` = :i AND cs.`level` < :l AND cs.`semester` = :s AND cs.`code` NOT IN (
-            SELECT ac.`fk_course` FROM `assigned_courses` AS ac WHERE ac.`fk_student` = :i
+            SELECT ac.`fk_course` FROM `student_course_assignments` AS ac WHERE ac.`fk_student` = :i
         )";
         return $this->dm->run($query, array(':i' => $index_number, ':l' => $level, ':s' => $current_semester_name))->all();
     }
