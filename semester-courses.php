@@ -249,8 +249,6 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
                         </div>
                         <div id="semester-courses" style="display: none;"></div>
                         <div id="registered-courses" style="display: none;"></div>
-
-
                     </div>
                 </div>
             </div>
@@ -379,6 +377,9 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
                                 $("#total_credits").text(total_credits);
                                 $("#semester-courses").show();
                                 return;
+                            } else {
+                                $("#semester-courses").html(`<div class="alert alert-danger alert-sm">${result.message}</div>`);
+                                $("#semester-courses").show();
                             }
                         },
                         error: function(xhr, status, error) {

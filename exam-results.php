@@ -147,6 +147,10 @@ $student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_
 
                     <h1 class="mt-4" style="text-transform: uppercase; font-size: 18px !important; font-weight:bold">Exam Results</h1>
 
+                    <form action="#" method="post">
+
+                    </form>
+
                     <table class="table table-borderless" style="margin-bottom: 30px !important;">
                         <colgroup>
                             <col style="width: 90%">

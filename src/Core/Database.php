@@ -12,6 +12,8 @@ class Database
     private $query;
     private $params;
     private $stmt;
+    private $inTransaction = false;
+    private $logFile = "database_errors.log";
 
     public function __construct($config)
     {
@@ -34,6 +36,61 @@ class Database
         }
     }
 
+    private function logError(PDOException $e)
+    {
+        $logFilePath = dirname(__FILE__) . '/' . $this->logFile;
+        if (!file_exists($logFilePath)) {
+            touch($logFilePath);
+        }
+        error_log("Warning: " . $e->getMessage() . "\nTrace: " . $e->getTraceAsString() . "\n", 3, $logFilePath);
+    }
+
+    // New transaction methods
+    public function beginTransaction()
+    {
+        if (!$this->inTransaction) {
+            try {
+                $this->inTransaction = $this->conn->beginTransaction();
+                return $this->inTransaction;
+            } catch (PDOException $e) {
+                $this->logError($e);
+                return json_encode(array("error" => "Transaction start failed: " . $e->getMessage()));
+            }
+        }
+        return false;
+    }
+
+    public function commit()
+    {
+        if ($this->inTransaction) {
+            try {
+                $this->conn->commit();
+                $this->inTransaction = false;
+                return true;
+            } catch (PDOException $e) {
+                $this->logError($e);
+                return json_encode(array("error" => "Transaction commit failed: " . $e->getMessage()));
+            }
+        }
+        return false;
+    }
+
+    public function rollback()
+    {
+        if ($this->inTransaction) {
+            try {
+                $this->conn->rollBack();
+                $this->inTransaction = false;
+                return true;
+            } catch (PDOException $e) {
+                $this->logError($e);
+                return json_encode(array("error" => "Transaction rollback failed: " . $e->getMessage()));
+            }
+        }
+        return false;
+    }
+
+
     public function run($query, $params = array()): mixed
     {
         $this->query = $query;
@@ -43,6 +100,7 @@ class Database
             $this->stmt->execute($this->params);
             return $this;
         } catch (Exception $e) {
+            $this->logError($e);
             throw $e;
         }
     }

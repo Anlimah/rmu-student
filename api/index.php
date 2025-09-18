@@ -230,7 +230,7 @@ elseif ($_SERVER['REQUEST_METHOD'] == "POST") {
                     "You have successfully registered $result courses for the semester!",
                     "Failed to register your semester courses. The process could not complete!"
                 );
-                die(json_encode($feed));
+                die(json_encode($result));
 
             case 'reset-course-registration':
                 $result = $studentObj->resetCourseRegistration(
