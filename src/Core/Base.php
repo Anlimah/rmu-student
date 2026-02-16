@@ -71,5 +71,6 @@ class Base
     {
         self::killSession();
         header('Location: login.php');
+        exit;
     }
 }

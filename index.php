@@ -1,272 +1,151 @@
 <?php
-session_start();
+$page_title = 'Dashboard';
+require_once('inc/auth.php');
 
-require_once('bootstrap.php');
-
-use Src\Core\Base;
-
-//Base::dd($_SESSION);
-
-if (Base::sessionExpire()) {
-    echo "<script>alert('Your session expired, logging you out...');</script>";
+$registration_open = !empty($current_semester) && $current_semester["reg_open_status"];
+$registration_end = '';
+if ($registration_open) {
+    $registration_end = (new \DateTime($current_semester["reg_end_date"]))->format("l F j, Y");
 }
-
-if (!isset($_SESSION["student"]['login']) || $_SESSION["student"]['login'] !== true) header('Location: login.php');
-if ($_SESSION["student"]['default_password']) header("Location: create-password.php");
-
-if (isset($_GET['logout'])) Base::logout();
-
-use Src\Controller\Semester;
-use Src\Controller\Student;
-
-$config = require('config/database.php');
-$student_index = isset($_SESSION["student"]['index_number']) && !empty($_SESSION["student"]["index_number"]) ? $_SESSION["student"]["index_number"] : "";
-
-$studentObj = new Student($config["database"]["mysql"], "mysql", getenv('TEST_DB_ADMISSION_USERNAME'), getenv('TEST_DB_ADMISSION_PASSWORD'));
-$student_data = $studentObj->fetchData($student_index);
-
-$semster = new Semester($config["database"]["mysql"], "mysql", getenv('TEST_DB_ADMISSION_USERNAME'), getenv('TEST_DB_ADMISSION_PASSWORD'));
-$current_semester = $semster->currentSemester();
-
-if (!empty($current_semester)) {
-    if ($current_semester["semester_name"] == 1)
-        $semester = $current_semester["semester_name"] . "<sup>st</sup>";
-    elseif ($current_semester["semester_name"] == 2)
-        $semester = $current_semester["semester_name"] . "<sup>nd</sup>";
-}
-
-$student_level = $studentObj->getCurrentLevel($student_index);
-$student_image = 'https://admissions.rmuictonline.com/apply/photos/' . $student_data["photo"];
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <title>Student Portal | Home</title>
-    <link rel="stylesheet" href="assets/css/main.css">
-    <?php require_once("inc/apply-head-section.php") ?>
-
-    <style>
-        .item-card {
-            display: flex;
-            align-items: center;
-            height: 80px;
-            padding: 0 20px;
-            border: 1px solid #ccc;
-            border-radius: 15px;
-            margin-bottom: 10px;
-            /*box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);*/
-        }
-
-        .item-card:hover {
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .item-card img {
-            width: 50px;
-            height: 50px;
-            margin-right: 20px;
-        }
-
-        .item-card p {
-            color: #003262;
-            font-size: 18px;
-            font-weight: bold;
-            margin: 0;
-        }
-
-        .arrow-link {
-            margin-left: auto;
-            color: #003262;
-            text-decoration: none;
-            padding-left: 10px;
-            font-size: 18px;
-        }
-
-        .transform-text {
-            text-transform: uppercase !important;
-        }
-
-        .profile-card {
-            /*box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;*/
-            background-color: #003262 !important;
-            border-radius: 15px !important;
-            border-color: transparent !important;
-            padding: 15px 15px !important;
-        }
-    </style>
+    <title>Student Portal | Dashboard</title>
+    <?php require_once("inc/head.php") ?>
 </head>
 
-<body id="body">
+<body>
+    <div class="app">
 
-    <div id="wrapper">
+        <?php require_once("inc/sidebar.php") ?>
 
-        <?php require_once("inc/page-nav2.php") ?>
+        <div class="app__main">
+            <?php require_once("inc/header.php") ?>
 
-        <main class="container">
-            <div class="row">
+            <main class="app__content">
 
-                <div class="col-md-12">
-                    <section id="page_info" style="margin-bottom: 0px !important;">
-
-                        <div class="row mb-4">
-                            <div class="col-xxl-12 col-md-12">
-                                <div class="profile-card">
-                                    <div class="student-img" style="text-align: center; padding: 5px;">
-                                        <img src="<?= $student_image ?>" alt="<?= $student_data["full_name"] ?>" style="border-radius: 50%; border: 2px solid white; width: 100px; height: 100px;">
-                                    </div>
-
-                                    <div class="student-name " style="text-align: center; color: #FFA000; font-weight: 600">
-                                        <?= $student_data["full_name"] ?>
-                                    </div>
-
-                                    <div class="student-index" style="text-align: center; color: white; font-weight: 600">
-                                        <?= $student_index ?>
-                                    </div>
-
-                                    <div style="display: flex; justify-content: center; align-items:center; margin-top: 10px; ">
-                                        <div class="student-program me-2 " style="color: white; font-weight: 600">
-                                            <?= $student_data["program_name"] ?>
-                                        </div>
-                                        <div class="student-program " style="color: #FFA000; font-weight: 600">
-                                            [<?= $student_data["class_code"] ?>]
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-
-                        <?php if (empty($current_semester) || !$current_semester["reg_open_status"]) { ?>
-                            <div class="row mb-4">
-                                <div class="col-xxl-12 col-md-12">
-                                    <div class="alert alert-danger d-flex align-items-center" role="alert">
-                                        <span class="bi bi-exclamation-triangle-fill me-2"></span>
-                                        <b><?= $semester ?> semester course registration closed</b>
-                                    </div>
-                                </div>
-                            </div>
-                        <?php } else {
-                            $registration_end = (new \DateTime($current_semester["reg_end_date"]))->format("l F j, Y");
-                        ?>
-                            <div class="row mb-4">
-                                <div class="col-xxl-12 col-md-12">
-                                    <div class="alert alert-success" role="alert">
-                                        <h6 class="alert-heading d-flex align-items-center">
-                                            <span class="bi bi-exclamation-triangle-fill me-2"></span>
-                                            <b class=""><?= $semester ?> semester course registration opened.</b>
-                                        </h6>
-                                        <hr>
-                                        <p class="mb-0 ">Registration ends on <b><?= $registration_end ?> at 11:59 PM.</b></p>
-                                        <hr>
-                                        <p class="mb-0 d-flex" style="justify-content: right;">
-                                            <button class="btn btn-outline-success " id="register-here-btn">Register Here</button>
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        <?php } ?>
-
-                        <div class="row">
-                            <div class="col-xxl-4 col-md-6 mb-2">
-                                <a href="semester-courses.php?myCoursesTab=SEMESTER_COURSES">
-                                    <div class="item-card">
-                                        <img src="assets/images/icons8-courses-64.png" alt="Icon">
-                                        <p>Semeter Courses</p>
-                                        <i class="arrow-link bi bi-box-arrow-in-down-right"></i>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="col-xxl-4 col-md-6 mb-2">
-                                <a href="exam-results.php">
-                                    <div class="item-card">
-                                        <img src="assets/images/icons8-exam-96.png" alt="Icon">
-                                        <p>Exam Results</p>
-                                        <i class="arrow-link bi bi-box-arrow-in-down-right"></i>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="col-xxl-4 col-md-6 mb-2">
-                                <a href="timetable.php">
-                                    <div class="item-card">
-                                        <img src="assets/images/icons8-timetable-94.png" alt="Icon">
-                                        <p>Timetable</p>
-                                        <i class="arrow-link bi bi-box-arrow-in-down-right"></i>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="col-xxl-4 col-md-6 mb-2">
-                                <a href="#">
-                                    <div class="item-card">
-                                        <img src="assets/images/icons8-exam-96(1).png" alt="Icon">
-                                        <p>Course & Lectruer Evaluation</p>
-                                        <i class="arrow-link bi bi-box-arrow-in-down-right"></i>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="col-xxl-4 col-md-6 mb-2">
-                                <a href="#">
-                                    <div class="item-card">
-                                        <img src="assets/images/icons8-hostel-55.png" alt="Icon">
-                                        <p>Hostel & Accomodation</p>
-                                        <i class="arrow-link bi bi-box-arrow-in-down-right"></i>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="col-xxl-4 col-md-6 mb-2">
-                                <a href="#">
-                                    <div class="item-card">
-                                        <img src="assets/images/icons8-books-94.png" alt="Icon">
-                                        <p>Library</p>
-                                        <i class="arrow-link bi bi-box-arrow-in-down-right"></i>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="col-xxl-4 col-md-6 mb-2">
-                                <a href="#">
-                                    <div class="item-card">
-                                        <img src="assets/images/icons8-book-and-pencil-96.png" alt="Icon">
-                                        <p>Practice Quiz</p>
-                                        <i class="arrow-link bi bi-box-arrow-in-down-right"></i>
-                                    </div>
-                                </a>
-                            </div>
-
-                        </div>
-
-                    </section>
+                <!-- Profile Card -->
+                <div class="profile-card mb-6">
+                    <img src="<?= $student_image ?>" alt="<?= $student_data["full_name"] ?>" class="profile-card__avatar">
+                    <div class="profile-card__name"><?= $student_data["full_name"] ?></div>
+                    <div class="profile-card__id"><?= $student_index ?></div>
+                    <div class="profile-card__program">
+                        <span class="profile-card__program-name"><?= $student_data["program_name"] ?></span>
+                        <span class="profile-card__class-code">[<?= $student_data["class_code"] ?>]</span>
+                    </div>
                 </div>
 
-            </div>
-        </main>
+                <!-- Registration Banner -->
+                <?php if (!$registration_open): ?>
+                    <div class="alert alert--danger mb-6">
+                        <span class="alert__icon bi bi-exclamation-triangle-fill"></span>
+                        <div class="alert__content">
+                            <strong><?= $semester_label ?> semester course registration closed</strong>
+                        </div>
+                    </div>
+                <?php else: ?>
+                    <div class="alert alert--success mb-6">
+                        <span class="alert__icon bi bi-check-circle-fill"></span>
+                        <div class="alert__content">
+                            <strong><?= $semester_label ?> semester course registration is open.</strong>
+                            <div class="mt-1 text-sm">Registration ends on <strong><?= $registration_end ?> at 11:59 PM.</strong></div>
+                            <div class="mt-4">
+                                <a href="register-courses.php" class="btn btn--success btn--sm">Register Now</a>
+                            </div>
+                        </div>
+                    </div>
+                <?php endif; ?>
 
-        <!-- footer -->
+                <!-- Quick Stats -->
+                <?php if (!empty($current_semester)): ?>
+                    <div class="grid grid--3 grid--auto-fit mb-8">
+                        <div class="stat-card">
+                            <div class="stat-card__icon stat-card__icon--navy">
+                                <i class="bi bi-calendar3"></i>
+                            </div>
+                            <div>
+                                <div class="stat-card__value"><?= $current_semester["academic_year_name"] ?></div>
+                                <div class="stat-card__label">Academic Year</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-card__icon stat-card__icon--gold">
+                                <i class="bi bi-mortarboard"></i>
+                            </div>
+                            <div>
+                                <div class="stat-card__value">Semester <?= $current_semester["semester_name"] ?></div>
+                                <div class="stat-card__label">Current Semester</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-card__icon stat-card__icon--green">
+                                <i class="bi bi-layers"></i>
+                            </div>
+                            <div>
+                                <div class="stat-card__value">Level <?= $student_level["level"] ?? 'N/A' ?></div>
+                                <div class="stat-card__label">Current Level</div>
+                            </div>
+                        </div>
+                    </div>
+                <?php endif; ?>
 
-        <?php require_once("inc/app-sections-menu.php"); ?>
+                <!-- Quick Access -->
+                <h2 class="section-title">Quick Access</h2>
+                <div class="grid grid--3 grid--auto-fit mb-8">
+
+                    <a href="semester-courses.php?myCoursesTab=SEMESTER_COURSES" class="feature-card">
+                        <img src="assets/images/icons8-courses-64.png" alt="" class="feature-card__icon">
+                        <span class="feature-card__label">Semester Courses</span>
+                        <i class="feature-card__arrow bi bi-chevron-right"></i>
+                    </a>
+
+                    <a href="exam-results.php" class="feature-card">
+                        <img src="assets/images/icons8-exam-96.png" alt="" class="feature-card__icon">
+                        <span class="feature-card__label">Exam Results</span>
+                        <i class="feature-card__arrow bi bi-chevron-right"></i>
+                    </a>
+
+                    <a href="timetable.php" class="feature-card">
+                        <img src="assets/images/icons8-timetable-94.png" alt="" class="feature-card__icon">
+                        <span class="feature-card__label">Timetable</span>
+                        <i class="feature-card__arrow bi bi-chevron-right"></i>
+                    </a>
+
+                    <a href="#" class="feature-card">
+                        <img src="assets/images/icons8-exam-96(1).png" alt="" class="feature-card__icon">
+                        <span class="feature-card__label">Course & Lecturer Evaluation</span>
+                        <i class="feature-card__arrow bi bi-chevron-right"></i>
+                    </a>
+
+                    <a href="#" class="feature-card">
+                        <img src="assets/images/icons8-hostel-55.png" alt="" class="feature-card__icon">
+                        <span class="feature-card__label">Hostel & Accommodation</span>
+                        <i class="feature-card__arrow bi bi-chevron-right"></i>
+                    </a>
+
+                    <a href="#" class="feature-card">
+                        <img src="assets/images/icons8-books-94.png" alt="" class="feature-card__icon">
+                        <span class="feature-card__label">Library</span>
+                        <i class="feature-card__arrow bi bi-chevron-right"></i>
+                    </a>
+
+                    <a href="#" class="feature-card">
+                        <img src="assets/images/icons8-book-and-pencil-96.png" alt="" class="feature-card__icon">
+                        <span class="feature-card__label">Practice Quiz</span>
+                        <i class="feature-card__arrow bi bi-chevron-right"></i>
+                    </a>
+                </div>
+
+            </main>
+
+            <?php require_once("inc/footer.php") ?>
+        </div>
     </div>
 
     <script src="js/jquery-3.6.0.min.js"></script>
-    <script src="js/myjs.js"></script>
-    <script>
-        $(document).ready(function() {
-            var incompleteForm = false;
-            var itsForm = false;
-
-            $("#register-here-btn").on("click", function() {
-                window.location.href = "register-courses.php";
-            });
-
-            $(document).on("click", ".logout-btn", function() {
-                window.location.href = "?logout";
-            });
-
-            $(document).on("click", ".user-profile", function() {
-                window.location.href = "profile.php";
-            });
-
-        });
-    </script>
+    <script src="js/portal.js"></script>
 </body>
 
 </html>

@@ -148,7 +148,7 @@ class Student
         $registered_courses = 0;
         foreach ($courses as $course) {
             $query = "UPDATE `student_courses` SET `registered` = 1 WHERE `fk_course` = :fkc AND `fk_student` = :fks AND `fk_semester` = :fkm";
-            $registered_courses += $this->dm->run($query, array(':fkc' => $course, ':fks' => $student, ':fkm' => $semester))->add();
+            $registered_courses += $this->dm->run($query, array(':fkc' => $course, ':fks' => $student, ':fkm' => $semester))->edit();
         }
         return $registered_courses;
     }
@@ -156,7 +156,7 @@ class Student
     public function resetCourseRegistration($student, $semester): mixed
     {
         $query = "UPDATE `student_courses` SET `registered` = 0 WHERE `fk_student` = :fks AND `fk_semester` = :fkm";
-        return $this->dm->run($query, array(':fks' => $student, ':fkm' => $semester))->del();
+        return $this->dm->run($query, array(':fks' => $student, ':fkm' => $semester))->edit();
     }
 
     public function fetchCourseRegistrationSummary($student, $semester): mixed

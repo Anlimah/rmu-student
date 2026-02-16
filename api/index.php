@@ -6,7 +6,8 @@ session_start();
 * @Author: Francis A. Anlimah
 */
 
-header("Access-Control-Allow-Origin: *");
+$allowed_origin = isset($_SERVER['HTTP_ORIGIN']) ? $_SERVER['HTTP_ORIGIN'] : '';
+header("Access-Control-Allow-Origin: " . $allowed_origin);
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: GET,POST,PUT,DELETE");
 header("Access-Control-Max-Age: 3600");
@@ -30,7 +31,9 @@ use Src\Controller\Semester;
 
 $fullUrl = $_SERVER["REQUEST_URI"];
 $urlParse = parse_url($fullUrl, PHP_URL_PATH);
-$urlPath = str_replace("/rmu-student/api/", "", $urlParse);
+// Extract path after /api/ regardless of base directory
+$apiPos = strpos($urlParse, '/api/');
+$urlPath = $apiPos !== false ? substr($urlParse, $apiPos + 5) : '';
 $separatePath = explode("/", $urlPath);
 $resourceRequested = count($separatePath);
 
