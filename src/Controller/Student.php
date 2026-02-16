@@ -146,11 +146,35 @@ class Student
     public function registerSemesterCourses(array $courses, $student, $semester): mixed
     {
         $registered_courses = 0;
+        $errorMessages = [];
+
         foreach ($courses as $course) {
-            $query = "UPDATE `student_courses` SET `registered` = 1 WHERE `fk_course` = :fkc AND `fk_student` = :fks AND `fk_semester` = :fkm";
-            $registered_courses += $this->dm->run($query, array(':fkc' => $course, ':fks' => $student, ':fkm' => $semester))->add();
+            // Check if the course is assigned to the student and also check if it is registered
+            $selectQuery = "SELECT * FROM `student_courses` WHERE `fk_course` = :fkc AND `fk_student` = :fks AND `fk_semester` = :fkm";
+            $studentCourseData = $this->dm->run($selectQuery, array(':fkc' => $course, ':fks' => $student, ':fkm' => $semester))->one();
+            if (empty($studentCourseData)) {
+                array_push($errorMessages, ["course" => $course, "message" => "Course ($course) is not assigned to you."]);
+            } else if ($studentCourseData['registered'] == 1) {
+                array_push($errorMessages, ["course" => $course, "message" => "Course ($course) is already registered."]);
+            } else {
+                $query = "UPDATE `student_courses` SET `registered` = 1 WHERE `fk_course` = :fkc AND `fk_student` = :fks AND `fk_semester` = :fkm";
+                $registered_courses += $this->dm->run($query, array(':fkc' => $course, ':fks' => $student, ':fkm' => $semester))->add();
+            }
         }
-        return $registered_courses;
+
+        if (!empty($errorMessages)) {
+            return array(
+                "success" => false,
+                "message" => "Some courses could not be registered.",
+                "errors" => $errorMessages,
+                "registered_count" => $registered_courses
+            );
+        }
+        return array(
+            "success" => true,
+            "message" => "Successfully registered {$registered_courses} course(s).",
+            "registered_count" => $registered_courses
+        );
     }
 
     public function resetCourseRegistration($student, $semester): mixed
@@ -193,14 +217,10 @@ class Student
                 cc.`name` AS category_name,
                 COALESCE(ac.`registered`, 0) AS registered,
                 ac.`id` AS student_course_id
-            FROM `course` AS cs
+            FROM `student_courses` AS ac
             LEFT JOIN `course_category` AS cc ON cs.`fk_category` = cc.`id`
-            LEFT JOIN `student_courses` AS ac 
-                ON ac.`fk_course` = cs.`code`
-            AND ac.`fk_student` = :i
-            AND ac.`fk_semester` = :s
-            WHERE cs.`level` = :l
-            AND cs.`semester` = :s
+            LEFT JOIN `courses` AS cs ON ac.`fk_course` = cs.`code`
+            WHERE cs.`level` = :l AND ac.`fk_student` = :i AND ac.`fk_semester` = :s AND cs.`semester` = :s
             ORDER BY cs.`code` ASC
             ";
 

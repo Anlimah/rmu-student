@@ -220,16 +220,7 @@ elseif ($_SERVER['REQUEST_METHOD'] == "POST") {
                     die(json_encode(array("success" => false,  "message" => "You have not selected any course!")));
                 }
                 $selected_courses = Validator::InputTextNumberForArray($_POST['selected-course']);
-                $result = $studentObj->registerSemesterCourses(
-                    $selected_courses,
-                    $_SESSION["student"]["index_number"],
-                    $_SESSION["semester"]["id"]
-                );
-                $feed = Validator::SendResult(
-                    $result,
-                    "You have successfully registered $result courses for the semester!",
-                    "Failed to register your semester courses. The process could not complete!"
-                );
+                $result = $studentObj->registerSemesterCourses($selected_courses, $_SESSION["student"]["index_number"], $_SESSION["semester"]["id"]);
                 die(json_encode($result));
 
             case 'reset-course-registration':
