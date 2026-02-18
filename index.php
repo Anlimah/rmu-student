@@ -27,7 +27,7 @@ if ($registration_open) {
             <main class="app__content">
 
                 <!-- Profile Card -->
-                <div class="profile-card mb-6">
+                <!-- <div class="profile-card mb-6">
                     <img src="<?= $student_image ?>" alt="<?= $student_data["full_name"] ?>" class="profile-card__avatar">
                     <div class="profile-card__name"><?= $student_data["full_name"] ?></div>
                     <div class="profile-card__id"><?= $student_index ?></div>
@@ -35,28 +35,7 @@ if ($registration_open) {
                         <span class="profile-card__program-name"><?= $student_data["program_name"] ?></span>
                         <span class="profile-card__class-code">[<?= $student_data["class_code"] ?>]</span>
                     </div>
-                </div>
-
-                <!-- Registration Banner -->
-                <?php if (!$registration_open): ?>
-                    <div class="alert alert--danger mb-6">
-                        <span class="alert__icon bi bi-exclamation-triangle-fill"></span>
-                        <div class="alert__content">
-                            <strong><?= $semester_label ?> semester course registration closed</strong>
-                        </div>
-                    </div>
-                <?php else: ?>
-                    <div class="alert alert--success mb-6">
-                        <span class="alert__icon bi bi-check-circle-fill"></span>
-                        <div class="alert__content">
-                            <strong><?= $semester_label ?> semester course registration is open.</strong>
-                            <div class="mt-1 text-sm">Registration ends on <strong><?= $registration_end ?> at 11:59 PM.</strong></div>
-                            <div class="mt-4">
-                                <a href="register-courses.php" class="btn btn--success btn--sm">Register Now</a>
-                            </div>
-                        </div>
-                    </div>
-                <?php endif; ?>
+                </div> -->
 
                 <!-- Quick Stats -->
                 <?php if (!empty($current_semester)): ?>
@@ -79,9 +58,30 @@ if ($registration_open) {
                     </div>
                 <?php endif; ?>
 
+                <!-- Registration Banner -->
+                <?php if (!$registration_open): ?>
+                    <div class="alert alert--danger mb-6">
+                        <span class="alert__icon bi bi-exclamation-triangle-fill"></span>
+                        <div class="alert__content">
+                            <strong><?= $semester_label ?> semester course registration closed</strong>
+                        </div>
+                    </div>
+                <?php else: ?>
+                    <div class="alert alert--success mb-6">
+                        <span class="alert__icon bi bi-check-circle-fill"></span>
+                        <div class="alert__content">
+                            <strong><?= $semester_label ?> semester course registration is open.</strong>
+                            <div class="mt-1 text-sm">Registration ends on <strong><?= $registration_end ?> at 11:59 PM.</strong></div>
+                            <div class="mt-4">
+                                <a href="register-courses.php" class="btn btn--success btn--sm">Register Now</a>
+                            </div>
+                        </div>
+                    </div>
+                <?php endif; ?>
+
                 <!-- Quick Access -->
                 <h2 class="section-title">Quick Access</h2>
-                <div class="grid grid--3 grid--auto-fit mb-8">
+                <div class="grid grid--3 grid--auto-fit mb-4">
 
                     <a href="semester-courses.php?myCoursesTab=SEMESTER_COURSES" class="feature-card">
                         <img src="assets/images/icons8-courses-64.png" alt="" class="feature-card__icon">
@@ -119,11 +119,11 @@ if ($registration_open) {
                         <i class="feature-card__arrow bi bi-chevron-right"></i>
                     </a>
 
-                    <a href="#" class="feature-card">
+                    <!-- <a href="#" class="feature-card">
                         <img src="assets/images/icons8-book-and-pencil-96.png" alt="" class="feature-card__icon">
                         <span class="feature-card__label">Practice Quiz</span>
                         <i class="feature-card__arrow bi bi-chevron-right"></i>
-                    </a>
+                    </a> -->
                 </div>
 
             </main>
