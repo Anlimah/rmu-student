@@ -62,14 +62,17 @@ if ($registration_open) {
                 <?php if (!empty($current_semester)): ?>
                     <div class="summary-bar mb-8">
                         <div class="summary-bar__item">
+                            <div class="summary-bar__icon"><i class="bi bi-calendar3"></i></div>
                             <div class="summary-bar__value"><?= $current_semester["academic_year_name"] ?></div>
                             <div class="summary-bar__label">Academic Year</div>
                         </div>
                         <div class="summary-bar__item">
+                            <div class="summary-bar__icon"><i class="bi bi-mortarboard"></i></div>
                             <div class="summary-bar__value">Semester <?= $current_semester["semester_name"] ?></div>
                             <div class="summary-bar__label">Current Semester</div>
                         </div>
                         <div class="summary-bar__item">
+                            <div class="summary-bar__icon"><i class="bi bi-layers"></i></div>
                             <div class="summary-bar__value">Level <?= $student_level["level"] ?? 'N/A' ?></div>
                             <div class="summary-bar__label">Current Level</div>
                         </div>
