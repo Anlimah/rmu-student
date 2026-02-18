@@ -194,13 +194,9 @@ class Student
                 COALESCE(ac.`registered`, 0) AS registered,
                 ac.`id` AS student_course_id
             FROM `course` AS cs
-            LEFT JOIN `course_category` AS cc ON cs.`fk_category` = cc.`id`
-            LEFT JOIN `student_courses` AS ac 
-                ON ac.`fk_course` = cs.`code`
-            AND ac.`fk_student` = :i
-            AND ac.`fk_semester` = :s
-            WHERE cs.`level` = :l
-            AND cs.`semester` = :s
+            LEFT JOIN `student_courses` AS ac ON ac.`fk_course` = cs.`code`
+            LEFT JOIN `course_category` AS cc ON cs.`fk_category` = cc.`id` AND ac.`fk_student` = :i AND ac.`fk_semester` = :s
+            WHERE cs.`level` = :l AND cs.`semester` = :s
             ORDER BY cs.`code` ASC
             ";
 
