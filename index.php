@@ -60,33 +60,18 @@ if ($registration_open) {
 
                 <!-- Quick Stats -->
                 <?php if (!empty($current_semester)): ?>
-                    <div class="grid grid--3 grid--auto-fit mb-8">
-                        <div class="stat-card">
-                            <div class="stat-card__icon stat-card__icon--navy">
-                                <i class="bi bi-calendar3"></i>
-                            </div>
-                            <div>
-                                <div class="stat-card__value"><?= $current_semester["academic_year_name"] ?></div>
-                                <div class="stat-card__label">Academic Year</div>
-                            </div>
+                    <div class="summary-bar mb-8">
+                        <div class="summary-bar__item">
+                            <div class="summary-bar__value"><?= $current_semester["academic_year_name"] ?></div>
+                            <div class="summary-bar__label">Academic Year</div>
                         </div>
-                        <div class="stat-card">
-                            <div class="stat-card__icon stat-card__icon--gold">
-                                <i class="bi bi-mortarboard"></i>
-                            </div>
-                            <div>
-                                <div class="stat-card__value">Semester <?= $current_semester["semester_name"] ?></div>
-                                <div class="stat-card__label">Current Semester</div>
-                            </div>
+                        <div class="summary-bar__item">
+                            <div class="summary-bar__value">Semester <?= $current_semester["semester_name"] ?></div>
+                            <div class="summary-bar__label">Current Semester</div>
                         </div>
-                        <div class="stat-card">
-                            <div class="stat-card__icon stat-card__icon--green">
-                                <i class="bi bi-layers"></i>
-                            </div>
-                            <div>
-                                <div class="stat-card__value">Level <?= $student_level["level"] ?? 'N/A' ?></div>
-                                <div class="stat-card__label">Current Level</div>
-                            </div>
+                        <div class="summary-bar__item">
+                            <div class="summary-bar__value">Level <?= $student_level["level"] ?? 'N/A' ?></div>
+                            <div class="summary-bar__label">Current Level</div>
                         </div>
                     </div>
                 <?php endif; ?>
