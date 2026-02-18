@@ -13,6 +13,31 @@ class Student
         $this->dm = new Database($config);
     }
 
+    public function courseInfo(string $course_code)
+    {
+        $query = "SELECT 
+        cs.`code` AS course_code, cs.`name` AS course_name, cs.`credits`, 
+        cs.`semester` AS semester, cs.`level`, cc.`id` AS category_id, 
+        cc.`name` AS category_name, d.`name` AS department_name 
+        FROM 
+        course AS cs, course_category AS cc, department AS d 
+        WHERE 
+        cs.`fk_category` = cc.`id` AND cs.`fk_department` = d.`id` AND cs.`code` = :c";
+        return $this->dm->run($query, array(':c' => $course_code))->all();
+    }
+
+    public function currentSemester(): mixed
+    {
+        $query = "SELECT 
+        s.`id` AS semester_id, s.`name` AS semester_name, s.`course_registration_opened` AS reg_open_status, 
+        s.`registration_end` AS reg_end_date, a.`id` AS academic_year_id, a.`name` AS academic_year_name 
+        FROM 
+        `semester` AS s, `academic_year` AS a 
+        WHERE 
+        s.`fk_academic_year` = a.`id` AND s.`active` = 1 AND a.`active` = 1";
+        return $this->dm->run($query)->one();
+    }
+
     public function login($index_number, $password)
     {
         $sql = "SELECT * FROM `student` WHERE `index_number` = :u";
@@ -193,10 +218,10 @@ class Student
                 cc.`name` AS category_name,
                 COALESCE(ac.`registered`, 0) AS registered,
                 ac.`id` AS student_course_id
-            FROM `course` AS cs
-            LEFT JOIN `student_courses` AS ac ON ac.`fk_course` = cs.`code`
-            LEFT JOIN `course_category` AS cc ON cs.`fk_category` = cc.`id` AND ac.`fk_student` = :i AND ac.`fk_semester` = :s
-            WHERE cs.`level` = :l AND cs.`semester` = :s
+            FROM `student_courses` AS ac
+            LEFT JOIN `course` AS cs ON cs.`code` = ac.`fk_course`
+            LEFT JOIN `course_category` AS cc ON cc.`id` = cs.`fk_category`
+            WHERE cs.`level` = :l AND ac.`fk_student` = :i AND ac.`fk_semester` = :s AND cs.`semester` = :s
             ORDER BY cs.`code` ASC
             ";
 
