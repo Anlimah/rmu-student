@@ -13,31 +13,6 @@ class Student
         $this->dm = new Database($config);
     }
 
-    public function courseInfo(string $course_code)
-    {
-        $query = "SELECT 
-        cs.`code` AS course_code, cs.`name` AS course_name, cs.`credits`, 
-        cs.`semester` AS semester, cs.`level`, cc.`id` AS category_id, 
-        cc.`name` AS category_name, d.`name` AS department_name 
-        FROM 
-        course AS cs, course_category AS cc, department AS d 
-        WHERE 
-        cs.`fk_category` = cc.`id` AND cs.`fk_department` = d.`id` AND cs.`code` = :c";
-        return $this->dm->run($query, array(':c' => $course_code))->all();
-    }
-
-    public function currentSemester(): mixed
-    {
-        $query = "SELECT 
-        s.`id` AS semester_id, s.`name` AS semester_name, s.`course_registration_opened` AS reg_open_status, 
-        s.`registration_end` AS reg_end_date, a.`id` AS academic_year_id, a.`name` AS academic_year_name 
-        FROM 
-        `semester` AS s, `academic_year` AS a 
-        WHERE 
-        s.`fk_academic_year` = a.`id` AND s.`active` = 1 AND a.`active` = 1";
-        return $this->dm->run($query)->one();
-    }
-
     public function login($index_number, $password)
     {
         $sql = "SELECT * FROM `student` WHERE `index_number` = :u";
