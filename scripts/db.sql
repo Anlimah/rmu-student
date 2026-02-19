@@ -579,3 +579,22 @@ CREATE TABLE IF NOT EXISTS `exam_results` (
 CREATE INDEX exam_results_score_idx1 ON `exam_results` (`score`);
 CREATE INDEX exam_results_grade_idx1 ON `exam_results` (`grade`);
 CREATE INDEX exam_results_published_idx1 ON `exam_results` (`published`);
+
+-- -----------------------------------------------------
+-- Table `timetable_files`
+-- Stores admin-uploaded timetable PDF files per semester.
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `timetable_files`;
+CREATE TABLE IF NOT EXISTS `timetable_files` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `title` VARCHAR(255) NOT NULL,
+    `file_path` VARCHAR(500) NOT NULL,
+    `uploaded_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+    `archived` TINYINT(1) DEFAULT 0,
+    `fk_semester` INT NOT NULL,
+    `fk_department` INT,
+    PRIMARY KEY (`id`),
+    CONSTRAINT `fk_timetable_files_semester1` FOREIGN KEY (`fk_semester`) REFERENCES `semester` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
+    CONSTRAINT `fk_timetable_files_department1` FOREIGN KEY (`fk_department`) REFERENCES `department` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE
+);
+CREATE INDEX timetable_files_archived_idx1 ON `timetable_files` (`archived`);

@@ -408,4 +408,38 @@ class Student
         )";
         return $this->dm->run($query, array(':i' => $index_number, ':l' => $level, ':s' => $current_semester_name))->all();
     }
+
+    public function fetchStudentSchedule(string $index_number, int $semester_id): mixed
+    {
+        $query = "SELECT
+            sc.`day_of_week`, sc.`start_time`, sc.`end_time`,
+            c.`code` AS course_code, c.`name` AS course_name, c.`credits`,
+            r.`number` AS room_number, r.`location` AS room_location
+            FROM `schedule` AS sc
+            JOIN `section` AS sec ON sc.`fk_section` = sec.`id`
+            JOIN `course` AS c ON sec.`fk_course` = c.`code`
+            JOIN `student_courses` AS stc ON stc.`fk_course` = c.`code`
+                AND stc.`fk_student` = :i AND stc.`fk_semester` = :s AND stc.`registered` = 1
+            LEFT JOIN `room` AS r ON sc.`fk_room` = r.`number`
+            WHERE sc.`fk_semester` = :s AND sc.`archived` = 0
+            ORDER BY FIELD(sc.`day_of_week`, 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'),
+                     sc.`start_time` ASC";
+        return $this->dm->run($query, array(':i' => $index_number, ':s' => $semester_id))->all();
+    }
+
+    public function fetchTimetableFiles(int $semester_id, ?int $department_id = null): mixed
+    {
+        $query = "SELECT `id`, `title`, `file_path`, `uploaded_at`
+            FROM `timetable_files`
+            WHERE `fk_semester` = :s AND `archived` = 0";
+        $params = array(':s' => $semester_id);
+
+        if ($department_id !== null) {
+            $query .= " AND (`fk_department` = :d OR `fk_department` IS NULL)";
+            $params[':d'] = $department_id;
+        }
+
+        $query .= " ORDER BY `uploaded_at` DESC";
+        return $this->dm->run($query, $params)->all();
+    }
 }

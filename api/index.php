@@ -89,6 +89,30 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                 );
                 die(json_encode(array("success" => true, "message" => $result)));
 
+            case 'timetable':
+                $semester_id = intval($_SESSION["semester"]["id"]);
+                $department_id = isset($student_data["department_id"]) ? intval($student_data["department_id"]) : null;
+
+                // Try schedule data first
+                $schedule = $studentObj->fetchStudentSchedule(
+                    $_SESSION["student"]["index_number"],
+                    $semester_id
+                );
+
+                // Get uploaded timetable files
+                $student_data_obj = $studentObj->fetchData($_SESSION["student"]["index_number"]);
+                $dept_id = !empty($student_data_obj["department_id"]) ? intval($student_data_obj["department_id"]) : null;
+                $timetable_files = $studentObj->fetchTimetableFiles($semester_id, $dept_id);
+
+                if (empty($schedule) && empty($timetable_files)) {
+                    die(json_encode(array("success" => false, "message" => "No timetable available for the current semester.")));
+                }
+
+                die(json_encode(array("success" => true, "message" => array(
+                    "schedule" => $schedule ?: [],
+                    "files" => $timetable_files ?: []
+                ))));
+
             case 'exam-results':
                 if (!isset($_GET["semester_id"]) || empty($_GET["semester_id"])) {
                     die(json_encode(array("success" => false, "message" => "Please select a semester.")));
