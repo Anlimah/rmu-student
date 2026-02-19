@@ -552,3 +552,30 @@ CREATE TABLE IF NOT EXISTS `lecture` (
   CONSTRAINT `lecture_semester1` FOREIGN KEY (`fk_semester`) REFERENCES `semester` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE
 );
 CREATE INDEX lecture_archived_idx1 ON `lecture` (`archived`);
+
+-- -----------------------------------------------------
+-- Table `exam_results`
+-- Stores published exam results per student per course per semester.
+-- Grades follow the standard Ghanaian university grading scale.
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `exam_results`;
+CREATE TABLE IF NOT EXISTS `exam_results` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `score` DECIMAL(5,2) NOT NULL,
+    `grade` VARCHAR(2) NOT NULL,
+    `grade_point` DECIMAL(3,1) NOT NULL,
+    `published` TINYINT(1) DEFAULT 0,
+    `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `fk_student` VARCHAR(10) NOT NULL,
+    `fk_course` VARCHAR(10) NOT NULL,
+    `fk_semester` INT NOT NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uq_student_course_semester` (`fk_student`, `fk_course`, `fk_semester`),
+    CONSTRAINT `fk_exam_results_student1` FOREIGN KEY (`fk_student`) REFERENCES `student` (`index_number`) ON DELETE NO ACTION ON UPDATE CASCADE,
+    CONSTRAINT `fk_exam_results_course1` FOREIGN KEY (`fk_course`) REFERENCES `course` (`code`) ON DELETE NO ACTION ON UPDATE CASCADE,
+    CONSTRAINT `fk_exam_results_semester1` FOREIGN KEY (`fk_semester`) REFERENCES `semester` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE
+);
+CREATE INDEX exam_results_score_idx1 ON `exam_results` (`score`);
+CREATE INDEX exam_results_grade_idx1 ON `exam_results` (`grade`);
+CREATE INDEX exam_results_published_idx1 ON `exam_results` (`published`);

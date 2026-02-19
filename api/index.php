@@ -89,6 +89,38 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                 );
                 die(json_encode(array("success" => true, "message" => $result)));
 
+            case 'exam-results':
+                if (!isset($_GET["semester_id"]) || empty($_GET["semester_id"])) {
+                    die(json_encode(array("success" => false, "message" => "Please select a semester.")));
+                }
+                $semester_id = intval($_GET["semester_id"]);
+                $results = $studentObj->fetchExamResults(
+                    $_SESSION["student"]["index_number"],
+                    $semester_id
+                );
+                if (empty($results)) {
+                    die(json_encode(array("success" => false, "message" => "No published results found for this semester.")));
+                }
+                $summary = $studentObj->fetchExamResultsSummary(
+                    $_SESSION["student"]["index_number"],
+                    $semester_id
+                );
+                die(json_encode(array("success" => true, "message" => array("results" => $results, "summary" => $summary))));
+
+            default:
+                die(json_encode(array("success" => false, "message" => "No match found for your request!")));
+        }
+    } else if ($module === 'semester') {
+        $semesterObj = new Semester($config["database"]["mysql"]);
+
+        switch ($action) {
+            case 'all':
+                $semesters = $semesterObj->allSemesters();
+                if (empty($semesters)) {
+                    die(json_encode(array("success" => false, "message" => "No semesters found.")));
+                }
+                die(json_encode(array("success" => true, "message" => $semesters)));
+
             default:
                 die(json_encode(array("success" => false, "message" => "No match found for your request!")));
         }

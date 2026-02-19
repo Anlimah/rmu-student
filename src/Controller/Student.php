@@ -369,6 +369,31 @@ class Student
         )->all();
     }
 
+    public function fetchExamResults(string $index_number, int $semester_id): mixed
+    {
+        $query = "SELECT
+            er.`score`, er.`grade`, er.`grade_point`,
+            c.`code` AS course_code, c.`name` AS course_name, c.`credits`
+            FROM `exam_results` AS er
+            JOIN `course` AS c ON er.`fk_course` = c.`code`
+            WHERE er.`fk_student` = :i AND er.`fk_semester` = :s AND er.`published` = 1
+            ORDER BY c.`code` ASC";
+        return $this->dm->run($query, array(':i' => $index_number, ':s' => $semester_id))->all();
+    }
+
+    public function fetchExamResultsSummary(string $index_number, int $semester_id): mixed
+    {
+        $query = "SELECT
+            COUNT(er.`id`) AS total_courses,
+            SUM(c.`credits`) AS total_credits,
+            SUM(er.`grade_point` * c.`credits`) AS total_weighted_points,
+            ROUND(SUM(er.`grade_point` * c.`credits`) / NULLIF(SUM(c.`credits`), 0), 2) AS gpa
+            FROM `exam_results` AS er
+            JOIN `course` AS c ON er.`fk_course` = c.`code`
+            WHERE er.`fk_student` = :i AND er.`fk_semester` = :s AND er.`published` = 1";
+        return $this->dm->run($query, array(':i' => $index_number, ':s' => $semester_id))->one();
+    }
+
     public function  fetchCoursesBySemAndLevel(string $index_number, int $level, int $current_semester_name): mixed
     {
         $query = "SELECT 
