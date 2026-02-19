@@ -123,13 +123,20 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                     $semester_id
                 );
                 if (empty($results)) {
-                    die(json_encode(array("success" => false, "message" => "No published results found for this semester.")));
+                    die(json_encode(array("success" => false, "message" => "No results found for this semester.")));
                 }
                 $summary = $studentObj->fetchExamResultsSummary(
                     $_SESSION["student"]["index_number"],
                     $semester_id
                 );
-                die(json_encode(array("success" => true, "message" => array("results" => $results, "summary" => $summary))));
+                $cgpa_data = $studentObj->fetchCumulativeGPA(
+                    $_SESSION["student"]["index_number"]
+                );
+                die(json_encode(array("success" => true, "message" => array(
+                    "results" => $results,
+                    "summary" => $summary,
+                    "cgpa" => $cgpa_data["cgpa"] ?? null
+                ))));
 
             default:
                 die(json_encode(array("success" => false, "message" => "No match found for your request!")));

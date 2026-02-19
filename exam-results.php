@@ -72,6 +72,11 @@ $all_semesters = $semesterObj->allSemesters();
                             <div class="summary-bar__value" id="summary-gpa">0.00</div>
                             <div class="summary-bar__label">Semester GPA</div>
                         </div>
+                        <div class="summary-bar__item">
+                            <div class="summary-bar__icon"><i class="bi bi-trophy"></i></div>
+                            <div class="summary-bar__value" id="summary-cgpa">0.00</div>
+                            <div class="summary-bar__label">Cumulative GPA</div>
+                        </div>
                     </div>
 
                     <!-- Results Table -->
@@ -91,9 +96,10 @@ $all_semesters = $semesterObj->allSemesters();
                                             <th>Course Code</th>
                                             <th>Course Title</th>
                                             <th style="text-align: center;">Credits</th>
-                                            <th style="text-align: center;">Score</th>
+                                            <th style="text-align: center;">CA Score</th>
+                                            <th style="text-align: center;">Exam Score</th>
+                                            <th style="text-align: center;">Total</th>
                                             <th style="text-align: center;">Grade</th>
-                                            <th style="text-align: center;">Grade Point</th>
                                         </tr>
                                     </thead>
                                     <tbody id="results-table-body">
@@ -119,14 +125,15 @@ $all_semesters = $semesterObj->allSemesters();
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr><td style="text-align:center;">80 &ndash; 100</td><td style="text-align:center;"><span class="badge badge--green">A</span></td><td style="text-align:center;">4.0</td><td style="text-align:center;">Excellent</td></tr>
-                                    <tr><td style="text-align:center;">75 &ndash; 79</td><td style="text-align:center;"><span class="badge badge--green">B+</span></td><td style="text-align:center;">3.5</td><td style="text-align:center;">Very Good</td></tr>
-                                    <tr><td style="text-align:center;">70 &ndash; 74</td><td style="text-align:center;"><span class="badge badge--navy">B</span></td><td style="text-align:center;">3.0</td><td style="text-align:center;">Good</td></tr>
-                                    <tr><td style="text-align:center;">65 &ndash; 69</td><td style="text-align:center;"><span class="badge badge--navy">C+</span></td><td style="text-align:center;">2.5</td><td style="text-align:center;">Above Average</td></tr>
-                                    <tr><td style="text-align:center;">60 &ndash; 64</td><td style="text-align:center;"><span class="badge badge--gold">C</span></td><td style="text-align:center;">2.0</td><td style="text-align:center;">Average</td></tr>
-                                    <tr><td style="text-align:center;">55 &ndash; 59</td><td style="text-align:center;"><span class="badge badge--gold">D+</span></td><td style="text-align:center;">1.5</td><td style="text-align:center;">Below Average</td></tr>
-                                    <tr><td style="text-align:center;">50 &ndash; 54</td><td style="text-align:center;"><span class="badge badge--gray">D</span></td><td style="text-align:center;">1.0</td><td style="text-align:center;">Pass</td></tr>
-                                    <tr><td style="text-align:center;">0 &ndash; 49</td><td style="text-align:center;"><span class="badge badge--danger">F</span></td><td style="text-align:center;">0.0</td><td style="text-align:center;">Fail</td></tr>
+                                    <tr><td style="text-align:center;">80 &ndash; 100</td><td style="text-align:center;"><span class="badge badge--green">A</span></td><td style="text-align:center;">4.00</td><td style="text-align:center;">Excellent</td></tr>
+                                    <tr><td style="text-align:center;">75 &ndash; 79</td><td style="text-align:center;"><span class="badge badge--green">A-</span></td><td style="text-align:center;">3.85</td><td style="text-align:center;">Very Good</td></tr>
+                                    <tr><td style="text-align:center;">70 &ndash; 74</td><td style="text-align:center;"><span class="badge badge--navy">B+</span></td><td style="text-align:center;">3.00</td><td style="text-align:center;">Good</td></tr>
+                                    <tr><td style="text-align:center;">65 &ndash; 69</td><td style="text-align:center;"><span class="badge badge--navy">B</span></td><td style="text-align:center;">2.85</td><td style="text-align:center;">Above Average</td></tr>
+                                    <tr><td style="text-align:center;">60 &ndash; 64</td><td style="text-align:center;"><span class="badge badge--gold">C+</span></td><td style="text-align:center;">2.50</td><td style="text-align:center;">Average</td></tr>
+                                    <tr><td style="text-align:center;">55 &ndash; 59</td><td style="text-align:center;"><span class="badge badge--gold">C</span></td><td style="text-align:center;">2.00</td><td style="text-align:center;">Below Average</td></tr>
+                                    <tr><td style="text-align:center;">50 &ndash; 54</td><td style="text-align:center;"><span class="badge badge--gray">D</span></td><td style="text-align:center;">1.50</td><td style="text-align:center;">Pass</td></tr>
+                                    <tr><td style="text-align:center;">45 &ndash; 49</td><td style="text-align:center;"><span class="badge badge--gray">E</span></td><td style="text-align:center;">1.00</td><td style="text-align:center;">Marginal Pass</td></tr>
+                                    <tr><td style="text-align:center;">0 &ndash; 44</td><td style="text-align:center;"><span class="badge badge--danger">F</span></td><td style="text-align:center;">0.00</td><td style="text-align:center;">Fail</td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -187,13 +194,18 @@ $all_semesters = $semesterObj->allSemesters();
                             // Populate table
                             results.forEach(function(row) {
                                 var badgeClass = getGradeBadge(row.grade);
+                                var caScore = parseFloat(row.continues_assessments_score || 0);
+                                var examScore = parseFloat(row.exam_score || 0);
+                                var finalScore = parseFloat(row.final_score || 0);
+
                                 var html = '<tr>' +
                                     '<td><span class="font-semibold text-navy">' + row.course_code + '</span></td>' +
                                     '<td>' + row.course_name + '</td>' +
-                                    '<td style="text-align:center;">' + row.credits + '</td>' +
-                                    '<td style="text-align:center;">' + parseFloat(row.score).toFixed(1) + '</td>' +
+                                    '<td style="text-align:center;">' + row.credit_hours + '</td>' +
+                                    '<td style="text-align:center;">' + caScore.toFixed(1) + '</td>' +
+                                    '<td style="text-align:center;">' + examScore.toFixed(1) + '</td>' +
+                                    '<td style="text-align:center;"><strong>' + finalScore.toFixed(1) + '</strong></td>' +
                                     '<td style="text-align:center;"><span class="badge ' + badgeClass + '">' + row.grade + '</span></td>' +
-                                    '<td style="text-align:center;">' + parseFloat(row.grade_point).toFixed(1) + '</td>' +
                                     '</tr>';
                                 $tableBody.append(html);
                             });
@@ -202,6 +214,7 @@ $all_semesters = $semesterObj->allSemesters();
                             $('#summary-courses').text(summary.total_courses || 0);
                             $('#summary-credits').text(summary.total_credits || 0);
                             $('#summary-gpa').text(parseFloat(summary.gpa || 0).toFixed(2));
+                            $('#summary-cgpa').text(parseFloat(data.cgpa || 0).toFixed(2));
 
                             // Update heading
                             $('#results-heading').text('Results: ' + semesterLabel);
@@ -243,20 +256,20 @@ $all_semesters = $semesterObj->allSemesters();
 
             function getGradeBadge(grade) {
                 switch(grade) {
-                    case 'A': return 'badge--green';
-                    case 'B+': return 'badge--green';
-                    case 'B': return 'badge--navy';
-                    case 'C+': return 'badge--navy';
-                    case 'C': return 'badge--gold';
-                    case 'D+': return 'badge--gold';
-                    case 'D': return 'badge--gray';
-                    case 'F': return 'badge--danger';
-                    default: return 'badge--gray';
+                    case 'A':  return 'badge--green';
+                    case 'A-': return 'badge--green';
+                    case 'B+': return 'badge--navy';
+                    case 'B':  return 'badge--navy';
+                    case 'C+': return 'badge--gold';
+                    case 'C':  return 'badge--gold';
+                    case 'D':  return 'badge--gray';
+                    case 'E':  return 'badge--gray';
+                    case 'F':  return 'badge--danger';
+                    default:   return 'badge--gray';
                 }
             }
 
             function generateResultsPDF(semesterLabel, studentName, studentIndex, programName) {
-                // Build the PDF content from the results table
                 var rows = [];
                 $('#results-table-body tr').each(function() {
                     var cells = $(this).find('td');
@@ -264,17 +277,18 @@ $all_semesters = $semesterObj->allSemesters();
                         code: cells.eq(0).text().trim(),
                         title: cells.eq(1).text().trim(),
                         credits: cells.eq(2).text().trim(),
-                        score: cells.eq(3).text().trim(),
-                        grade: cells.eq(4).text().trim(),
-                        gradePoint: cells.eq(5).text().trim()
+                        ca: cells.eq(3).text().trim(),
+                        exam: cells.eq(4).text().trim(),
+                        total: cells.eq(5).text().trim(),
+                        grade: cells.eq(6).text().trim()
                     });
                 });
 
                 var gpa = $('#summary-gpa').text();
+                var cgpa = $('#summary-cgpa').text();
                 var totalCredits = $('#summary-credits').text();
                 var totalCourses = $('#summary-courses').text();
 
-                // Create a printable document
                 var printWindow = window.open('', '_blank');
                 var html = '<!DOCTYPE html><html><head><title>Exam Results - ' + studentName + '</title>' +
                     '<style>' +
@@ -307,7 +321,7 @@ $all_semesters = $semesterObj->allSemesters();
                     '<td class="label">Semester:</td><td>' + semesterLabel + '</td></tr>' +
                     '</table></div>' +
                     '<table class="results"><thead><tr>' +
-                    '<th>Course Code</th><th>Course Title</th><th>Credits</th><th>Score</th><th>Grade</th><th>Grade Point</th>' +
+                    '<th>Course Code</th><th>Course Title</th><th>Credits</th><th>CA Score</th><th>Exam Score</th><th>Total</th><th>Grade</th>' +
                     '</tr></thead><tbody>';
 
                 rows.forEach(function(row) {
@@ -315,9 +329,10 @@ $all_semesters = $semesterObj->allSemesters();
                         '<td>' + row.code + '</td>' +
                         '<td>' + row.title + '</td>' +
                         '<td>' + row.credits + '</td>' +
-                        '<td>' + row.score + '</td>' +
+                        '<td>' + row.ca + '</td>' +
+                        '<td>' + row.exam + '</td>' +
+                        '<td><strong>' + row.total + '</strong></td>' +
                         '<td>' + row.grade + '</td>' +
-                        '<td>' + row.gradePoint + '</td>' +
                         '</tr>';
                 });
 
@@ -325,7 +340,8 @@ $all_semesters = $semesterObj->allSemesters();
                     '<div class="summary">' +
                     'Total Courses: <strong>' + totalCourses + '</strong> &nbsp;&nbsp;|&nbsp;&nbsp; ' +
                     'Total Credits: <strong>' + totalCredits + '</strong> &nbsp;&nbsp;|&nbsp;&nbsp; ' +
-                    'Semester GPA: <strong>' + gpa + '</strong>' +
+                    'Semester GPA: <strong>' + gpa + '</strong> &nbsp;&nbsp;|&nbsp;&nbsp; ' +
+                    'Cumulative GPA: <strong>' + cgpa + '</strong>' +
                     '</div>' +
                     '<div class="footer">Generated from RMU Student Portal on ' + new Date().toLocaleDateString('en-GB', {day: 'numeric', month: 'long', year: 'numeric'}) + '</div>' +
                     '</body></html>';

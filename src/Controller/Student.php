@@ -372,11 +372,17 @@ class Student
     public function fetchExamResults(string $index_number, int $semester_id): mixed
     {
         $query = "SELECT
-            er.`score`, er.`grade`, er.`grade_point`,
-            c.`code` AS course_code, c.`name` AS course_name, c.`credits`
-            FROM `exam_results` AS er
-            JOIN `course` AS c ON er.`fk_course` = c.`code`
-            WHERE er.`fk_student` = :i AND er.`fk_semester` = :s AND er.`published` = 1
+            sr.`continues_assessments_score`, sr.`project_score`, sr.`exam_score`,
+            sr.`final_score`, sr.`grade`, sr.`gpa`,
+            c.`code` AS course_code, c.`name` AS course_name,
+            sc.`credit_hours`
+            FROM `student_results` AS sr
+            JOIN `course` AS c ON sr.`fk_course` = c.`code`
+            JOIN `student_courses` AS sc
+                ON sr.`fk_student` = sc.`fk_student`
+                AND sr.`fk_course` = sc.`fk_course`
+                AND sr.`fk_semester` = sc.`fk_semester`
+            WHERE sr.`fk_student` = :i AND sr.`fk_semester` = :s
             ORDER BY c.`code` ASC";
         return $this->dm->run($query, array(':i' => $index_number, ':s' => $semester_id))->all();
     }
@@ -384,14 +390,31 @@ class Student
     public function fetchExamResultsSummary(string $index_number, int $semester_id): mixed
     {
         $query = "SELECT
-            COUNT(er.`id`) AS total_courses,
-            SUM(c.`credits`) AS total_credits,
-            SUM(er.`grade_point` * c.`credits`) AS total_weighted_points,
-            ROUND(SUM(er.`grade_point` * c.`credits`) / NULLIF(SUM(c.`credits`), 0), 2) AS gpa
-            FROM `exam_results` AS er
-            JOIN `course` AS c ON er.`fk_course` = c.`code`
-            WHERE er.`fk_student` = :i AND er.`fk_semester` = :s AND er.`published` = 1";
+            COUNT(sr.`id`) AS total_courses,
+            SUM(sc.`credit_hours`) AS total_credits,
+            ROUND(SUM(gp.`point` * sc.`credit_hours`) / NULLIF(SUM(sc.`credit_hours`), 0), 2) AS gpa
+            FROM `student_results` AS sr
+            JOIN `student_courses` AS sc
+                ON sr.`fk_student` = sc.`fk_student`
+                AND sr.`fk_course` = sc.`fk_course`
+                AND sr.`fk_semester` = sc.`fk_semester`
+            JOIN `grade_points` AS gp ON sr.`grade` = gp.`grade`
+            WHERE sr.`fk_student` = :i AND sr.`fk_semester` = :s";
         return $this->dm->run($query, array(':i' => $index_number, ':s' => $semester_id))->one();
+    }
+
+    public function fetchCumulativeGPA(string $index_number): mixed
+    {
+        $query = "SELECT
+            ROUND(SUM(gp.`point` * sc.`credit_hours`) / NULLIF(SUM(sc.`credit_hours`), 0), 2) AS cgpa
+            FROM `student_results` AS sr
+            JOIN `student_courses` AS sc
+                ON sr.`fk_student` = sc.`fk_student`
+                AND sr.`fk_course` = sc.`fk_course`
+                AND sr.`fk_semester` = sc.`fk_semester`
+            JOIN `grade_points` AS gp ON sr.`grade` = gp.`grade`
+            WHERE sr.`fk_student` = :i";
+        return $this->dm->run($query, array(':i' => $index_number))->one();
     }
 
     public function  fetchCoursesBySemAndLevel(string $index_number, int $level, int $current_semester_name): mixed
