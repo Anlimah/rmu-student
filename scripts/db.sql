@@ -77,7 +77,7 @@ DROP TABLE IF EXISTS `course`;
 CREATE TABLE IF NOT EXISTS `course` (
   `code` VARCHAR(10) NOT NULL,
   `name` VARCHAR(255) NOT NULL,
-  `credits` INT DEFAULT 0,
+  `credit_hours` INT DEFAULT 0,
   `semester` INT NOT NULL,
   `level` INT NOT NULL,
   `archived` TINYINT(1) DEFAULT 0,
@@ -88,12 +88,12 @@ CREATE TABLE IF NOT EXISTS `course` (
 CONSTRAINT `fk_course_department1` FOREIGN KEY (`fk_department`) REFERENCES `department` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE
 );
 CREATE INDEX course_name_idx1 ON `course` (`name`);
-CREATE INDEX course_credits_idx1 ON `course` (`credits`);
+CREATE INDEX course_credit_hours_idx1 ON `course` (`credit_hours`);
 CREATE INDEX course_semester_idx1 ON `course` (`semester`);
 CREATE INDEX course_level_idx1 ON `course` (`level`);
 CREATE INDEX course_archived_idx1 ON `course` (`archived`);
 
-INSERT INTO `course`(`code`, `name`, `credits`, `semester`, `level`, `fk_category`, `fk_department`) VALUES 
+INSERT INTO `course`(`code`, `name`, `credit_hours`, `semester`, `level`, `fk_category`, `fk_department`) VALUES
 ("BCME 407", "Digital Signal Processing", "3", "1", "400", "1", "1"),
 ("BEEE 409", "Linear Systems", "3", "1", "400", "1", "1"),
 ("BCME 405", "Micro Processor Systems & Application", "3", "1", "400", "1", "1"),
@@ -433,7 +433,7 @@ CREATE TABLE IF NOT EXISTS `section` (
     `id` INT NOT NULL AUTO_INCREMENT,
     `fk_class` VARCHAR(10), -- FK
     `fk_course` VARCHAR(10), -- FK
-    `credits` INT NOT NULL,
+    `credit_hours` INT NOT NULL,
     `level` INT NOT NULL,
     `semester` INT NOT NULL,
     PRIMARY KEY (`id`),
@@ -441,7 +441,7 @@ CREATE TABLE IF NOT EXISTS `section` (
   CONSTRAINT `fk_section_course1` FOREIGN KEY (`fk_course`) REFERENCES `course` (`code`) ON DELETE NO ACTION ON UPDATE CASCADE,
   -- CONSTRAINT `fk_section_semester1` FOREIGN KEY (`fk_semester`) REFERENCES `semester` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE
 );
-CREATE INDEX section_credits_idx1 ON section (`credits`);
+CREATE INDEX section_credit_hours_idx1 ON section (`credit_hours`);
 CREATE INDEX section_level_idx1 ON section (`level`);
 CREATE INDEX section_semester_idx1 ON section (`semester`);
 
@@ -480,7 +480,7 @@ CREATE TABLE IF NOT EXISTS `assigned_courses` (
     `id` INT NOT NULL AUTO_INCREMENT,
     `fk_student` VARCHAR(10), -- FK
     `fk_course` VARCHAR(10), -- FK
-    `credits` INT NOT NULL,
+    `credit_hours` INT NOT NULL,
     `level` INT NOT NULL,
     `semester` INT NOT NULL,
     `added_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -488,7 +488,7 @@ CREATE TABLE IF NOT EXISTS `assigned_courses` (
   CONSTRAINT `fk_assigned_courses_student1` FOREIGN KEY (`fk_student`) REFERENCES `student` (`index_number`) ON DELETE NO ACTION ON UPDATE CASCADE,
   CONSTRAINT `fk_assigned_courses_course1` FOREIGN KEY (`fk_course`) REFERENCES `course` (`code`) ON DELETE NO ACTION ON UPDATE CASCADE
 );
-CREATE INDEX assigned_courses_credits_idx1 ON `assigned_courses` (`credits`);
+CREATE INDEX assigned_courses_credit_hours_idx1 ON `assigned_courses` (`credit_hours`);
 CREATE INDEX assigned_courses_level_idx1 ON `assigned_courses` (`level`);
 CREATE INDEX assigned_courses_semester_idx1 ON `assigned_courses` (`semester`);
 CREATE INDEX assigned_courses_added_at_idx1 ON `assigned_courses` (`added_at`);

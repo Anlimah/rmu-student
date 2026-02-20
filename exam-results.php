@@ -52,6 +52,17 @@ $all_semesters = $semesterObj->allSemesters();
                     </div>
                 </div>
 
+                <!-- Loading state -->
+                <div id="results-loading" class="card mb-6" style="display: none;">
+                    <div class="card__body">
+                        <div class="empty-state">
+                            <div class="empty-state__icon"><i class="bi bi-arrow-repeat spin"></i></div>
+                            <div class="empty-state__title">Loading Results</div>
+                            <div class="empty-state__message">Fetching your exam results for the selected semester...</div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Results Content -->
                 <div id="results-content" style="display: none;">
 
@@ -106,6 +117,16 @@ $all_semesters = $semesterObj->allSemesters();
                                     </tbody>
                                 </table>
                             </div>
+                        </div>
+                    </div>
+
+                    <!-- GPA Trend -->
+                    <div class="card mb-6" id="gpa-trend-card" style="display: none;">
+                        <div class="card__header">
+                            <h3 class="card__title"><i class="bi bi-graph-up"></i> GPA Trend</h3>
+                        </div>
+                        <div class="card__body">
+                            <div id="gpa-trend-chart" class="gpa-trend"></div>
                         </div>
                     </div>
 
@@ -166,6 +187,7 @@ $all_semesters = $semesterObj->allSemesters();
             var $btnLoad = $('#btn-load-results');
             var $resultsContent = $('#results-content');
             var $emptyState = $('#results-empty-state');
+            var $loading = $('#results-loading');
             var $tableBody = $('#results-table-body');
 
             function escapeHtml(str) {
@@ -202,12 +224,16 @@ $all_semesters = $semesterObj->allSemesters();
                 var semesterLabel = $semesterSelect.find('option:selected').text().trim();
                 $btnLoad.prop('disabled', true).html('<i class="bi bi-arrow-repeat spin"></i> Loading...');
                 $tableBody.empty();
+                $resultsContent.hide();
+                $emptyState.hide();
+                $loading.show();
 
                 $.ajax({
                     type: "GET",
                     url: "api/student/exam-results",
                     data: { semester_id: semesterId },
                     success: function(result) {
+                        $loading.hide();
                         if (result.success) {
                             var data = result.message;
                             var results = data.results;
@@ -243,6 +269,7 @@ $all_semesters = $semesterObj->allSemesters();
 
                             $emptyState.hide();
                             $resultsContent.show();
+                            loadGpaTrend();
                         } else {
                             $resultsContent.hide();
                             $emptyState.find('.empty-state__icon').html('<i class="bi bi-clipboard-x"></i>');
@@ -252,6 +279,7 @@ $all_semesters = $semesterObj->allSemesters();
                         }
                     },
                     error: function(xhr) {
+                        $loading.hide();
                         if (xhr.status == 401) {
                             alert("Your session expired, logging you out...");
                             window.location.href = "?logout";
@@ -295,6 +323,52 @@ $all_semesters = $semesterObj->allSemesters();
                     case 'F':  return 'badge--danger';
                     default:   return 'badge--gray';
                 }
+            }
+
+            // Load GPA trend on first results load
+            var trendLoaded = false;
+            function loadGpaTrend() {
+                if (trendLoaded) return;
+                $.ajax({
+                    type: "GET",
+                    url: "api/student/gpa-trend",
+                    success: function(result) {
+                        if (result.success && result.message.length > 1) {
+                            trendLoaded = true;
+                            renderGpaTrend(result.message);
+                            $('#gpa-trend-card').show();
+                        }
+                    }
+                });
+            }
+
+            function renderGpaTrend(data) {
+                var $chart = $('#gpa-trend-chart');
+                var maxGpa = 4.0;
+
+                var html = '<div class="gpa-trend__bars">';
+                data.forEach(function(item) {
+                    var gpa = parseFloat(item.gpa || 0);
+                    var height = Math.max((gpa / maxGpa) * 100, 5);
+                    var colorClass = gpa >= 3.5 ? 'gpa-trend__bar--excellent'
+                        : gpa >= 2.5 ? 'gpa-trend__bar--good'
+                        : gpa >= 1.5 ? 'gpa-trend__bar--average'
+                        : 'gpa-trend__bar--poor';
+                    html += '<div class="gpa-trend__bar-wrapper">';
+                    html += '<div class="gpa-trend__value">' + gpa.toFixed(2) + '</div>';
+                    html += '<div class="gpa-trend__bar ' + colorClass + '" style="height: ' + height + '%;"></div>';
+                    html += '</div>';
+                });
+                html += '</div>';
+
+                html += '<div class="gpa-trend__labels">';
+                data.forEach(function(item) {
+                    var label = item.academic_year_name + ' S' + item.semester_name;
+                    html += '<div class="gpa-trend__label">' + escapeHtml(label) + '</div>';
+                });
+                html += '</div>';
+
+                $chart.html(html);
             }
 
             function generateResultsPDF(semesterLabel, studentName, studentIndex, programName) {

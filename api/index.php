@@ -113,9 +113,19 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                     "files" => $timetable_files ?: []
                 ))));
 
+            case 'gpa-trend':
+                $trend = $studentObj->fetchGpaTrend($_SESSION["student"]["index_number"]);
+                if (empty($trend)) {
+                    die(json_encode(array("success" => false, "message" => "No GPA data available yet.")));
+                }
+                die(json_encode(array("success" => true, "message" => $trend)));
+
             case 'exam-results':
                 if (!isset($_GET["semester_id"]) || empty($_GET["semester_id"])) {
                     die(json_encode(array("success" => false, "message" => "Please select a semester.")));
+                }
+                if (!ctype_digit($_GET["semester_id"])) {
+                    die(json_encode(array("success" => false, "message" => "Invalid semester ID.")));
                 }
                 $semester_id = intval($_GET["semester_id"]);
                 $results = $studentObj->fetchExamResults(
@@ -159,7 +169,10 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                 if (!isset($_GET["cc"]) || empty($_GET["cc"])) {
                     die(json_encode(array("success" => false, "message" => "Invalid request!")));
                 }
-                $course_info = $courseObj->courseInfo($_GET["cc"]);
+                if (!preg_match('/^[A-Z]{3,5}\s?\d{3}$/i', $_GET["cc"])) {
+                    die(json_encode(array("success" => false, "message" => "Invalid course code format!")));
+                }
+                $course_info = $courseObj->courseInfo(htmlspecialchars($_GET["cc"]));
                 if (empty($course_info)) {
                     die(json_encode(array("success" => false, "message" => "No results found for this course!")));
                 }
