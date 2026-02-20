@@ -125,17 +125,13 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                 if (empty($results)) {
                     die(json_encode(array("success" => false, "message" => "No results found for this semester.")));
                 }
-                $summary = $studentObj->fetchExamResultsSummary(
+                $summary = $studentObj->fetchGpaCgpa(
                     $_SESSION["student"]["index_number"],
                     $semester_id
                 );
-                $cgpa_data = $studentObj->fetchCumulativeGPA(
-                    $_SESSION["student"]["index_number"]
-                );
                 die(json_encode(array("success" => true, "message" => array(
                     "results" => $results,
-                    "summary" => $summary,
-                    "cgpa" => $cgpa_data["cgpa"] ?? null
+                    "summary" => $summary
                 ))));
 
             default:
@@ -199,6 +195,8 @@ elseif ($_SERVER['REQUEST_METHOD'] == "POST") {
 
                 $result = $studentObj->login($username, $password);
                 if (!$result["success"]) die(json_encode($result));
+
+                session_regenerate_id(true);
 
                 if ($result["message"]["default_password"]) $_SESSION["student"]['level_admitted'] = $result["message"]["level_admitted"];
                 $_SESSION["student"]['login'] = true;

@@ -107,17 +107,19 @@ class Database
 
     private function type(): mixed
     {
-        return explode(' ', $this->query)[0];
+        return strtoupper(trim(explode(' ', trim($this->query))[0]));
     }
 
     public function all()
     {
-        if ($this->type() == 'SELECT') return $this->stmt->fetchAll();
+        $type = $this->type();
+        if ($type == 'SELECT' || $type == 'CALL') return $this->stmt->fetchAll();
     }
 
     public function one()
     {
-        if ($this->type() == 'SELECT') return $this->stmt->fetch();
+        $type = $this->type();
+        if ($type == 'SELECT' || $type == 'CALL') return $this->stmt->fetch();
     }
 
     public function add($autoIncrementColumn = null, $primaryKeyValue = null)

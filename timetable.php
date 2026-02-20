@@ -161,6 +161,13 @@ require_once('inc/auth.php');
                 }
             });
 
+            function escapeHtml(str) {
+                if (!str) return '';
+                var div = document.createElement('div');
+                div.appendChild(document.createTextNode(str));
+                return div.innerHTML;
+            }
+
             function renderSchedule(schedule) {
                 var $body = $('#schedule-body');
                 var days = {};
@@ -185,19 +192,19 @@ require_once('inc/auth.php');
                     entries.forEach(function(entry, index) {
                         var startTime = formatTime(entry.start_time);
                         var endTime = formatTime(entry.end_time);
-                        var venue = entry.room_number || '—';
-                        if (entry.room_location) venue += ' (' + entry.room_location + ')';
+                        var venue = escapeHtml(entry.room_number) || '—';
+                        if (entry.room_location) venue += ' (' + escapeHtml(entry.room_location) + ')';
 
                         var html = '<tr>';
                         if (index === 0) {
                             html += '<td class="timetable-grid__day" rowspan="' + entries.length + '">' +
-                                '<span class="timetable-grid__day-name">' + day + '</span>' +
+                                '<span class="timetable-grid__day-name">' + escapeHtml(day) + '</span>' +
                                 '</td>';
                         }
                         html += '<td class="timetable-grid__time">' + startTime + ' – ' + endTime + '</td>' +
                             '<td>' +
-                            '<span class="font-semibold text-navy">' + entry.course_code + '</span>' +
-                            '<div class="text-sm text-muted">' + entry.course_name + '</div>' +
+                            '<span class="font-semibold text-navy">' + escapeHtml(entry.course_code) + '</span>' +
+                            '<div class="text-sm text-muted">' + escapeHtml(entry.course_name) + '</div>' +
                             '</td>' +
                             '<td><i class="bi bi-geo-alt"></i> ' + venue + '</td>' +
                             '</tr>';
@@ -214,18 +221,21 @@ require_once('inc/auth.php');
                         day: 'numeric', month: 'short', year: 'numeric'
                     });
 
+                    var safeTitle = escapeHtml(file.title);
+                    var safePath = encodeURI(file.file_path);
+
                     var html = '<div class="timetable-file">' +
                         '<div class="timetable-file__info">' +
                         '<i class="bi bi-file-earmark-pdf-fill timetable-file__icon"></i>' +
                         '<div>' +
-                        '<div class="timetable-file__title">' + file.title + '</div>' +
+                        '<div class="timetable-file__title">' + safeTitle + '</div>' +
                         '<div class="timetable-file__date">Uploaded: ' + uploadDate + '</div>' +
                         '</div>' +
                         '</div>' +
                         '<div class="timetable-file__actions">' +
-                        '<a href="' + file.file_path + '" target="_blank" class="btn btn--sm btn--primary">' +
+                        '<a href="' + safePath + '" target="_blank" class="btn btn--sm btn--primary">' +
                         '<i class="bi bi-eye"></i> View</a>' +
-                        '<a href="' + file.file_path + '" download class="btn btn--sm btn--outline">' +
+                        '<a href="' + safePath + '" download class="btn btn--sm btn--outline">' +
                         '<i class="bi bi-download"></i> Download</a>' +
                         '</div>' +
                         '</div>';

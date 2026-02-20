@@ -387,34 +387,12 @@ class Student
         return $this->dm->run($query, array(':i' => $index_number, ':s' => $semester_id))->all();
     }
 
-    public function fetchExamResultsSummary(string $index_number, int $semester_id): mixed
+    public function fetchGpaCgpa(string $index_number, int $semester_id): mixed
     {
-        $query = "SELECT
-            COUNT(sr.`id`) AS total_courses,
-            SUM(sc.`credit_hours`) AS total_credits,
-            ROUND(SUM(gp.`point` * sc.`credit_hours`) / NULLIF(SUM(sc.`credit_hours`), 0), 2) AS gpa
-            FROM `student_results` AS sr
-            JOIN `student_courses` AS sc
-                ON sr.`fk_student` = sc.`fk_student`
-                AND sr.`fk_course` = sc.`fk_course`
-                AND sr.`fk_semester` = sc.`fk_semester`
-            JOIN `grade_points` AS gp ON sr.`grade` = gp.`grade`
-            WHERE sr.`fk_student` = :i AND sr.`fk_semester` = :s";
-        return $this->dm->run($query, array(':i' => $index_number, ':s' => $semester_id))->one();
-    }
-
-    public function fetchCumulativeGPA(string $index_number): mixed
-    {
-        $query = "SELECT
-            ROUND(SUM(gp.`point` * sc.`credit_hours`) / NULLIF(SUM(sc.`credit_hours`), 0), 2) AS cgpa
-            FROM `student_results` AS sr
-            JOIN `student_courses` AS sc
-                ON sr.`fk_student` = sc.`fk_student`
-                AND sr.`fk_course` = sc.`fk_course`
-                AND sr.`fk_semester` = sc.`fk_semester`
-            JOIN `grade_points` AS gp ON sr.`grade` = gp.`grade`
-            WHERE sr.`fk_student` = :i";
-        return $this->dm->run($query, array(':i' => $index_number))->one();
+        return $this->dm->run(
+            "CALL calculate_gpa_cgpa(:i, :s)",
+            array(':i' => $index_number, ':s' => $semester_id)
+        )->one();
     }
 
     public function  fetchCoursesBySemAndLevel(string $index_number, int $level, int $current_semester_name): mixed

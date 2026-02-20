@@ -109,12 +109,13 @@ $all_semesters = $semesterObj->allSemesters();
                         </div>
                     </div>
 
-                    <!-- Grading Scale Reference -->
+                    <!-- Grading Scale Reference (collapsible) -->
                     <div class="card mb-6">
-                        <div class="card__header">
-                            <h3 class="card__title">Grading Scale</h3>
+                        <div class="card__header card__header--toggle" id="grading-scale-toggle" style="cursor: pointer; margin-bottom: 0; border-bottom: none;">
+                            <h3 class="card__title"><i class="bi bi-info-circle"></i> Grading Scale</h3>
+                            <i class="bi bi-chevron-down" id="grading-scale-icon"></i>
                         </div>
-                        <div class="table-wrapper">
+                        <div class="table-wrapper" id="grading-scale-body" style="display: none;">
                             <table class="table table--sm">
                                 <thead>
                                     <tr>
@@ -167,6 +168,27 @@ $all_semesters = $semesterObj->allSemesters();
             var $emptyState = $('#results-empty-state');
             var $tableBody = $('#results-table-body');
 
+            function escapeHtml(str) {
+                if (!str) return '';
+                var div = document.createElement('div');
+                div.appendChild(document.createTextNode(str));
+                return div.innerHTML;
+            }
+
+            // Grading scale toggle
+            $('#grading-scale-toggle').on('click', function() {
+                var $body = $('#grading-scale-body');
+                var $icon = $('#grading-scale-icon');
+                $body.slideToggle(200);
+                $icon.toggleClass('bi-chevron-down bi-chevron-up');
+                // Restore header border when open
+                if ($body.is(':visible')) {
+                    $(this).css({'margin-bottom': 'var(--space-4)', 'border-bottom': '1px solid var(--color-border)', 'padding-bottom': 'var(--space-4)'});
+                } else {
+                    $(this).css({'margin-bottom': '0', 'border-bottom': 'none', 'padding-bottom': '0'});
+                }
+            });
+
             // Enable/disable the button based on selection
             $semesterSelect.on('change', function() {
                 $btnLoad.prop('disabled', !$(this).val());
@@ -199,8 +221,8 @@ $all_semesters = $semesterObj->allSemesters();
                                 var finalScore = parseFloat(row.final_score || 0);
 
                                 var html = '<tr>' +
-                                    '<td><span class="font-semibold text-navy">' + row.course_code + '</span></td>' +
-                                    '<td>' + row.course_name + '</td>' +
+                                    '<td><span class="font-semibold text-navy">' + escapeHtml(row.course_code) + '</span></td>' +
+                                    '<td>' + escapeHtml(row.course_name) + '</td>' +
                                     '<td style="text-align:center;">' + row.credit_hours + '</td>' +
                                     '<td style="text-align:center;">' + caScore.toFixed(1) + '</td>' +
                                     '<td style="text-align:center;">' + examScore.toFixed(1) + '</td>' +
@@ -210,11 +232,11 @@ $all_semesters = $semesterObj->allSemesters();
                                 $tableBody.append(html);
                             });
 
-                            // Update summary
+                            // Update summary (from calculate_gpa_cgpa stored procedure)
                             $('#summary-courses').text(summary.total_courses || 0);
                             $('#summary-credits').text(summary.total_credits || 0);
                             $('#summary-gpa').text(parseFloat(summary.gpa || 0).toFixed(2));
-                            $('#summary-cgpa').text(parseFloat(data.cgpa || 0).toFixed(2));
+                            $('#summary-cgpa').text(parseFloat(summary.cgpa || 0).toFixed(2));
 
                             // Update heading
                             $('#results-heading').text('Results: ' + semesterLabel);
@@ -233,6 +255,12 @@ $all_semesters = $semesterObj->allSemesters();
                         if (xhr.status == 401) {
                             alert("Your session expired, logging you out...");
                             window.location.href = "?logout";
+                        } else {
+                            $resultsContent.hide();
+                            $emptyState.find('.empty-state__icon').html('<i class="bi bi-exclamation-triangle"></i>');
+                            $emptyState.find('.empty-state__title').text('Something Went Wrong');
+                            $emptyState.find('.empty-state__message').text('Failed to load results. Please check your connection and try again.');
+                            $emptyState.show();
                         }
                     },
                     complete: function() {
